@@ -63,7 +63,7 @@ Refer the [Roadmap](#roadmap) section in this document for the full list of road
 ## Directory Content
  The root directory of the DKMRX.LIB library contains this readme.md file as well as the following subdirectories;
 
- * [dkmrx](dkmrx) - contains build artifacts;
+ * [dkmrx](dkmrx) - contains build artefacts;
  * [include](include) - contains library header files;
  * [review](review) - contains source modules currently under review or testing. These are candidate source modules that haven't made into the current set of library source modules yet;
  * [source](source) - current set of library source modules.
@@ -79,9 +79,11 @@ There are three sample programs available that demonstrate how to use the librar
 ## Build Notes
 
 Here is the MS Visual Studio configuration log used to build the target:
-1. Let the c++ compiler know the location of include area: ../include
-2. Define the real type e.g. real=double.
-3. Define _CRT_SECURE_NO_WARNINGS to remove "This function or variable may be unsafe" errors triggered by some string and file functions.
+1. Switch precompiled headers off;
+2. Set the language standard to the most recent version;
+3. Let the c++ compiler know the location of include area: ../include
+4. Define the real type e.g. real=double.
+5. Define _CRT_SECURE_NO_WARNINGS to remove "This function or variable may be unsafe" errors triggered by some string and file functions.
 
 ## Roadmap
 

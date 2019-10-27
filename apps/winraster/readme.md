@@ -7,12 +7,14 @@ Once the program has started it will automatically launch itself into a demo mod
 ## Build Notes
 
 Here is the MS Visual Studio configuration log used to build the target:
-1. Let the c++ compiler know locations of include areas: ../include;../../../libs/dkmrx/include
-2. Let the resource compiler know the location of include area: ../include
-3. Define the real type the same as what has been used to build the dkmrx.lib library e.g. real=double.
-4. Let the linker know the location of the dkmrx.lib library (add a reference to the project on the Visual C++ platform).
-5. Define _CRT_SECURE_NO_WARNINGS to remove "This function or variable may be unsafe" errors triggered by some string and file functions.
-6. Define _CRT_NON_CONFORMING_WCSTOK to remove wcstok/strtok related errors.
+1. Switch precompiled headers off;
+2. Set the language standard to the most recent version;
+3. Let the c++ compiler know locations of include areas: ../include;../../../libs/dkmrx/include
+4. Let the resource compiler know the location of include area: ../include
+5. Define the real type the same as what has been used to build the dkmrx.lib library e.g. real=double.
+6. Let the linker know the location of the dkmrx.lib library (add a reference to the project on the Visual C++ platform).
+7. Define _CRT_SECURE_NO_WARNINGS to remove "This function or variable may be unsafe" errors triggered by some string and file functions.
+8. Define _CRT_NON_CONFORMING_WCSTOK to remove wcstok/strtok related errors.
 
 ## Roadmap
 1. C++ 20 will introduce standard numeric constants. Replace myPi in raster_geometry.cpp with a standard one once it's become available.
