@@ -141,6 +141,11 @@ void WinRasterRenderer::erasePrevRect()
 	DeleteObject(hBrush);
 }
 
+void WinRasterRenderer::setSize(unsigned winWidth, unsigned winHeight)
+{
+	pRasterGeom_->setSize(winWidth, winHeight);
+}
+
 void WinRasterRenderer::drawBitmap_()
 {
 	erasePrevRect();

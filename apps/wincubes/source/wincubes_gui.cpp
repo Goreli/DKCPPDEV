@@ -7,7 +7,6 @@
 
 #include "wincubes_gui.h"
 #include "wincubes_renderer.hpp"
-#include "cubes_geometry.hpp"
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -141,7 +140,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
 	case WM_SIZE:
-		appGlobals.pRenderer->getCubes().setSize(LOWORD(lParam), HIWORD(lParam));
+		appGlobals.pRenderer->setSize(LOWORD(lParam), HIWORD(lParam));
 		break;
     case WM_COMMAND:
         {
@@ -171,11 +170,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			case ID_MOTIONCONTROL_STOP:
 				DisableAndEnableMenuItems(hWnd, ID_MOTIONCONTROL_STOP, ID_MOTIONCONTROL_CONTINUE);
-				appGlobals.pRenderer->getCubes().stop();
+				appGlobals.pRenderer->stop();
 				break;
 			case ID_MOTIONCONTROL_CONTINUE:
 				DisableAndEnableMenuItems(hWnd, ID_MOTIONCONTROL_CONTINUE, ID_MOTIONCONTROL_STOP);
-				appGlobals.pRenderer->getCubes().cont();
+				appGlobals.pRenderer->cont();
 				break;
 			case ID_MOTIONCONTROL_RESTART:
 				appGlobals.pRenderer->restart();

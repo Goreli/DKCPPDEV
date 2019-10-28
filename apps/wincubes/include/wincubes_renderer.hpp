@@ -38,10 +38,12 @@ private:
 public:
 	WinCubesRenderer(HWND hWnd);
 	~WinCubesRenderer();
-	CubesGeometry& getCubes();
+	void setSize(unsigned xdim, unsigned ydim);
 	void background_job(void);
 	void highlight(WORD CubeNumber);
 	void setDelayMS(DWORD dwDelayMS);
+	void stop();
+	void cont();
 	void restart();
 };
 

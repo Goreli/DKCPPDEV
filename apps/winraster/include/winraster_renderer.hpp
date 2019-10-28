@@ -13,9 +13,9 @@ class WinRasterRenderer
 public:
 	WinRasterRenderer(HWND hwnd, wchar_t* colorFileName, COLORREF crBgrnd);
 	~WinRasterRenderer();
-	RasterGeometry& getRaster() { return *pRasterGeom_; }
 	void backgroundJob(void);
 	void erasePrevRect();
+	void setSize(unsigned winWidth, unsigned winHeight);
 
 private:
 	HWND hwnd_;

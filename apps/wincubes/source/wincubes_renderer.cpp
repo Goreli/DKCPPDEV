@@ -37,9 +37,23 @@ void WinCubesRenderer::restart() {
 	pCubesGeom_->setSize(xdim, ydim);
 }
 
+void WinCubesRenderer::stop() {
+	pCubesGeom_->stop();
+}
+
+void WinCubesRenderer::cont() {
+	pCubesGeom_->cont();
+}
+
+void WinCubesRenderer::setSize(unsigned xdim, unsigned ydim) {
+	pCubesGeom_->setSize(xdim, ydim);
+}
+
+/*
 CubesGeometry& WinCubesRenderer::getCubes() {
 	return *pCubesGeom_;
 }
+*/
 
 void WinCubesRenderer::setDelayMS(DWORD dwDelayMS) {
 	dwDelayMS_ = dwDelayMS;

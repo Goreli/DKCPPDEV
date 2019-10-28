@@ -9,7 +9,7 @@
 
 #include "winraster_gui.h"
 #include "winraster_renderer.hpp"
-#include "raster_geometry.hpp"
+//#include "raster_geometry.hpp"
 
 using namespace std;
 
@@ -134,8 +134,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_SIZE:
 		appGlobals.winWidth = LOWORD(lParam);
 		appGlobals.winHeight = HIWORD(lParam);
-		if (appGlobals.pRenderer)
-			appGlobals.pRenderer->getRaster().setSize(appGlobals.winWidth, appGlobals.winHeight);
+		appGlobals.pRenderer->setSize(appGlobals.winWidth, appGlobals.winHeight);
 		break;
 	
 	case WM_COMMAND:
@@ -216,6 +215,6 @@ void openDataFile(HWND hWnd)
 			appGlobals.pRenderer->erasePrevRect();
 		appGlobals.pRenderer = std::make_unique<WinRasterRenderer>
 			(hWnd, ofn.lpstrFile, appGlobals.colorRefBackground);
-		appGlobals.pRenderer->getRaster().setSize(appGlobals.winWidth, appGlobals.winHeight);
+		appGlobals.pRenderer->setSize(appGlobals.winWidth, appGlobals.winHeight);
 	}
 }
