@@ -176,6 +176,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../include;../../../libs/dkmrx/include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

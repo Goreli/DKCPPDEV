@@ -11,6 +11,8 @@ A collection of c++ libs and apps
 The root directory contains git specific configuration files e.g. .gitignore and .gitattributes. It also contains a Visual Studio solution file that builds all targets in this repo, a LICENSE file and this README.md file. There are two subdirectories under the root directory:
  * [apps](apps) - for applications;
  * [libs](libs) - for libraries.
+
+Refer individual readme.md files located in subdirectories of the directories listed above for detailed description of the respective content. A high level overview of the content follows.
  
 ### Content of the [apps](apps) directory 
  * [apps/winbmp2mrx](apps/winbmp2mrx) - a Windows Console application that creates test data files for the [apps/winraster](apps/winraster) sample application;

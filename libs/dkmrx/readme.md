@@ -55,7 +55,7 @@ With the advent of Move Semantics and Smart Pointers it may be possible to retir
 
 Another feature worth mentioning is persistence of matrix data. The io module implements simple stream serialisation methods that allow to read/write matrix data from/to text files. The primary purpose of this functionality is to enable experimentation with relatively small chunks of data. 
 
-It sounds like an interesting exercise to implement support for binary files as well to enable efficient i/o of large matrices. This implementation could coincide with a development of a memory mapped file i/o to enable Linear Algebra operations for large matrices that ordinarily don't fit in memory.
+It sounds like an interesting exercise to implement support for binary files as well to enable efficient i/o of large matrices. This implementation could coincide with a development of a memory mapped file i/o to enable Linear Algebra operations for large matrices that ordinarily wouldn't fit in memory.
 
 Refer the [Roadmap](#roadmap) section in this document for the full list of roadmap items.
 
@@ -78,12 +78,14 @@ There are three sample programs available that demonstrate how to use the librar
  
 ## Build Notes
 
-Here is the MS Visual Studio configuration log used to build the target:
+Here is the MS Visual Studio configuration log used to build the target in both the Debug and Release configurations:
 1. Switch precompiled headers off;
 2. Set the language standard to the most recent version;
 3. Let the c++ compiler know the location of include area: ../include
 4. Define the real type e.g. real=double.
 5. Define _CRT_SECURE_NO_WARNINGS to remove "This function or variable may be unsafe" errors triggered by some string and file functions.
+
+No optimisation has been used in the Debug configuration. Specifically in the Release configuration the "Favour Speed over Size" optimisation option may be desired.
 
 ## Roadmap
 
