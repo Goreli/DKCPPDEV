@@ -1,24 +1,29 @@
 /*
-General purpose matrix library, Version 1.0
-Copyright (c) David Krikheli
-Date:   26 Jan 1995 23:27:20
+MIT License
 
-This media contains programs and data mhich are proprietary
-to David Krikheli.
+Copyright(c) 2019 David Krikheli
 
-These contents are provided under a David Krikheli softmare source
-license, mhich prohibits their unauthorized resale or distribution 
-outside of the buyer's organization.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this softwareand associated documentation files(the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and /or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions :
 
-THE SOFTMARE IS PROVIDED "AS-IS" AND MITHOUT MARRANTY OF ANY KIND, 
-EXPRESS, IMPLIED OR OTHERMISE, INCLUDING MITHOUT LIMITATION, ANY 
-MARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+The above copyright noticeand this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-IN NO EVENT SHALL David Krikheli BE LIABLE FOR ANY SPECIAL, INCIDENTAL,
-INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND, OR ANY DAMAGES MHATSOEVER
-RESULTING FROM LOSS OF USE, DATA OR PROFITS, MHETHER OR NOT ADVISED OF THE
-POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF LIABILITY, ARISING OUT OF OR
-IN CONNECTION MITH THE USE OR PERFORMANCE OF THIS SOFTMARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+/*
+Modification history:
+
 */
 
 #include "matrix.hpp"
@@ -36,7 +41,7 @@ matrix& matrix::extract
 		matrix *mx=new matrix;
 		mx->Status=TEMPORARY;
 		return *mx;
-		
+
 	}
 	if( FirstCol < 0 || FirstCol >= Columns )
 	{
@@ -46,7 +51,7 @@ matrix& matrix::extract
 		matrix *mx=new matrix;
 		mx->Status=TEMPORARY;
 		return *mx;
-		
+
 	}
 	if( RowsTotal < 0 || FirstRow + RowsTotal > Rows )
 	{
@@ -56,7 +61,7 @@ matrix& matrix::extract
 		matrix *mx=new matrix;
 		mx->Status=TEMPORARY;
 		return *mx;
-		
+
 	}
 	if( ColsTotal < 0 || FirstCol + ColsTotal > Columns )
 	{
@@ -66,7 +71,7 @@ matrix& matrix::extract
 		matrix *mx=new matrix;
 		mx->Status=TEMPORARY;
 		return *mx;
-		
+
 	}
 
 matrix *mx = new matrix( RowsTotal, ColsTotal );
@@ -153,7 +158,7 @@ void matrix::paste_and_add
 		if ( From.Status==TEMPORARY ) delete &From;
 		return;
 	}
-	if( 
+	if(
 		RowsTotal < 0
 			||
 		FirstToRow + RowsTotal > Rows
@@ -166,7 +171,7 @@ void matrix::paste_and_add
 		if ( From.Status==TEMPORARY ) delete &From;
 		return;
 	}
-	if( 
+	if(
 		ColsTotal < 0
 			||
 		FirstToCol + ColsTotal > Columns

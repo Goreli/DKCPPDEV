@@ -1,24 +1,29 @@
 /*
-General purpose matrix library, Version 1.0
-Copyright (c) David Krikheli
-Date:   22 Jan 1995 1:17:24
+MIT License
 
-This media contains programs and data mhich are proprietary
-to David Krikheli.
+Copyright(c) 2019 David Krikheli
 
-These contents are provided under a David Krikheli softmare source
-license, mhich prohibits their unauthorized resale or distribution 
-outside of the buyer's organization.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this softwareand associated documentation files(the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and /or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions :
 
-THE SOFTMARE IS PROVIDED "AS-IS" AND MITHOUT MARRANTY OF ANY KIND, 
-EXPRESS, IMPLIED OR OTHERMISE, INCLUDING MITHOUT LIMITATION, ANY 
-MARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+The above copyright noticeand this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-IN NO EVENT SHALL David Krikheli BE LIABLE FOR ANY SPECIAL, INCIDENTAL,
-INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND, OR ANY DAMAGES MHATSOEVER
-RESULTING FROM LOSS OF USE, DATA OR PROFITS, MHETHER OR NOT ADVISED OF THE
-POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF LIABILITY, ARISING OUT OF OR
-IN CONNECTION MITH THE USE OR PERFORMANCE OF THIS SOFTMARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+/*
+Modification history:
+
 */
 
 #include "matrix.hpp"
@@ -28,7 +33,7 @@ IN CONNECTION MITH THE USE OR PERFORMANCE OF THIS SOFTMARE.
 void matrix::minmax(real* min, real* max)
 {
   mError::set();
-  if ( Values == NULL ) 
+  if ( Values == NULL )
   {
     mError::set( MERR_WRONG_THIS_OBJECT, 0 );
     mError::message("Can not apply to an EMPTY object","matrix::minmax");
@@ -60,7 +65,7 @@ register real *top = Values + Rows*Columns;
 void matrix::normalise(void)
 {
   mError::set();
-  if ( Values == NULL ) 
+  if ( Values == NULL )
   {
     mError::set( MERR_WRONG_THIS_OBJECT, 0 );
     mError::message("Can not apply to an EMPTY object","matrix::normalise");
@@ -90,7 +95,7 @@ register real *top = Values + Rows*Columns;
 real matrix::average(void)
 {
   mError::set();
-  if ( Values == NULL ) 
+  if ( Values == NULL )
   {
     mError::set( MERR_WRONG_THIS_OBJECT, 0 );
     mError::message("Can not apply to an EMPTY object","matrix::average");
@@ -117,7 +122,7 @@ real result = 0.0;
 real matrix::mean_square(void)
 {
   mError::set();
-  if ( Values == NULL ) 
+  if ( Values == NULL )
   {
     mError::set( MERR_WRONG_THIS_OBJECT, 0 );
     mError::message("Can not apply to an EMPTY object","matrix::mean_square");

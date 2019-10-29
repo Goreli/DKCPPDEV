@@ -1,33 +1,38 @@
 /*
-General purpose matrix library, Version 1.0
-Copyright (c) David Krikheli
-Date:   3 Sep 1994 23:27:20
+MIT License
 
-This media contains programs and data mhich are proprietary
-to David Krikheli.
+Copyright(c) 2019 David Krikheli
 
-These contents are provided under a David Krikheli softmare source
-license, mhich prohibits their unauthorized resale or distribution 
-outside of the buyer's organization.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this softwareand associated documentation files(the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and /or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions :
 
-THE SOFTMARE IS PROVIDED "AS-IS" AND MITHOUT MARRANTY OF ANY KIND, 
-EXPRESS, IMPLIED OR OTHERMISE, INCLUDING MITHOUT LIMITATION, ANY 
-MARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+The above copyright noticeand this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-IN NO EVENT SHALL David Krikheli BE LIABLE FOR ANY SPECIAL, INCIDENTAL,
-INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND, OR ANY DAMAGES MHATSOEVER
-RESULTING FROM LOSS OF USE, DATA OR PROFITS, MHETHER OR NOT ADVISED OF THE
-POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF LIABILITY, ARISING OUT OF OR
-IN CONNECTION MITH THE USE OR PERFORMANCE OF THIS SOFTMARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+/*
+Modification history:
+
 */
 
 #include <stdio.h>
 #include "matrix.hpp"
 #include "linsys.hpp"
 
-int gauss_elimination(int A_Columns,int B_Columns,real* A_Values,real* B_Values)      
+int gauss_elimination(int A_Columns,int B_Columns,real* A_Values,real* B_Values)
 {
-real* TopPtrA=A_Values+A_Columns*A_Columns; 
+real* TopPtrA=A_Values+A_Columns*A_Columns;
 int iiStepA=A_Columns+1;
 int i1iStepA=A_Columns;
 real* iPtrB=B_Values;
@@ -39,7 +44,7 @@ register real  *i1jPtrB;
 register real* ijPtrA;
 register real* i1jPtrA;
 register real* ijTopB;
-register real* ijTopA=A_Values+A_Columns; 
+register real* ijTopA=A_Values+A_Columns;
 int   iStepB=B_Columns;
 int   manySolutions = 0;
 real  koeff;
@@ -97,10 +102,10 @@ if (B_Columns == 1)
 else
 {
   while(iiPtrA<TopPtrA)
-  { 
+  {
     if ( *iiPtrA == 0.0 )
-      for (i1iPtrA=iiPtrA+i1iStepA,i1PtrB=iPtrB+iStepB; 
-	   i1iPtrA<TopPtrA; 
+      for (i1iPtrA=iiPtrA+i1iStepA,i1PtrB=iPtrB+iStepB;
+	   i1iPtrA<TopPtrA;
 	   i1iPtrA+=i1iStepA,i1PtrB+=iStepB)
 	if ( *i1iPtrA != 0.0 )
 	{
@@ -126,11 +131,11 @@ else
 	      }
 	      break;
 	}
-    if ( *iiPtrA != 0 ) 
-      for (i1iPtrA=iiPtrA+i1iStepA,i1PtrB=iPtrB+iStepB; 
-	   i1iPtrA<TopPtrA; 
+    if ( *iiPtrA != 0 )
+      for (i1iPtrA=iiPtrA+i1iStepA,i1PtrB=iPtrB+iStepB;
+	   i1iPtrA<TopPtrA;
 	   i1iPtrA+=i1iStepA,i1PtrB+=iStepB)
-	    if ( *i1iPtrA != 0.0 ) 
+	    if ( *i1iPtrA != 0.0 )
 	    {
 	      ijPtrA=iiPtrA; i1jPtrA=i1iPtrA;
 	      koeff=*i1jPtrA++ / *ijPtrA++;
@@ -153,14 +158,14 @@ else
 		}
 		while(ijPtrA < ijTopA) *i1jPtrA++ -= koeff * *ijPtrA++;
 	      }
-	    }     
+	    }
 	iiPtrA+=iiStepA;
 	iPtrB+=iStepB;
-	ijTopA+=i1iStepA;    
+	ijTopA+=i1iStepA;
   }
   for (iiPtrA=TopPtrA-1,i1iPtrA=TopPtrA,
-       iPtrB=B_Values+(A_Columns-1)*B_Columns; 
-       iiPtrA>=iiStartA; 
+       iPtrB=B_Values+(A_Columns-1)*B_Columns;
+       iiPtrA>=iiStartA;
        iiPtrA-=iiStepA,iPtrB-=iStepB,i1iPtrA-=i1iStepA)
  {
  for(ijPtrB=iPtrB,ijTopB=iPtrB+B_Columns;
@@ -169,7 +174,7 @@ else
     )
   {
     for (ijPtrA=iiPtrA+1,jPtrX=ijPtrB+iStepB; ijPtrA<i1iPtrA; ijPtrA++,jPtrX+=iStepB)
-      *ijPtrB -= *ijPtrA * *jPtrX; //(*x)[j][0];       
+      *ijPtrB -= *ijPtrA * *jPtrX; //(*x)[j][0];
     if (*iiPtrA != 0.0) *ijPtrB /= *iiPtrA;
     else
       if (*ijPtrB != 0.0) return 1;
@@ -179,7 +184,7 @@ else
 	*ijPtrB=0.0;
       }
   }
- }  
-} 
+ }
+}
 return -manySolutions;
 }
