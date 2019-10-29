@@ -65,7 +65,7 @@ LONG WinBMPInfoHeader::getWidth()
 	return bmpInfoHeader_.biWidth;
 }
 
-void WinBMPInfoHeader::wbmp2mrx(long lOffset, istream& inStream, matrix& mrx)
+void WinBMPInfoHeader::wbmp2mrx(long lOffset, istream& inStream, dkmrx::matrix& mrx)
 {
 	size_t colorTableSize = getColorTableSize_();
 	unique_ptr<RGBQUAD[]> pColorTable;

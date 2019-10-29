@@ -30,6 +30,8 @@ Modification history:
 #include <stdlib.h>
 #include "dkmrx_error.hpp"
 
+using namespace dkmrx;
+
 matrix& matrix::operator - (matrix& mx)
 {
 	mError::set();

@@ -32,9 +32,11 @@ Modification history:
 #include "dkmrx_matrix.hpp"
 #include "dkmrx_error.hpp"
 
+using namespace dkmrx;
+
 char* str_lwr(char*);
 
-ostream& operator<<(ostream& out,matrix& mx)
+std::ostream& dkmrx::operator<<(std::ostream& out,matrix& mx)
 {
 std::streamsize tempWidth     = out.width();
 std::streamsize tempPrecision = out.precision();
@@ -68,7 +70,7 @@ std::streamsize tempPrecision = out.precision();
 	return out;
 }
 
-istream& operator>>(istream& in,matrix& mx)
+std::istream& dkmrx::operator>>(std::istream& in,matrix& mx)
 {    
     mError::set();
     if ( mx.Status== STATUS::TEMPORARY )

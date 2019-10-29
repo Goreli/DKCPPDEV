@@ -34,7 +34,7 @@ using namespace std;
 // Forward declarations of functions defined in this module.
 void printCopyright(void);
 void printUsage(void);
-void writeMatrix(matrix& mrx, const char* strOutFileName);
+void writeMatrix(dkmrx::matrix& mrx, const char* strOutFileName);
 
 int main(int iArgC, char** lplpszArgV) 
 {
@@ -74,7 +74,7 @@ int main(int iArgC, char** lplpszArgV)
 
 	// Populate a dkmrx matrix with the image data and write it out
 	// to the output file using the standard dkmrx io interface.
-	matrix mrx(0.0, winBmpInfoHeader.getHeight(), winBmpInfoHeader.getWidth());
+	dkmrx::matrix mrx(0.0, winBmpInfoHeader.getHeight(), winBmpInfoHeader.getWidth());
 	winBmpInfoHeader.wbmp2mrx(fileHeader.bfOffBits, inStream, mrx);
 	char* strOutFileName = *(lplpszArgV + 2);
 	writeMatrix(mrx, strOutFileName);
@@ -83,7 +83,7 @@ int main(int iArgC, char** lplpszArgV)
 	return 0;
 }
 
-void writeMatrix(matrix& mrx, const char* strOutFileName)
+void writeMatrix(dkmrx::matrix& mrx, const char* strOutFileName)
 {
 	fstream file(strOutFileName, ios::out);
 	// Allow to output 24 bits - 8 decimal digits

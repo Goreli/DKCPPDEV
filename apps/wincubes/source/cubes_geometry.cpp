@@ -28,6 +28,8 @@ Modification history:
 
 #include "cubes_geometry.hpp"
 
+using namespace dkmrx;
+
 const double myPi = 3.14159265358979323846;
 
 CubesGeometry::CubesGeometry(void):radius_(0.0), xdim_(0), ydim_(0),

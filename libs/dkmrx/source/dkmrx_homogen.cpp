@@ -26,10 +26,12 @@ Modification history:
 
 */
 
-#include "dkmrx_matrix.hpp"
 #include <stdlib.h>
 #include <math.h>
+#include "dkmrx_matrix.hpp"
 #include "dkmrx_error.hpp"
+
+using namespace dkmrx;
 
 /*
 Could be usefull:

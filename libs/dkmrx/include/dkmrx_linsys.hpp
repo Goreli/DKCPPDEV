@@ -27,63 +27,64 @@ Modification history:
 */
 
 
-#ifndef linsys_h
-#define linsys_h
+#ifndef dkmrx_linsys_hpp
+#define dkmrx_linsys_hpp
 
 #include "dkmrx_matrix.hpp"
-//#include "bool.hpp"
 
-//int gauss_elimination(int,int,real*,real*);
-
-/************************************************************\
-*                         "linsys"                           *
-*   Basic class for solving a simultenious linear equations  *
-*                                                            *
-\************************************************************/
-
-class linsys
-{
-public:
-	linsys(void);
-virtual void	 exclude_rows_and_columns(unsigned* List, unsigned Entries);
-virtual void	 solve_in_single_step(void)    = 0;
-virtual unsigned solve_in_multiple_steps(void) = 0;// returns progress()
-virtual void	 restore_rows_and_columns(void);
-	int	 how_many_solutions(void) { return NumberOfSolutions_; }
-
-protected:
-	int	 progress(void); //returns 1%-100%
-	bool is_excluded(unsigned);
-	unsigned ToBeDone_;
-	matrix	 *ExcludedRows_;
-	matrix	 *ExcludedColumns_;
-
-private:
-	unsigned Done_;
-	unsigned *ExcludeList_;
-	unsigned ExcludeListEntries_;
-	int	 NumberOfSolutions_;
-};
+namespace dkmrx {
 
 
-class linsysGauss : public linsys
-{
-public:
-	linsysGauss(matrix* Left, matrix* Right, bool MultyPass = false);
-	void	 exclude_rows_and_columns(unsigned* List, unsigned Entries);
-	void	 solve_in_single_step(void);
-	unsigned solve_in_multiple_steps(void);
-	void	 restore_rows_and_columns(void);
-};
+	/*********************************************************************\
+	*                             "linsys"                                *
+	*   Base class for solving a system of simultenious linear equations  *
+	*                                                                     *
+	\*********************************************************************/
 
-class linsysKholesky : public linsys
-{
-public:
-	linsysKholesky(matrix* Left, matrix* Right, bool MultyPass = false);
-	void	 exclude_rows_and_columns(unsigned* List, unsigned Entries);
-	void	 solve_in_single_step(void);
-	unsigned solve_in_multiple_steps(void);
-	void	 restore_rows_and_columns(void);
-};
-   
-#endif /* linsys_h */
+	class linsys
+	{
+	public:
+		linsys(void);
+		virtual void	 exclude_rows_and_columns(unsigned* List, unsigned Entries);
+		virtual void	 solve_in_single_step(void) = 0;
+		virtual unsigned solve_in_multiple_steps(void) = 0;// returns progress()
+		virtual void	 restore_rows_and_columns(void);
+		int	 how_many_solutions(void) { return NumberOfSolutions_; }
+
+	protected:
+		int	 progress(void); //returns 1%-100%
+		bool is_excluded(unsigned);
+		unsigned ToBeDone_;
+		matrix* ExcludedRows_;
+		matrix* ExcludedColumns_;
+
+	private:
+		unsigned Done_;
+		unsigned* ExcludeList_;
+		unsigned ExcludeListEntries_;
+		int	 NumberOfSolutions_;
+	};
+
+
+	class linsysGauss : public linsys
+	{
+	public:
+		linsysGauss(matrix* Left, matrix* Right, bool MultyPass = false);
+		void	 exclude_rows_and_columns(unsigned* List, unsigned Entries);
+		void	 solve_in_single_step(void);
+		unsigned solve_in_multiple_steps(void);
+		void	 restore_rows_and_columns(void);
+	};
+
+	class linsysKholesky : public linsys
+	{
+	public:
+		linsysKholesky(matrix* Left, matrix* Right, bool MultyPass = false);
+		void	 exclude_rows_and_columns(unsigned* List, unsigned Entries);
+		void	 solve_in_single_step(void);
+		unsigned solve_in_multiple_steps(void);
+		void	 restore_rows_and_columns(void);
+	};
+
+}	// namespace dkmrx
+#endif // dkmrx_linsys_hpp

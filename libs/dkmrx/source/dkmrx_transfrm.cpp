@@ -27,11 +27,12 @@ Modification history:
 */
 
 // All coordinates are considered in the world (right) coordinate system.
-#include "dkmrx_geometry.hpp"
 #include <stdlib.h>
 #include <math.h>
+#include "dkmrx_geometry.hpp"
 #include "dkmrx_error.hpp"
 
+using namespace dkmrx;
 
 mTransformer::mTransformer(void):matrix(4,4)
 {

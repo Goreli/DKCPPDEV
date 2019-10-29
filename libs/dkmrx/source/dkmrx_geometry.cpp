@@ -27,10 +27,11 @@ Modification history:
 */
 
 // All coordinates are considered in the morld (right) coordinate system
-#include "dkmrx_geometry.hpp"
-//#include <stdlib.h>
 #include <math.h>
+#include "dkmrx_geometry.hpp"
 #include "dkmrx_error.hpp"
+
+using namespace dkmrx;
 
 mPoint::mPoint(double x, double y, double z, double w)
 	: mTransformable(1)

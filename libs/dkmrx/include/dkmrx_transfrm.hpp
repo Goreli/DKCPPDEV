@@ -26,40 +26,44 @@ Modification history:
 
 */
 
-#ifndef transform_h
-#define transform_h
+#ifndef dkmrx_transfrm_hpp
+#define dkmrx_transfrm_hpp
 
 #include "dkmrx_matrix.hpp"
-class mLine;
 
-class mTransformer: public matrix
-{   
-public:
-	mTransformer( void );
-	mTransformer(mTransformer&);
+namespace dkmrx {
 
-	void rotate(real through,matrix& about, matrix& putFrom );
-	void rotate(real through, mLine& about );
-	void rotateX(real through);
-	void rotateY(real through);
-	void rotateZ(real through);
-	void translate(matrix& to, matrix& putFrom );
-	void translate(real x,real y,real z, matrix& putFrom );
-	void scale(real Kx,real Ky,real Kz, matrix& about );
-	void reset(void);
-	void concatenate( mTransformer& );
-};
+	class mLine;
 
-class mTransformable: public matrix
-{
-public:
-	mTransformable(int rows);
-	mTransformable(real init_value, int rows);   
-	mTransformable(mTransformable&);
-	mTransformable(void);
+	class mTransformer : public matrix
+	{
+	public:
+		mTransformer(void);
+		mTransformer(mTransformer&);
 
-virtual	void transform( mTransformer& );
-	matrix& operator = (matrix& m) { return matrix::operator=(m); }
-};
+		void rotate(real through, matrix& about, matrix& putFrom);
+		void rotate(real through, mLine& about);
+		void rotateX(real through);
+		void rotateY(real through);
+		void rotateZ(real through);
+		void translate(matrix& to, matrix& putFrom);
+		void translate(real x, real y, real z, matrix& putFrom);
+		void scale(real Kx, real Ky, real Kz, matrix& about);
+		void reset(void);
+		void concatenate(mTransformer&);
+	};
 
-#endif //transform_h
+	class mTransformable : public matrix
+	{
+	public:
+		mTransformable(int rows);
+		mTransformable(real init_value, int rows);
+		mTransformable(mTransformable&);
+		mTransformable(void);
+
+		virtual	void transform(mTransformer&);
+		matrix& operator = (matrix& m) { return matrix::operator=(m); }
+	};
+
+} // namespace dkmrx
+#endif // dkmrx_transfrm_hpp

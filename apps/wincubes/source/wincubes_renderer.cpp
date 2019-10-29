@@ -30,6 +30,8 @@ Modification history:
 #include "cubes_geometry.hpp"
 #include "resource.h"
 
+using namespace dkmrx;
+
 WinCubesRenderer::WinCubesRenderer(HWND hWnd) {
 	hWnd_ = hWnd;
 	hdc_ = GetDC(hWnd);

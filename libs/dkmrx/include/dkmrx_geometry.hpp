@@ -26,38 +26,41 @@ Modification history:
 
 */
 
-#ifndef geometry_h
-#define geometry_h
+#ifndef dkmrx_geometry_hpp
+#define dkmrx_geometry_hpp
 
 #include "dkmrx_transfrm.hpp"
 
-class mPoint: public mTransformable
-{
-public:
+namespace dkmrx {
 
-	mPoint(real x=0, real y=0, real z=0, real w=1);
-	mPoint( mPoint& );
+	class mPoint : public mTransformable
+	{
+	public:
 
-	real	distance( mPoint& );
-	real	x(void)     { return (*this)[0][0]/(*this)[0][3]; }
-	void	x(real X) { (*this)[0][0] = (real)((*this)[0][3] * X); }
-	real	y(void)     { return (*this)[0][1]/(*this)[0][3]; }
-	void	y(real Y) { (*this)[0][1] = (real)((*this)[0][3] * Y); }
-	real	z(void)     { return (*this)[0][2]/(*this)[0][3]; }
-	void	z(real Z) { (*this)[0][2] = (real)((*this)[0][3] * Z); }
-	real	w(void)     { return (*this)[0][3]; }
-	void	w(real);
-};
+		mPoint(real x = 0, real y = 0, real z = 0, real w = 1);
+		mPoint(mPoint&);
 
-class mLine: public mTransformable
-{
-public:
+		real	distance(mPoint&);
+		real	x(void) { return (*this)[0][0] / (*this)[0][3]; }
+		void	x(real X) { (*this)[0][0] = (real)((*this)[0][3] * X); }
+		real	y(void) { return (*this)[0][1] / (*this)[0][3]; }
+		void	y(real Y) { (*this)[0][1] = (real)((*this)[0][3] * Y); }
+		real	z(void) { return (*this)[0][2] / (*this)[0][3]; }
+		void	z(real Z) { (*this)[0][2] = (real)((*this)[0][3] * Z); }
+		real	w(void) { return (*this)[0][3]; }
+		void	w(real);
+	};
 
-	mLine(mPoint& point1, mPoint& point2, real par1 = 0, real par2 = 1);
-	mLine( void );
-	mLine( mLine& );
+	class mLine : public mTransformable
+	{
+	public:
 
-	mPoint& point( real par );
-};
+		mLine(mPoint& point1, mPoint& point2, real par1 = 0, real par2 = 1);
+		mLine(void);
+		mLine(mLine&);
 
-#endif //geometry_h
+		mPoint& point(real par);
+	};
+
+}	// namespace dkmrx
+#endif //dkmrx_geometry_hpp

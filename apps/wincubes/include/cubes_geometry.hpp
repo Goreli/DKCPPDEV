@@ -40,7 +40,7 @@ void     getSize(unsigned* pxdim, unsigned* pydim);
 void	 stop(void) 	{ active_ = 0; }
 void	 cont(void)	{ active_ = 1; }
 
-mTransformable& getCube(int i, int j) { return cubes_[i][j]; }
+dkmrx::mTransformable& getCube(int i, int j) { return cubes_[i][j]; }
 int	 act(void);
 
 private:
@@ -61,10 +61,10 @@ typedef int (CubesGeometry::*ACTPTR)(void);
 	ACTPTR acts_[6] = {&CubesGeometry::act1_, &CubesGeometry::act2_, 
 		&CubesGeometry::act3_, &CubesGeometry::act4_, &CubesGeometry::act5_,
 		nullptr};
-	mTransformable cubes_[9][4];
-	matrix centre_[9];
-	mPoint origin_, scrCntr_;
-	mLine diag_;
+	dkmrx::mTransformable cubes_[9][4];
+	dkmrx::matrix centre_[9];
+	dkmrx::mPoint origin_, scrCntr_;
+	dkmrx::mLine diag_;
 	double radius_;
 	int active_;
 	unsigned xdim_;

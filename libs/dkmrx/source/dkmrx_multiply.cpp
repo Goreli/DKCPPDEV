@@ -29,6 +29,8 @@ Modification history:
 #include "dkmrx_matrix.hpp"
 #include "dkmrx_error.hpp"
 
+using namespace dkmrx;
+
 #if defined(I387_32)
 static void multiply_in_assembler_on_4_by_4
 (real* ToTransform, real* Transformer, real* Transformed, unsigned long Rows);

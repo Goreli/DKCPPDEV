@@ -31,6 +31,8 @@ Modification history:
 #include "dkmrx_error.hpp"
 #include "dkmrx_gausseln.hpp"
 
+using namespace dkmrx;
+
 matrix& matrix::operator / (matrix& A)
 {
 	mError::set();

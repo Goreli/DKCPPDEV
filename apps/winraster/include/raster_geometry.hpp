@@ -29,9 +29,12 @@ Modification history:
 #ifndef raster_geometry_hpp
 #define raster_geometry_hpp
 
-class mPoint;
-class mLine;
-class mTransformable;
+// Forward declarations:
+namespace dkmrx {
+	class mPoint;
+	class mLine;
+	class mTransformable;
+}
 
 typedef unsigned char uch;
 
@@ -66,20 +69,20 @@ private:
 	struct RGBPixel_;
 	std::unique_ptr<RGBPixel_[]> pixels_;
 
-	std::unique_ptr<mTransformable> initialCoords_;
-	std::unique_ptr<mTransformable> transformedCoords_;
+	std::unique_ptr<dkmrx::mTransformable> initialCoords_;
+	std::unique_ptr<dkmrx::mTransformable> transformedCoords_;
 
 	int rasterWidth_;
 	int rasterHeight_;
 	double rasterRadius_;
-	std::unique_ptr<mPoint> rasterCentre_;
+	std::unique_ptr<dkmrx::mPoint> rasterCentre_;
 
 	int frameCounter_;
 
 // Size dependant items
 	double windowRadius_;
-	std::unique_ptr<mPoint> windowCentre_;
-	std::unique_ptr<mLine> windowDiag_;
+	std::unique_ptr<dkmrx::mPoint> windowCentre_;
+	std::unique_ptr<dkmrx::mLine> windowDiag_;
 };
 
 #endif // raster_geometry_hpp

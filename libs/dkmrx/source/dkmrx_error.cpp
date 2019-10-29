@@ -36,6 +36,8 @@ Modification history:
 #endif
 */
 
+using namespace dkmrx;
+
 int mError::code_ = 0;
 int mError::parameter1_ = 0;
 int mError::parameter2_ = 0;

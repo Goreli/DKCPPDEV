@@ -26,27 +26,28 @@ Modification history:
 
 */
 
-#ifndef error_h
-#define error_h
+#ifndef dkmrx_error_hpp
+#define dkmrx_error_hpp
+namespace dkmrx {
 
-class mError
-{
-public:
+	class mError
+	{
+	public:
 
-static void set(int code = 0,int param1 = 0,int param2 = 0) { code_ = code; parameter1_ = param1; parameter2_ = param2; }
-static int  get_code(void)                              { return code_; }
-static int  get_param1(void)                            { return parameter1_; }
-static int  get_param2(void)                            { return parameter2_; }
-static void display_message(bool flag = true)       { display_message_ = flag; }
-static void message(const char* message, const char* title = 0);
+		static void set(int code = 0, int param1 = 0, int param2 = 0) { code_ = code; parameter1_ = param1; parameter2_ = param2; }
+		static int  get_code(void) { return code_; }
+		static int  get_param1(void) { return parameter1_; }
+		static int  get_param2(void) { return parameter2_; }
+		static void display_message(bool flag = true) { display_message_ = flag; }
+		static void message(const char* message, const char* title = 0);
 
-private:
+	private:
 
-static int      code_;
-static int      parameter1_;
-static int      parameter2_;
-static bool display_message_;
-};
+		static int      code_;
+		static int      parameter1_;
+		static int      parameter2_;
+		static bool display_message_;
+	};
 
 #define MERR_INCOMPATIBLE_MATRICES              30001
 #define MERR_INSUFFICIENT_MEMORY                30002
@@ -68,4 +69,5 @@ static bool display_message_;
 #define MERR_NOT_IMPLEMENTED                    30018
 #define MERR_GENERIC_ERROR                      30019
 
-#endif // error_h
+}	// namespace dkmrx
+#endif // dkmrx_error_hpp

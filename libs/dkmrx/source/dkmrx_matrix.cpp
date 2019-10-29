@@ -26,18 +26,17 @@ Modification history:
 
 */
 
-#include "dkmrx_matrix.hpp"    
 #include <string.h>
 #include <stdio.h>
+#include "dkmrx_matrix.hpp"    
 #include "dkmrx_error.hpp"
+
+using namespace dkmrx;
 
 #if defined(MATRIX_DEBUG)
 int	matrix::Created = 0;
 int	matrix::Destroied = 0;
 #endif
-
-
-
 
 matrix::matrix(void)
 {

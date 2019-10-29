@@ -35,8 +35,11 @@ Modification history:
 
 #include <memory>
 
+// Forward references:
 class CubesGeometry;
-class mTransformable;
+namespace dkmrx {
+	class mTransformable;
+}
 
 class WinCubesRenderer {
 private:
@@ -60,7 +63,7 @@ private:
 	std::unique_ptr<CubesGeometry> pCubesGeom_;
 
 	void renderAllCubes_(void);
-	void renderCube_(mTransformable&);
+	void renderCube_(dkmrx::mTransformable&);
 	void erasePreviousCubes_();
 
 public:

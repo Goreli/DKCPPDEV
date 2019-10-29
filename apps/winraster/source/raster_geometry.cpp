@@ -31,10 +31,11 @@ Modification history:
 #include "dkmrx_geometry.hpp"
 #include "raster_geometry.hpp"
 
-const double myPi = 3.14159265358979323846;
-
+using namespace dkmrx;
 using std::ios;
 using std::fstream;
+
+const double myPi = 3.14159265358979323846;
 
 struct RasterGeometry::RGBPixel_
 {

@@ -47,7 +47,7 @@ private:
 
 public:
 	int readInfoHeader(std::istream& inStream);
-	void wbmp2mrx(long lOffset, std::istream& inStream, matrix& mrx);
+	void wbmp2mrx(long lOffset, std::istream& inStream, dkmrx::matrix& mrx);
 	bool isFormatSupported(void);
 	void printProperties(int sizeOfInfoHeader);
 	LONG getHeight();
