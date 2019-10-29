@@ -15,7 +15,7 @@ The root directory contains git specific configuration files e.g. .gitignore and
 Refer individual readme.md files located in subdirectories of the directories listed above for detailed description of the respective content. A high level overview of the content follows.
  
 ### Content of the [apps](apps) directory 
- * [apps/winbmp2mrx](apps/winbmp2mrx) - a Windows Console application that creates test data files for the [apps/winraster](apps/winraster) sample application;
+ * [apps/winbmp2mrx](apps/winbmp2mrx) - a Windows Console application that converts Windows Bitmap files into DKMRX Matrix data files. The data files can then be consumed by the [apps/winraster](apps/winraster) sample application;
  * [apps/wincubes](apps/wincubes) - a sample Windows Desktop application that demonstrates how to use the [libs/dkmrx](libs/dkmrx) matrix library to perform 3D coordinate transformation in **Vector Graphics** applications;
  * [apps/winraster](apps/winraster) - a sample Windows Desktop program that demonstrates how to use the [libs/dkmrx](libs/dkmrx) matrix library to perform 3D coordinate transformation in **Raster Graphics** applications.
 
@@ -35,7 +35,5 @@ Open the dkcppdev.sln Visual Studio 2019 Solution file located in the root direc
 
 Earlier versions of the library are known to compile on non-Windows platforms such as Silicon Graphics, Solaris and Ubuntu. This repo does not contain any build artefacts used for those builds. 
 
-Here is some interesting information on how to generate makefiles from Visual Studio Solution files:
+Should there be a need to set up a different build system (CMake?) refer individual readme.md files located in the source code directories. These files contain detail that can be used for the build configuration purposes. Also, here is some interesting information on how to generate makefiles from Visual Studio Solution files:
 https://sourceforge.net/projects/vcproj2cmake/ (I haven't tried to use it yet).
-
-Should there be a need to set up a different build system refer individual readme.md files located in the source code directories. These files contain detail that can be used for the build configuration purposes.
