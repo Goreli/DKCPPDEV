@@ -33,7 +33,7 @@ This repo has been tested using the following platform(s) and attributes:
 
 Open the dkcppdev.sln Visual Studio 2019 Solution file located in the root directory to build all the targets.
 
-Earlier versions of the library are known to compile on non-Windows platforms such as Silicon Graphics, Solaris and Ubuntu. This repo does not contain any build artefacts used for those builds. 
+Earlier versions of the [libs/dkmrx](libs/dkmrx) library are known to compile on non-Windows platforms such as Silicon Graphics, Solaris and Ubuntu. This repo does not contain any build artefacts used for those builds. 
 
 Should there be a need to set up a different build system (CMake?) refer individual readme.md files located in the source code directories. These files contain detail that can be used for the build configuration purposes. Also, here is some interesting information on how to generate makefiles from Visual Studio Solution files:
 https://sourceforge.net/projects/vcproj2cmake/ (I haven't tried to use it yet).
