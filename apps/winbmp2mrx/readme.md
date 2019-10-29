@@ -20,4 +20,4 @@ No optimisation has been used in the Debug configuration. Specifically in the Re
 
 1. Remove dependency on <stdio.h> in module winbmpfilereader.cpp;
 2. Use multithreading to read the input file and process the content;
-3. Deprecate this application in favour of a more generic application that would use a uniform command line interface to convert relevant file formats including binary of some sort and delimited text - refer the DKMRX roadmap.
+3. Deprecate this application in favour of a more generic application that would use a uniform command line interface to convert relevant file formats including binary of some sort and delimited text - refer the [../../libs/dkmrx](../../libs/dkmrx) library roadmap.
