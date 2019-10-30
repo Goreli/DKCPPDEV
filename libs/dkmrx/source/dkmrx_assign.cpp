@@ -28,7 +28,6 @@ Modification history:
 
 #include "dkmrx_matrix.hpp"
 #include "dkmrx_error.hpp"
-#include <stdlib.h>
 
 using namespace dkmrx;
 
@@ -45,26 +44,26 @@ matrix& matrix::operator=(matrix& mx)
 	    return *this; //  else can I do?
 	}
 
-	if( mx.Values == NULL )
+	if( mx.Values == nullptr)
 	{
 	    if ( mx.Status== STATUS::TEMPORARY ) delete &mx;
 	    empty();
 	    return *this;
 	}
 
-	if ( Values != NULL ) delete [] Values;
+	if ( Values != nullptr) delete [] Values;
 	Rows=mx.Rows;
 	Columns=mx.Columns;
 	if ( mx.Status == STATUS::TEMPORARY )
 	{
 	    Values=mx.Values;
-	    mx.Values = NULL;
+	    mx.Values = nullptr;
 	    delete &mx;
 	    return *this;
 	}
 	size_t MatSize = mx.Rows * mx.Columns;
 	Values= new real[MatSize];
-	if ( Values == NULL )
+	if ( Values == nullptr)
 	{
 	    mError::set( MERR_INSUFFICIENT_MEMORY );
 	    mError::message("Not enough memory","matrix::operator =");

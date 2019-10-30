@@ -59,9 +59,6 @@
     <ClInclude Include="..\include\dkmrx_geometry.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\dkmrx_linsys.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\dkmrx_matrix.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

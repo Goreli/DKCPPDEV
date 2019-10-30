@@ -26,9 +26,9 @@ Modification history:
 
 */
 
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
+#include <iostream>
+#include <cstring>
+#include <cctype>
 #include "dkmrx_matrix.hpp"
 #include "dkmrx_error.hpp"
 
@@ -48,12 +48,12 @@ std::streamsize tempPrecision = out.precision();
 	}
 
     out<<"Matrix: "; 
-    if ( mx.Name != NULL ) out<<mx.Name;
+    if ( mx.Name != nullptr) out<<mx.Name;
     out<<"\n";
     out<<"rows "<<mx.Rows<<"; columns "<<mx.Columns;
     out<<"; width "<<tempWidth<<"; precision "<<tempPrecision<<"\n";
     
-	if ( mx.Values != NULL )
+	if ( mx.Values != nullptr)
 	for ( int i=0; i<mx.Rows; i++ )
 	{
 	  for ( int j=0; j<mx.Columns; j++ )
@@ -78,13 +78,13 @@ std::istream& dkmrx::operator>>(std::istream& in,matrix& mx)
       delete &mx;
       return in;                                            
     }  
-    if ( mx.Values != NULL )
+    if ( mx.Values != nullptr)
 	mx.empty();
 // READ HEADER             
 int   chcount = 81; // both header strings are assumed to be less than 80 ch long
 char* tempptr;     
 	char* str    = new char[chcount];
-	if ( str == NULL )
+	if ( str == nullptr)
 	{
 		mError::set( MERR_INSUFFICIENT_MEMORY );
 		mError::message("Not enough memory","matrix::operator >>");
@@ -94,7 +94,7 @@ char* tempptr;
     do
     {
       in.getline(str,chcount); 
-      tempptr = strstr(str_lwr(str),"matrix:");
+      tempptr = std::strstr(str_lwr(str),"matrix:");
     } 
     while( !tempptr && !in.eof() );
     if( in.eof() )
@@ -104,10 +104,10 @@ char* tempptr;
       mError::message("can not find first header row","matrix::operator >>");
       return in;
     }                                                       
-    tempptr += strlen("matrix:");
+    tempptr += std::strlen("matrix:");
     while( *tempptr == ' ' )
 	tempptr++;
-	if( strlen(tempptr) != 0 )
+	if(std::strlen(tempptr) != 0 )
 		mx.name( tempptr );
 // read and and parse the second header row
 	in.getline(str,chcount);
@@ -120,26 +120,26 @@ char* tempptr;
       return in;
     }
 int flag = 0;
-	tempptr = strstr(str_lwr(str),"rows");
-	if( tempptr != NULL )
+	tempptr = std::strstr(str_lwr(str),"rows");
+	if( tempptr != nullptr)
 	{
-	  tempptr += strlen("rows")+1;
-	  mx.Rows = atoi(tempptr);
+	  tempptr += std::strlen("rows")+1;
+	  mx.Rows = std::atoi(tempptr);
 	} 
 	else flag++;
-	tempptr = strstr(str_lwr(str),"columns");
-	if( tempptr != NULL )
+	tempptr = std::strstr(str_lwr(str),"columns");
+	if( tempptr != nullptr)
 	{
-	  tempptr += strlen("columns")+1;
-	  mx.Columns = atoi(tempptr);
+	  tempptr += std::strlen("columns")+1;
+	  mx.Columns = std::atoi(tempptr);
 	} 
 	else flag++;
 int wid=0;
-	tempptr = strstr(str_lwr(str),"width");
-	if( tempptr != NULL )
+	tempptr = std::strstr(str_lwr(str),"width");
+	if( tempptr != nullptr)
 	{
-	  tempptr += strlen("width")+1;
-	  wid = atoi(tempptr);
+	  tempptr += std::strlen("width")+1;
+	  wid = std::atoi(tempptr);
 	} 
 	else flag++;
 	if( 
@@ -159,7 +159,7 @@ int wid=0;
 chcount = mx.Columns * wid * 2;
 delete [] str;
 	str    = new char[chcount];
-	if ( str == NULL )
+	if ( str == nullptr)
 	{
 	  mx.empty();
 	  mError::set( MERR_INSUFFICIENT_MEMORY );
@@ -167,7 +167,7 @@ delete [] str;
 	  return in;
 	}
 	mx.Values = new real [ mx.Rows * mx.Columns ];
-	if ( mx.Values == NULL )
+	if ( mx.Values == nullptr)
 	{
 	  delete [] str;
 	  mx.empty();
@@ -186,11 +186,11 @@ delete [] str;
     		  mError::message("Unexpected end of file","matrix::operator >>");
 		  return in;
 		} 
-		tempptr = strtok(str," \t,;");
+		tempptr = std::strtok(str," \t,;");
 		for(int col=0; col<mx.Columns; col++)
 		{
-		  mx[row][col] = (real) atof(tempptr);
-		  tempptr = strtok(NULL," \t,;");
+		  mx[row][col] = (real)std::atof(tempptr);
+		  tempptr = std::strtok(nullptr," \t,;");
 		}
 	}
 //Done!
@@ -212,7 +212,7 @@ char* c=str;
 */
 char* c = str;
 	while (*c != '\000')
-		*c++ = (char)tolower(*c);
+		*c++ = (char)std::tolower(*c);
 	return str;
 }
 

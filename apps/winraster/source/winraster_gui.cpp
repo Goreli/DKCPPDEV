@@ -26,15 +26,12 @@ Modification history:
 
 */
 
-#define STRICT
-#define WIN64_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
-#include <windows.h>
-#include <commdlg.h>
-#include <memory>
 
 #include "winraster_gui.h"
 #include "winraster_renderer.hpp"
-//#include "raster_geometry.hpp"
+
+#include <commdlg.h>
+#include <memory>
 
 using namespace std;
 

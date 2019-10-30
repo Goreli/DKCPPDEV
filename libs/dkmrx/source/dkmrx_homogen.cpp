@@ -26,8 +26,6 @@ Modification history:
 
 */
 
-#include <stdlib.h>
-#include <math.h>
 #include "dkmrx_matrix.hpp"
 #include "dkmrx_error.hpp"
 
@@ -50,14 +48,14 @@ int matrix::toHG(real scaleFactor)    // to HomoGeneous form
     delete  this;
     return 1;
   }
-  if ( Values == NULL ) 
+  if ( Values == nullptr ) 
   {
     mError::set( MERR_WRONG_THIS_OBJECT, 0 );
     mError::message("Can not apply to an EMPTY object","matrix::toHG");
     return 2;
   }
   real* newval = new real [(Columns+1) * Rows];
-  if ( newval == NULL)
+  if ( newval == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY );
     mError::message("Not enough memory","convertToHG");
@@ -101,7 +99,7 @@ int matrix::fromHG()    // from HomoGeneous form
     delete this;
     return 1;
   }
-  if ( Values == NULL ) 
+  if ( Values == nullptr)
   {
     mError::set( MERR_WRONG_THIS_OBJECT, 0 );
     mError::message("Can not apply to an EMPTY object","matrix::fromHG");
@@ -114,7 +112,7 @@ int matrix::fromHG()    // from HomoGeneous form
     return 3;
   }
   real* newval = new real [(Columns-1) * Rows];
-  if ( newval == NULL)
+  if ( newval == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY );
     mError::message("Not enough memory","convertToHG");

@@ -27,8 +27,7 @@ Modification history:
 */
 
 // All coordinates are considered in the world (right) coordinate system.
-#include <stdlib.h>
-#include <math.h>
+#include <cmath>
 #include "dkmrx_geometry.hpp"
 #include "dkmrx_error.hpp"
 
@@ -62,7 +61,7 @@ void mTransformer::rotate(real through,matrix& about,matrix& putFrom)
 //Chapter22:
 {
   mError::set();
-  if ( putFrom[0] == NULL )
+  if ( putFrom[0] == nullptr)
   {
     mError::set( MERR_WRONG_ARGUMENT, 3 );
     mError::message("Wrong third argument","mTransformer::rotation");
@@ -70,7 +69,7 @@ void mTransformer::rotate(real through,matrix& about,matrix& putFrom)
     if ( about.status() == STATUS::TEMPORARY )   delete &about;
     return;
   }
-  if ( about[0] == NULL )
+  if ( about[0] == nullptr)
   {
     mError::set( MERR_WRONG_ARGUMENT, 2 );
     mError::message("Wrong second argument","mTransformer::rotation");
@@ -80,7 +79,7 @@ void mTransformer::rotate(real through,matrix& about,matrix& putFrom)
   }                          
  
   mTransformer *r = new mTransformer; 
-  if( r == NULL )
+  if( r == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 1 );
     mError::message("Not enough memory","mTransformer::rotation");
@@ -88,7 +87,7 @@ void mTransformer::rotate(real through,matrix& about,matrix& putFrom)
     if ( about.status() == STATUS::TEMPORARY )   delete &about;
     return;
   } 
-  if ( (*r)[0] == NULL  )
+  if ( (*r)[0] == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
     mError::message("Not enough memory","mTransformer::rotation");
@@ -376,12 +375,12 @@ pop_4_and_finish:
 
   if ( v != 0.0 )
   {
-	v=pow(v,0.5);
+	v=std::pow(v,0.5);
 	a/=v; b/=v; c/=v;
 	// Normalization done.
 
-	real Z1  = 1 - cos(through);
-	real z2 = sin(through);
+	real Z1  = 1 - std::cos(through);
+	real z2 = std::sin(through);
 
 	real ABZ1  = a*b*Z1;
 	real CZ2 = c*z2;
@@ -454,13 +453,13 @@ void mTransformer::rotateX(real through)
 {
   mError::set();
   mTransformer *r = new mTransformer;
-  if ( r == NULL )
+  if ( r == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 1 );
     mError::message("Not enough memory","rotationX");
     return;
   }      
-  if ( (*r)[0] == NULL )
+  if ( (*r)[0] == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
     mError::message("Not enough memory","rotationX");
@@ -468,8 +467,8 @@ void mTransformer::rotateX(real through)
     return;
   }      
 
-  (*r)[1][1] = (*r)[2][2] = (real) cos(through);
-  (*r)[2][1] = (*r)[1][2] = (real) sin(through);
+  (*r)[1][1] = (*r)[2][2] = (real)std::cos(through);
+  (*r)[2][1] = (*r)[1][2] = (real)std::sin(through);
   (*r)[1][2] *= (real) -1.0;
   (*this) *= *r;
   delete r;
@@ -482,13 +481,13 @@ void mTransformer::rotateY(real through)
 {
   mError::set();
   mTransformer *r = new mTransformer;
-  if ( r == NULL )
+  if ( r == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 1 );
     mError::message("Not enough memory","rotationY");
     return;
   }      
-  if ( (*r)[0] == NULL )
+  if ( (*r)[0] == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
     mError::message("Not enough memory","rotationY");
@@ -496,8 +495,8 @@ void mTransformer::rotateY(real through)
     return;
   }      
 
-  (*r)[0][0] = (*r)[2][2] = (real) cos(through);
-  (*r)[2][0] = (*r)[0][2] = (real) sin(through);
+  (*r)[0][0] = (*r)[2][2] = (real)std::cos(through);
+  (*r)[2][0] = (*r)[0][2] = (real)std::sin(through);
   (*r)[2][0] *= (real) -1.0;
   (*this) *= *r;
   delete r;
@@ -510,13 +509,13 @@ void mTransformer::rotateZ(real through)
 {
   mError::set();
   mTransformer *r = new mTransformer;
-  if ( r == NULL )
+  if ( r == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 1 );
     mError::message("Not enough memory","rotationZ");
     return;
   }      
-  if ( (*r)[0] == NULL )
+  if ( (*r)[0] == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
     mError::message("Not enough memory","rotationZ");
@@ -524,8 +523,8 @@ void mTransformer::rotateZ(real through)
     return;
   }      
 
-  (*r)[0][0] = (*r)[1][1] = (real) cos(through);
-  (*r)[1][0] = (*r)[0][1] = (real) sin(through);
+  (*r)[0][0] = (*r)[1][1] = (real)std::cos(through);
+  (*r)[1][0] = (*r)[0][1] = (real)std::sin(through);
   (*r)[0][1] *= (real) -1.0;
   (*this) *= *r;
   delete r;
@@ -537,7 +536,7 @@ void mTransformer::translate(matrix& to, matrix& putFrom)
 //Chapter22:
 {
   mError::set();
-  if ( putFrom[0] == NULL )
+  if ( putFrom[0] == nullptr)
   {
     mError::set( MERR_WRONG_ARGUMENT, 2 );
     mError::message("Wrong second argument","mTransformer::translation");
@@ -545,7 +544,7 @@ void mTransformer::translate(matrix& to, matrix& putFrom)
     if ( to.status() == STATUS::TEMPORARY )      delete &to;
     return;
   }
-  if ( to[0] == NULL )
+  if ( to[0] == nullptr)
   {
     mError::set( MERR_WRONG_ARGUMENT, 1 );
     mError::message("Wrong first argument","mTransformer::translation");
@@ -555,13 +554,13 @@ void mTransformer::translate(matrix& to, matrix& putFrom)
   }                          
 
   mTransformer *r = new mTransformer;
-  if ( r == NULL )
+  if ( r == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 1 );
     mError::message("Not enough memory","translation");
     return;
   }      
-  if ( (*r)[0] == NULL )
+  if ( (*r)[0] == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
     mError::message("Not enough memory","translation");
@@ -585,7 +584,7 @@ void mTransformer::translate(real x,real y,real z, matrix& putFrom)
 //Chapter22:
 {
   mError::set();
-  if ( putFrom[0] == NULL )
+  if ( putFrom[0] == nullptr)
   {
     mError::set( MERR_WRONG_ARGUMENT, 4 );
     mError::message("Wrong fourth argument","mTransformer::translation");
@@ -594,13 +593,13 @@ void mTransformer::translate(real x,real y,real z, matrix& putFrom)
   }
 
   mTransformer *r = new mTransformer;
-  if ( r == NULL )
+  if ( r == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 1 );
     mError::message("Not enough memory","translation");
     return;
   }      
-  if ( (*r)[0] == NULL )
+  if ( (*r)[0] == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
     mError::message("Not enough memory","translation");
@@ -623,7 +622,7 @@ void mTransformer::scale(real Kx,real Ky,real Kz, matrix& about)
 //Chapter22:
 {
   mError::set();
-  if ( about[0] == NULL )
+  if ( about[0] == nullptr)
   {
     mError::set( MERR_WRONG_ARGUMENT, 4 );
     mError::message("Wrong fourth argument","mTransformer::scaling");
@@ -632,13 +631,13 @@ void mTransformer::scale(real Kx,real Ky,real Kz, matrix& about)
   }                          
 
   mTransformer *r = new mTransformer;
-  if ( r == NULL )
+  if ( r == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 1 );
     mError::message("Not enough memory","scaling");
     return;
   }      
-  if ( (*r)[0] == NULL )
+  if ( (*r)[0] == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
     mError::message("Not enough memory","scaling");

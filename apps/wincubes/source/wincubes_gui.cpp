@@ -26,10 +26,6 @@ Modification history:
 
 */
 
-#define STRICT
-#define WIN64_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
-#include <windows.h>
-
 #include "wincubes_gui.h"
 #include "wincubes_renderer.hpp"
 

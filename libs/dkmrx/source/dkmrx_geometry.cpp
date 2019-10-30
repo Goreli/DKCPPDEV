@@ -27,7 +27,7 @@ Modification history:
 */
 
 // All coordinates are considered in the morld (right) coordinate system
-#include <math.h>
+#include <cmath>
 #include "dkmrx_geometry.hpp"
 #include "dkmrx_error.hpp"
 
@@ -64,11 +64,11 @@ double mPoint::distance(mPoint& point)
 		if( this->status() == STATUS::TEMPORARY ) delete this;
 		return 0.0;
 	}
-	double dist = pow
+	double dist = std::pow
 			(
-				pow(this->x() - point.x(), 2.0) +
-				pow(this->y() - point.y(), 2.0) +
-				pow(this->z() - point.z(), 2.0),
+				std::pow(this->x() - point.x(), 2.0) +
+				std::pow(this->y() - point.y(), 2.0) +
+				std::pow(this->z() - point.z(), 2.0),
 				0.5
 			);
 	if( point.status() == STATUS::TEMPORARY ) delete &point;
@@ -157,11 +157,11 @@ mPoint& mLine::point(double par)
 	mError::set();
 matrix *pnt = new matrix;
 
-	if ( pnt == NULL )
+	if ( pnt == nullptr )
 	{
 	    mError::set( MERR_INSUFFICIENT_MEMORY );
 	    mError::message("Not enough memory","mLine::point");
-	    return *((mPoint*)NULL);
+	    return *((mPoint*)nullptr);
 	}
 
 matrix temp(1,2);

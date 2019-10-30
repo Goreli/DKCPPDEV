@@ -44,7 +44,7 @@ matrix& matrix::operator * (double k)
 	mError::set();
 matrix *mx1;
 
-	if( Values == NULL )
+	if( Values == nullptr)
 	{
 		mError::set( MERR_WRONG_THIS_OBJECT );
 		mError::message("Matrix has no values","matrix::operator *(double)");
@@ -64,7 +64,7 @@ real *finish = start + Columns*Rows;
 	else
 	{
 		mx1 = new matrix(Rows, Columns);
-	 	if( mx1->Values==NULL)
+	 	if( mx1->Values== nullptr)
 		{
 		  mError::set( MERR_INSUFFICIENT_MEMORY );
 		  mError::message("Not enough memory","matrix::operator *");
@@ -83,8 +83,8 @@ matrix& matrix::operator * (matrix& mx)
 {
 	mError::set();
 	if( (Columns != mx.Rows) ||
-	    (Values== NULL)      ||
-	    (mx.Values== NULL)
+	    (Values== nullptr)      ||
+	    (mx.Values== nullptr)
 	  )
 	{
 		mError::set( MERR_INCOMPATIBLE_MATRICES );
@@ -97,7 +97,7 @@ matrix& matrix::operator * (matrix& mx)
 	}
 
 	matrix *mx3=new matrix(Rows,mx.Columns);
-	if( mx3->Values==NULL)
+	if( mx3->Values== nullptr)
 	{
 	  mError::set( MERR_INSUFFICIENT_MEMORY );
 	  mError::message("Not enough memory","matrix::operator *");
@@ -164,8 +164,8 @@ matrix& matrix::operator *= (matrix& mx)
 		return *this; //  else can I do?
 	}
 	if( (this->Columns != mx.Rows)  ||
-		(this->Values== NULL)       ||
-		(mx.Values== NULL)
+		(this->Values== nullptr)       ||
+		(mx.Values== nullptr)
 	  )
 	{
 		mError::set( MERR_INCOMPATIBLE_MATRICES );
@@ -176,7 +176,7 @@ matrix& matrix::operator *= (matrix& mx)
 	}
 
 	real *temp = new real[(this->Rows)*(mx.Columns)];
-	if( temp == NULL )
+	if( temp == nullptr)
 	{
 	  mError::set( MERR_INSUFFICIENT_MEMORY );
 	  mError::message("Not enough memory","matrix::operator *=");

@@ -26,8 +26,10 @@ Modification history:
 
 */
 
+#include <iostream>
 #include "winbmpinfoheader.hpp"
 using namespace std;
+
 
 bool WinBMPInfoHeader::readFileHeader(BITMAPFILEHEADER& fileHeader, istream& inStream)
 {

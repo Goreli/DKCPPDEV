@@ -27,6 +27,7 @@ Modification history:
 */
 
 #include "dkmrx_matrix.hpp"
+#include "dkmrx_linsys.hpp"
 #include "dkmrx_error.hpp"
 #include "dkmrx_gausseln.hpp"
 
@@ -37,8 +38,8 @@ matrix& matrix::operator / (matrix& A)
 	mError::set();
 	if( (A.Columns  != A.Rows)     ||
 	    (A.Columns  != Rows)       ||
-	    (A.Values == nullptr)         ||
-	    (Values == nullptr)
+	    (A.Values == NULL)         ||
+	    (Values == NULL)
 	  )
 	{
 		mError::set( MERR_INCOMPATIBLE_MATRICES );
@@ -53,7 +54,7 @@ matrix& matrix::operator / (matrix& A)
     int gaussError=0;
 	matrix *x = new matrix(*this);
     
-	if( x->Values== nullptr)
+	if( x->Values==NULL)
 	{
 	    mError::set( MERR_INSUFFICIENT_MEMORY );
 	    mError::message("Not enough memory","matrix::operator /");
@@ -96,8 +97,8 @@ matrix& matrix::operator /= (matrix& A)
 	}
 	if( (A.Columns  != A.Rows)     ||
 	    (A.Columns  != Rows)       ||
-	    (A.Values == nullptr)         ||
-	    (this->Values == nullptr)
+	    (A.Values == NULL)         ||
+	    (this->Values == NULL)
 	  )
 	{
 		mError::set( MERR_INCOMPATIBLE_MATRICES );
@@ -137,7 +138,7 @@ matrix&  matrix::operator ~  (void)
 {
 	mError::set();
 	if( (this->Columns  != Rows)     ||
-	    (this->Values == nullptr)
+	    (this->Values == NULL)
 	  )
 	{
 		mError::set( MERR_WRONG_THIS_OBJECT );
@@ -149,7 +150,7 @@ matrix&  matrix::operator ~  (void)
 	}
 
     matrix *I = new matrix( matrix::identity(this->Columns) );
-	if( I->Values== nullptr)
+	if( I->Values==NULL)
 	{
 	    mError::set( MERR_INSUFFICIENT_MEMORY );
 	    mError::message("Not enough memory","matrix::operator ~");
@@ -160,3 +161,56 @@ matrix&  matrix::operator ~  (void)
 	return *I;                                            
 }                                                                          
 
+
+/************************************************************\
+*                         "linsys"                           *
+*     Base class for solving a system of linear equations    *
+\************************************************************/
+
+linsys::linsys(void)
+{
+	ToBeDone_               = 0;
+	ExcludedRows_           = NULL;
+	ExcludedColumns_        = NULL;
+	Done_                   = 0;
+	ExcludeList_            = NULL;
+	ExcludeListEntries_     = 0;
+	NumberOfSolutions_      = 0;
+}
+
+void linsys::exclude_rows_and_columns(unsigned* List, unsigned Entries)
+{
+	ExcludeList_            = List;
+	ExcludeListEntries_     = Entries;
+}
+
+void linsys::restore_rows_and_columns(void)
+{
+	ExcludeList_            = NULL;
+	ExcludeListEntries_     = 0;
+}
+
+/****************************************************\
+*  This function should be called at the end of the  *
+*  multistep function and performs basic accounting. *
+\****************************************************/
+
+int linsys::progress(void)
+{
+	if( Done_ == ToBeDone_ )
+		return 100;     //100%
+	Done_++;
+	if( Done_ == ToBeDone_ )
+		return 100;     //100%
+	else
+		return ( 100 * Done_ / ToBeDone_ );
+}
+
+bool linsys::is_excluded(unsigned Number)
+{
+	unsigned int Entry;
+	for(Entry = 0; Entry < ExcludeListEntries_; Entry++ )
+		if( ExcludeList_[Entry] == Number )
+			break;
+	return ( Entry < ExcludeListEntries_ )? true : false;
+}

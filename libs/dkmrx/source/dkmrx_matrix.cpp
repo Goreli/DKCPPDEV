@@ -26,8 +26,8 @@ Modification history:
 
 */
 
-#include <string.h>
-#include <stdio.h>
+#include <cstring>
+#include <cstdio>
 #include "dkmrx_matrix.hpp"    
 #include "dkmrx_error.hpp"
 
@@ -45,10 +45,10 @@ matrix::matrix(void)
 #endif
 	Rows=Columns=0;
 	Status=STATUS::PERMANENT;
-	Storage.MemoryArea = NULL;
-	Storage.FileName   = NULL;
-	Values=NULL;
-	Name=NULL;
+	Storage.MemoryArea = nullptr;
+	Storage.FileName   = nullptr;
+	Values= nullptr;
+	Name= nullptr;
 }
 
 matrix::matrix(int rows,int columns)
@@ -59,10 +59,10 @@ matrix::matrix(int rows,int columns)
 	mError::set();
 	Rows=rows;  Columns=columns;
 	Status= STATUS::PERMANENT;
-	Storage.MemoryArea = NULL;
-	Storage.FileName   = NULL;
-	Values=NULL;
-	Name=NULL;
+	Storage.MemoryArea = nullptr;
+	Storage.FileName   = nullptr;
+	Values= nullptr;
+	Name= nullptr;
 
 	if ( (Rows<=0) || (Columns<=0) )
 	{
@@ -77,7 +77,7 @@ matrix::matrix(int rows,int columns)
 	{
 		size_t MatSize=Rows * Columns;
 		Values= new real[MatSize];
-		if ( Values == NULL )
+		if ( Values == nullptr)
 		{
 			Rows=Columns=0;
 			mError::set( MERR_INSUFFICIENT_MEMORY );
@@ -94,10 +94,10 @@ matrix::matrix(real init_value,int rows,int columns)
 	mError::set();
 	Rows=rows;  Columns=columns;
 	Status= STATUS::PERMANENT;
-	Storage.MemoryArea = NULL;
-	Storage.FileName   = NULL;
-    Values=NULL;
-	Name=NULL;
+	Storage.MemoryArea = nullptr;
+	Storage.FileName   = nullptr;
+    Values= nullptr;
+	Name= nullptr;
 
 	if ( (Rows<=0) || (Columns<=0) )
 	{
@@ -112,7 +112,7 @@ matrix::matrix(real init_value,int rows,int columns)
 	{
 		size_t MatSize=Rows * Columns;
 		Values= new real[MatSize];
-		if ( Values == NULL )
+		if ( Values == nullptr)
 		{
 			Rows=Columns=0;
 			mError::set( MERR_INSUFFICIENT_MEMORY );
@@ -136,10 +136,10 @@ matrix::matrix(matrix& m)
 #endif
 	Rows=0;  Columns=0;
 	Status= STATUS::PERMANENT;
-	Storage.MemoryArea = NULL;
-	Storage.FileName   = NULL;
-	Values=NULL;
-	Name=NULL;
+	Storage.MemoryArea = nullptr;
+	Storage.FileName   = nullptr;
+	Values= nullptr;
+	Name= nullptr;
 
 	*this=m;
 }
@@ -149,17 +149,17 @@ matrix::~matrix()
 #if defined(MATRIX_DEBUG)
 	Destroied++;
 #endif
-	if (Values != NULL) delete [] Values;
-	if (Name   != NULL) delete [] Name;
+	if (Values != nullptr) delete [] Values;
+	if (Name   != nullptr) delete [] Name;
 }
 
 void matrix::empty()
 {
 	Rows=Columns=0;
-	if ( Values != NULL )
+	if ( Values != nullptr)
 	{
 		delete [] Values;
-		Values=NULL;
+		Values= nullptr;
 	}
 }
 
@@ -171,8 +171,8 @@ int matrix::storeValues(STORE_OPERATION So)
   if( So == STORE_OPERATION::SAVE )
   { 
     if (
-	( Storage.MemoryArea != NULL ) ||
-	( Storage.FileName   != NULL )                                 
+	( Storage.MemoryArea != nullptr) ||
+	( Storage.FileName   != nullptr)
        ) 
     {   
       mError::set( MERR_VALUES_ALREADY_SAVED );
@@ -180,37 +180,37 @@ int matrix::storeValues(STORE_OPERATION So)
       return 0;
     }                                          
     real* Tempreal = new real[ AreaSize ];
-    if ( Tempreal != NULL )
+    if ( Tempreal != nullptr)
     {
-      memcpy(Tempreal,Values,AreaSize*sizeof(real));
+      std::memcpy(Tempreal,Values,AreaSize*sizeof(real));
       Storage.MemoryArea = Values; 
       Values = Tempreal;
       return 0;
     }
   
     Storage.FileName = new char[L_tmpnam+1];
-    if ( Storage.FileName == NULL )
+    if ( Storage.FileName == nullptr)
     {
       mError::set( MERR_INSUFFICIENT_MEMORY );
       mError::message("Not enough memory","matrix::storeValues");
       return 1;
     } 
-    tmpnam( Storage.FileName );
-    FILE* Fptr = fopen(Storage.FileName,"mb");
-    if ( Fptr != NULL )
+	std::tmpnam( Storage.FileName );
+	std::FILE* Fptr = std::fopen(Storage.FileName,"mb");
+    if ( Fptr != nullptr)
     { 
-      if ( AreaSize == fwrite(Values,sizeof(real),AreaSize,Fptr ) )
+      if ( AreaSize == std::fwrite(Values,sizeof(real),AreaSize,Fptr ) )
       { 
-	fclose(Fptr);  
+		  std::fclose(Fptr);
 	return 0;
       }
-      fclose(Fptr);
-      remove( Storage.FileName );
+	  std::fclose(Fptr);
+	  std::remove( Storage.FileName );
     }    
     mError::set( MERR_FILE_WRITE );
     mError::message("Unable to mrite to a file","matrix::storeValues");
     delete [] Storage.FileName;
-    Storage.FileName = NULL;
+    Storage.FileName = nullptr;
     return 1;
   }               
   
@@ -218,38 +218,38 @@ int matrix::storeValues(STORE_OPERATION So)
   if( So == STORE_OPERATION::LOAD )
   { 
     if (
-	( Storage.MemoryArea == NULL ) &&
-	( Storage.FileName   == NULL )                                 
+	( Storage.MemoryArea == nullptr) &&
+	( Storage.FileName   == nullptr)
        ) 
     {   
       mError::set( MERR_VALUES_NOT_LOADED );
       mError::message("values have not been loaded","matrix::storeValues");
       return 0;
     }                                          
-    if ( Storage.MemoryArea != NULL )
+    if ( Storage.MemoryArea != nullptr)
     { 
       delete [] Values;
       Values = Storage.MemoryArea; 
-      Storage.MemoryArea = NULL;
+      Storage.MemoryArea = nullptr;
       return 0;
     } 
-    // So ..., Storage.FileName != NULL
-    FILE* Fptr = fopen(Storage.FileName,"rb");
-    if ( Fptr != NULL )
+    // So ..., Storage.FileName != nullptr
+	std::FILE* Fptr = std::fopen(Storage.FileName,"rb");
+    if ( Fptr != nullptr)
     {
-      if ( AreaSize == fread( Values,sizeof(real),AreaSize,Fptr ) )
+      if ( AreaSize == std::fread( Values,sizeof(real),AreaSize,Fptr ) )
       { 
-	fclose( Fptr );  
-	remove(Storage.FileName);
+		  std::fclose( Fptr );
+		  std::remove(Storage.FileName);
 	delete [] Storage.FileName;
-	Storage.FileName = NULL; 
+	Storage.FileName = nullptr;
 	return 0;
       } 
-      fclose(Fptr);
+	  std::fclose(Fptr);
     }  
-    remove(Storage.FileName);
+	std::remove(Storage.FileName);
     delete [] Storage.FileName;
-    Storage.FileName = NULL; 
+    Storage.FileName = nullptr;
     mError::set( MERR_FILE_READ );
     mError::message("Unable to read from a file","matrix::storeValues");
     return 1;
@@ -270,7 +270,7 @@ matrix& matrix::identity(int Dim)
   }
 
 matrix *I = new matrix(0.0, Dim, Dim);
-  if ( I->Values == NULL )
+  if ( I->Values == nullptr)
   {
 	mError::set( MERR_INSUFFICIENT_MEMORY );
 	mError::message("Not enough memory","matrix::identity");
@@ -290,11 +290,11 @@ void matrix::name(const char* N)
 {                     
   mError::set();
   delete [] Name;
-  if ( N == NULL ) Name = NULL;
+  if ( N == nullptr) Name = nullptr;
   else
   {
     Name = new char [ strlen(N) + 1 ];
-    if ( Name == NULL )
+    if ( Name == nullptr)
     {
 	mError::set( MERR_INSUFFICIENT_MEMORY );
 	mError::message("Not enough memory","matrix::setName");

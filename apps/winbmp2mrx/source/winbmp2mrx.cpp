@@ -26,6 +26,7 @@ Modification history:
 
 */
 
+#include<iostream>
 #include "winbmpinfoheader.hpp"
 #include "dkmrx_matrix.hpp"
 

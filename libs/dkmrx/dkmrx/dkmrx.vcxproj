@@ -35,7 +35,6 @@
     <ClInclude Include="..\include\dkmrx_error.hpp" />
     <ClInclude Include="..\include\dkmrx_gausseln.hpp" />
     <ClInclude Include="..\include\dkmrx_geometry.hpp" />
-    <ClInclude Include="..\include\dkmrx_linsys.hpp" />
     <ClInclude Include="..\include\dkmrx_matrix.hpp" />
     <ClInclude Include="..\include\dkmrx_transfrm.hpp" />
   </ItemGroup>

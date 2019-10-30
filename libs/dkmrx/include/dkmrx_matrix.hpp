@@ -29,7 +29,7 @@ Modification history:
 #ifndef dkmrx_matrix_hpp
 #define dkmrx_matrix_hpp
 
-#include <iostream>
+#include <iosfwd>
 
 namespace dkmrx {
 
@@ -63,7 +63,7 @@ namespace dkmrx {
 		real     mean_square(void);
 		real     det(void);
 		real     trace(void);
-		real* operator []    (int i) { return Values + (((int64_t)Columns) * ((int64_t)i)); }
+		real* operator []    (int i) { return Values + (((long long)Columns) * ((long long)i)); }
 		int      transpose(void);
 		matrix& extract(int FirstRow, int FirstCol,
 			int RowsTotal, int ColsTotal);
