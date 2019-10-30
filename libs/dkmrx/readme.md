@@ -103,4 +103,4 @@ No optimisation has been used in the Debug configuration. Specifically in the Re
 10. Gather column stats e.g. NaN counts, mean and stddev values;
 11. Convenient Data Science specific interface. Shortcuts for data preprocessing/cleanup, dimensionality reduction etc;
 12. Automatic testing;
-13. Remove standard C library include files (e.g. stdlib.h in dkmrx_add.cpp etc).
+13. Remove standard C library include files (e.g. stdlib.h in dkmrx_add.cpp etc). **Done. 31/Oct/2019**
