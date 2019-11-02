@@ -35,7 +35,7 @@ using namespace dkmrx;
 
 #if defined(MATRIX_DEBUG)
 int	matrix::Created = 0;
-int	matrix::Destroied = 0;
+int	matrix::Destroyed = 0;
 #endif
 
 matrix::matrix(void)
@@ -44,7 +44,7 @@ matrix::matrix(void)
 	Created++;
 #endif
 	Rows=Columns=0;
-	Status=STATUS::PERMANENT;
+	//Status=STATUS::PERMANENT;
 	Storage.MemoryArea = nullptr;
 	Storage.FileName   = nullptr;
 	Values= nullptr;
@@ -58,7 +58,7 @@ matrix::matrix(int rows,int columns)
 #endif
 	mError::set();
 	Rows=rows;  Columns=columns;
-	Status= STATUS::PERMANENT;
+	//Status= STATUS::PERMANENT;
 	Storage.MemoryArea = nullptr;
 	Storage.FileName   = nullptr;
 	Values= nullptr;
@@ -93,7 +93,7 @@ matrix::matrix(real init_value,int rows,int columns)
 #endif
 	mError::set();
 	Rows=rows;  Columns=columns;
-	Status= STATUS::PERMANENT;
+	//Status= STATUS::PERMANENT;
 	Storage.MemoryArea = nullptr;
 	Storage.FileName   = nullptr;
     Values= nullptr;
@@ -129,13 +129,13 @@ matrix::matrix(real init_value,int rows,int columns)
 	}
 }
 
-matrix::matrix(matrix& m)
+matrix::matrix(const matrix& m)
 {
 #if defined(MATRIX_DEBUG)
 	Created++;
 #endif
 	Rows=0;  Columns=0;
-	Status= STATUS::PERMANENT;
+	//Status= STATUS::PERMANENT;
 	Storage.MemoryArea = nullptr;
 	Storage.FileName   = nullptr;
 	Values= nullptr;
@@ -144,10 +144,25 @@ matrix::matrix(matrix& m)
 	*this=m;
 }
 
+matrix::matrix(matrix&& m) noexcept
+{
+#if defined(MATRIX_DEBUG)
+	Created++;
+#endif
+	Rows = 0;  Columns = 0;
+	//Status= STATUS::PERMANENT;
+	Storage.MemoryArea = nullptr;
+	Storage.FileName = nullptr;
+	Values = nullptr;
+	Name = nullptr;
+
+	*this = m;
+}
+
 matrix::~matrix()
 {
 #if defined(MATRIX_DEBUG)
-	Destroied++;
+	Destroyed++;
 #endif
 	if (Values != nullptr) delete [] Values;
 	if (Name   != nullptr) delete [] Name;
@@ -257,33 +272,38 @@ int matrix::storeValues(STORE_OPERATION So)
 return 1;             
 }                        
 
-matrix& matrix::identity(int Dim)
+matrix matrix::identity(int Dim)
 {
 	mError::set();
+	matrix identityMatrix;
+
   if ( Dim <= 0 )
   {
     mError::set( MERR_ILLEGAL_DIMENSION );
     mError::message("Illegal dimension","matrix::identity");
-    matrix *I = new matrix;
-    I->Status = STATUS::TEMPORARY;
-    return *I;
-  }
-
-matrix *I = new matrix(0.0, Dim, Dim);
-  if ( I->Values == nullptr)
-  {
-	mError::set( MERR_INSUFFICIENT_MEMORY );
-	mError::message("Not enough memory","matrix::identity");
+    //matrix *I = new matrix;
+    //I->Status = STATUS::TEMPORARY;
+    //return *I;
   }
   else
   {
-    int   step=Dim + 1;
-    real* Ptr;
-    real* PtrTop=I->Values + Dim*Dim;
-    for ( Ptr=I->Values; Ptr < PtrTop; Ptr += step ) *Ptr = 1.0;
+	  identityMatrix = matrix(0.0, Dim, Dim);
+	  if (identityMatrix.Values == nullptr)
+	  {
+		  mError::set(MERR_INSUFFICIENT_MEMORY);
+		  mError::message("Not enough memory", "matrix::identity");
+	  }
+	  else
+	  {
+		  int   step = Dim + 1;
+		  real* Ptr;
+		  real* PtrTop = identityMatrix.Values + Dim * Dim;
+		  for (Ptr = identityMatrix.Values; Ptr < PtrTop; Ptr += step) *Ptr = 1.0;
+	  }
   }
-  I->Status = STATUS::TEMPORARY;
-  return *I;
+
+  //I->Status = STATUS::TEMPORARY;
+  return identityMatrix;
 }
 
 void matrix::name(const char* N)

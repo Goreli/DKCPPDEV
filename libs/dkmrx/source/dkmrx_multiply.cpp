@@ -39,47 +39,35 @@ static void multiply_in_assembler_on_4_by_4
 // We can take advantage of this in the *= operator in order not to allocate the temp area.
 #endif	// I387_32
 
-matrix& matrix::operator * (double k)
+matrix matrix::operator * (double k) const
 {
 	mError::set();
-matrix *mx1;
 
 	if( Values == nullptr)
 	{
 		mError::set( MERR_WRONG_THIS_OBJECT );
-		mError::message("Matrix has no values","matrix::operator *(double)");
-		if ( Status == STATUS::TEMPORARY ) return *this;
-		mx1=new matrix;
-		mx1->Status= STATUS::TEMPORARY;
-		return *mx1;
+		mError::message("Matrix has no values","matrix::operator * (double) const");
+		return matrix();
 	}             
+
 real *start = Values;
 real *finish = start + Columns*Rows;
-	if( Status == STATUS::TEMPORARY )
+
+	matrix mrx(Rows, Columns);
+	if( mrx.Values== nullptr)
 	{
-		while( start < finish )
-			*(start++) *= (real)k;
-		return *this;
+		mError::set( MERR_INSUFFICIENT_MEMORY );
+		mError::message("Not enough memory","matrix::operator * (double) const");
 	}
 	else
 	{
-		mx1 = new matrix(Rows, Columns);
-	 	if( mx1->Values== nullptr)
-		{
-		  mError::set( MERR_INSUFFICIENT_MEMORY );
-		  mError::message("Not enough memory","matrix::operator *");
-		}
-	 	else
-	 	{
-	 	 real *dest = mx1->Values;
-			while( start < finish )
-				*(dest++) = *(start++) * (real)k;
-		}
-	}       
-	mx1->Status = STATUS::TEMPORARY;
-    return *mx1;
+	 	real *dest = mrx.Values;
+		while( start < finish )
+			*(dest++) = *(start++) * (real)k;
+	}
+    return mrx;
 }
-matrix& matrix::operator * (matrix& mx)
+matrix matrix::operator * (const matrix& mx) const
 {
 	mError::set();
 	if( (Columns != mx.Rows) ||
@@ -88,19 +76,15 @@ matrix& matrix::operator * (matrix& mx)
 	  )
 	{
 		mError::set( MERR_INCOMPATIBLE_MATRICES );
-		mError::message("Incompatible matrices","matrix::operator *");
-		if ( Status== STATUS::TEMPORARY ) delete this;
-		if ( mx.Status== STATUS::TEMPORARY ) delete &mx;
-		matrix *mx3=new matrix;
-		mx3->Status= STATUS::TEMPORARY;
-		return *mx3;
+		mError::message("Incompatible matrices","matrix::operator * (const matrix& mx) const");
+		return matrix();
 	}
 
-	matrix *mx3=new matrix(Rows,mx.Columns);
-	if( mx3->Values== nullptr)
+	matrix mrx(Rows,mx.Columns);
+	if( mrx.Values== nullptr)
 	{
 	  mError::set( MERR_INSUFFICIENT_MEMORY );
-	  mError::message("Not enough memory","matrix::operator *");
+	  mError::message("Not enough memory","matrix::operator * (const matrix& mx) const");
 	}
 	else 
 // ***************** Start of the actual multiplication
@@ -115,9 +99,9 @@ real* firstS2;
 real *firstD, *mx1_values, *firstDTop, *dTop;
 
 columns    = mx.Columns;
-firstD     = mx3->Values;
-firstDTop  = mx3->Values +   mx.Columns;
-dTop       = mx3->Values + ( mx.Columns * mx3->Rows );
+firstD     = mrx.Values;
+firstDTop  = mrx.Values +   mx.Columns;
+dTop       = mrx.Values + ( mx.Columns * mrx.Rows );
 firstS2    = mx.Values;
 s2Top      = mx.Values  + ( mx.Columns * mx.Rows );
 s1         = Values;
@@ -145,33 +129,19 @@ mx1_values = Values;
 }
 // ***************** End of the actual multiplication
 
-	if ( Status== STATUS::TEMPORARY ) delete this;
-	if ( mx.Status== STATUS::TEMPORARY ) delete &mx;
-	mx3->Status= STATUS::TEMPORARY;
-	return *mx3;
+	return mrx;
 }
 
-matrix& matrix::operator *= (matrix& mx)
+matrix& matrix::operator *= (const matrix& mx)
 {
 	mError::set();
-	if ( this->Status== STATUS::TEMPORARY )
-	{
-	    mError::set( MERR_LVALUE );
-		mError::message("Inappropriate lvalue","matrix::operator *=");
-	    if ( mx.Status== STATUS::TEMPORARY ) delete &mx;
-	    this->empty();
-	    delete this;  //  Speculation, but what
-		return *this; //  else can I do?
-	}
 	if( (this->Columns != mx.Rows)  ||
 		(this->Values== nullptr)       ||
 		(mx.Values== nullptr)
 	  )
 	{
 		mError::set( MERR_INCOMPATIBLE_MATRICES );
-		mError::message("Incompatible matrices","matrix::operator *=");
-		if ( mx.Status== STATUS::TEMPORARY ) delete &mx;
-		this->empty();
+		mError::message("Incompatible matrices","matrix::operator *= (const matrix&)");
 		return *this;
 	}
 
@@ -179,9 +149,7 @@ matrix& matrix::operator *= (matrix& mx)
 	if( temp == nullptr)
 	{
 	  mError::set( MERR_INSUFFICIENT_MEMORY );
-	  mError::message("Not enough memory","matrix::operator *=");
-	  if ( mx.Status== STATUS::TEMPORARY ) delete &mx;
-	  this->empty();
+	  mError::message("Not enough memory","matrix::operator *= (const matrix&)");
 	  return *this;
 	}
 // ***************** Start of the actual multiplication
@@ -256,7 +224,6 @@ mx1_values = this->Values;
 // ***************** End of the actual multiplication
 
 	this->Columns = mx.Columns;
-	if ( mx.Status== STATUS::TEMPORARY ) delete &mx;
 	delete [] this->Values;
 	this->Values = temp;
 	return *this;

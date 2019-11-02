@@ -31,22 +31,12 @@ Modification history:
 
 using namespace dkmrx;
 
-matrix& matrix::operator=(matrix& mx)
+matrix& matrix::operator=(const matrix& mx)
 {
 	mError::set();
-	if ( Status== STATUS::TEMPORARY )
-	{
-	    mError::set( MERR_LVALUE );
-	    mError::message("Inappropriate lvalue","matrix::operator =");
-	    if ( mx.Status== STATUS::TEMPORARY ) delete &mx;
-	    empty();
-	    delete this;  //  Speculation, but mhat
-	    return *this; //  else can I do?
-	}
 
 	if( mx.Values == nullptr)
 	{
-	    if ( mx.Status== STATUS::TEMPORARY ) delete &mx;
 	    empty();
 	    return *this;
 	}
@@ -54,19 +44,12 @@ matrix& matrix::operator=(matrix& mx)
 	if ( Values != nullptr) delete [] Values;
 	Rows=mx.Rows;
 	Columns=mx.Columns;
-	if ( mx.Status == STATUS::TEMPORARY )
-	{
-	    Values=mx.Values;
-	    mx.Values = nullptr;
-	    delete &mx;
-	    return *this;
-	}
 	size_t MatSize = mx.Rows * mx.Columns;
 	Values= new real[MatSize];
 	if ( Values == nullptr)
 	{
 	    mError::set( MERR_INSUFFICIENT_MEMORY );
-	    mError::message("Not enough memory","matrix::operator =");
+	    mError::message("Not enough memory","matrix::operator=(const matrix& mx)");
 	    Rows=Columns=0;
 	    return *this;
 	}
@@ -75,5 +58,26 @@ matrix& matrix::operator=(matrix& mx)
 	index2= mx.Values;
 	top   = index1 + MatSize;
 	while ( index1<top ) *index1++ = *index2++;
+	return *this;
+}
+
+matrix& matrix::operator=(matrix&& mx) noexcept
+{
+	mError::set();
+
+	if (mx.Values == nullptr)
+	{
+		empty();
+		return *this;
+	}
+
+	if (Values != nullptr) delete[] Values;
+	Rows = mx.Rows;
+	Columns = mx.Columns;
+	Values = mx.Values;
+
+	mx.Values = nullptr;
+	mx.Rows = 0;
+	mx.Columns = 0;
 	return *this;
 }

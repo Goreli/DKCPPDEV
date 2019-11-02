@@ -39,18 +39,18 @@ namespace dkmrx {
 	{
 	public:
 		mTransformer(void);
-		mTransformer(mTransformer&);
+		mTransformer(const mTransformer&);
 
-		void rotate(real through, matrix& about, matrix& putFrom);
-		void rotate(real through, mLine& about);
+		void rotate(real through, const matrix& about, const matrix& putFrom);
+		void rotate(real through, const mLine& about);
 		void rotateX(real through);
 		void rotateY(real through);
 		void rotateZ(real through);
-		void translate(matrix& to, matrix& putFrom);
-		void translate(real x, real y, real z, matrix& putFrom);
-		void scale(real Kx, real Ky, real Kz, matrix& about);
+		void translate(const matrix& to, const matrix& putFrom);
+		void translate(real x, real y, real z, const matrix& putFrom);
+		void scale(real Kx, real Ky, real Kz, const matrix& about);
 		void reset(void);
-		void concatenate(mTransformer&);
+		void concatenate(const mTransformer&);
 	};
 
 	class mTransformable : public matrix
@@ -58,11 +58,11 @@ namespace dkmrx {
 	public:
 		mTransformable(int rows);
 		mTransformable(real init_value, int rows);
-		mTransformable(mTransformable&);
+		mTransformable(const mTransformable&);
 		mTransformable(void);
 
-		virtual	void transform(mTransformer&);
-		matrix& operator = (matrix& m) { return matrix::operator=(m); }
+		virtual	void transform(const mTransformer&);
+		//matrix& operator = (const matrix& m) { return matrix::operator=(m); }
 	};
 
 } // namespace dkmrx

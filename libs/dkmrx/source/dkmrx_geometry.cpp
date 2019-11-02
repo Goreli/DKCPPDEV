@@ -43,25 +43,21 @@ real *ptr = (*this)[0];
 	*(ptr++) = (real) (z*w);
 	*ptr     = (real) w;
 }
-mPoint::mPoint(mPoint& point) : mTransformable(point) {}
+mPoint::mPoint(const mPoint& point) : mTransformable(point) {}
 
-double mPoint::distance(mPoint& point)
+double mPoint::distance(const mPoint& point) const
 {
 	mError::set();
 	if( point.columns() != 4 )
 	{
 		mError::set( MERR_WRONG_ARGUMENT, 1 );
-		mError::message("Argument is not homogenious","mPoint::distance");
-		if( point.status() == STATUS::TEMPORARY ) delete &point;
-		if( this->status() == STATUS::TEMPORARY ) delete this;
+		mError::message("Argument is not homogenious","mPoint::distance(const mPoint&) const");
 		return 0.0;
 	}
 	if( this->columns() != 4 )
 	{
 		mError::set( MERR_WRONG_THIS_OBJECT, 4 );
-		mError::message("This object is not homogenious","mPoint::distance");
-		if( point.status() == STATUS::TEMPORARY ) delete &point;
-		if( this->status() == STATUS::TEMPORARY ) delete this;
+		mError::message("This object is not homogenious","mPoint::distance(const mPoint&) const");
 		return 0.0;
 	}
 	double dist = std::pow
@@ -71,8 +67,6 @@ double mPoint::distance(mPoint& point)
 				std::pow(this->z() - point.z(), 2.0),
 				0.5
 			);
-	if( point.status() == STATUS::TEMPORARY ) delete &point;
-	if( this->status() == STATUS::TEMPORARY ) delete this;
 	return dist;
 }
 
@@ -85,10 +79,9 @@ real *ptr = (*this)[0];
 	*(ptr++) *= (real) temp;
 	*(ptr++) *= (real) temp;
 	*ptr      = (real) M;
-	if( this->status() == STATUS::TEMPORARY ) delete this;
 }
 
-mLine::mLine(mPoint& point1, mPoint& point2, double par1, double par2)
+mLine::mLine(const mPoint& point1, const mPoint& point2, double par1, double par2)
 	:mTransformable(2)
 {
 	mError::set();
@@ -96,19 +89,13 @@ matrix pars(2,2);
 	if( point1.columns() != 4 )
 	{
 		mError::set( MERR_WRONG_ARGUMENT, 1 );
-		mError::message("Wrong first argument","mLine::mLine(,,,)");
-		if( point1.status() == STATUS::TEMPORARY ) delete &point1;
-		if( point2.status() == STATUS::TEMPORARY ) delete &point2;
-		if( this->status() == STATUS::TEMPORARY ) delete this;
+		mError::message("Wrong first argument","mLine::mLine(const mPoint&, const mPoint&, double, double)");
 		return;
 	}
 	if( point2.columns() != 4 )
 	{
 		mError::set( MERR_WRONG_ARGUMENT, 2 );
-		mError::message("Wrong second argument","mLine::mLine(,,,)");
-		if( point1.status() == STATUS::TEMPORARY ) delete &point1;
-		if( point2.status() == STATUS::TEMPORARY ) delete &point2;
-		if( this->status() == STATUS::TEMPORARY ) delete this;
+		mError::message("Wrong second argument","mLine::mLine(const mPoint&, const mPoint&, double, double)");
 		return;
 	}
 	pars[0][0]    = (real) par1;
@@ -144,15 +131,11 @@ matrix temp1;
 	(*this)[1][1] = temp1[1][1];
 	(*this)[1][2] = temp1[1][2];
 	(*this)[1][3] = temp1[1][3];
-	
-	if( point1.status() == STATUS::TEMPORARY ) delete &point1;
-	if( point2.status() == STATUS::TEMPORARY ) delete &point2;
-	if( this->status() == STATUS::TEMPORARY ) delete this;
 }
-mLine::mLine(mLine& line):mTransformable(line) {}
+mLine::mLine(const mLine& line):mTransformable(line) {}
 mLine::mLine(void):mTransformable(1,2) {}
 
-mPoint& mLine::point(double par)
+mPoint mLine::point(double par) const
 {
 	mError::set();
 matrix *pnt = new matrix;
@@ -169,7 +152,5 @@ matrix temp(1,2);
 	temp[0][0] = (real) par;
 	temp[0][1] = 1;
 	*pnt = temp * *this;
-	pnt->status(STATUS::TEMPORARY);
-	if( this->status() == STATUS::TEMPORARY ) delete this;
 	return *((mPoint*)pnt);
 }

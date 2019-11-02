@@ -43,7 +43,7 @@ real* values = (*this)[0];
 	*++values=0;	*++values=0;	*++values=0;	*++values=1;
 }
 
-mTransformer::mTransformer(mTransformer& kit):matrix(kit) {}
+mTransformer::mTransformer(const mTransformer& kit):matrix(kit) {}
 
 void mTransformer::reset(void)
 {
@@ -55,7 +55,7 @@ real* values = (*this)[0];
 	*++values=0;	*++values=0;	*++values=0;	*++values=1;
 }
 
-void mTransformer::rotate(real through,matrix& about,matrix& putFrom)
+void mTransformer::rotate(real through,const matrix& about,const matrix& putFrom)
 //William M. Newman, Robert F. Sproull; 
 //Principles of interactive computer graphics, McGRAW-HILL
 //Chapter22:
@@ -64,37 +64,22 @@ void mTransformer::rotate(real through,matrix& about,matrix& putFrom)
   if ( putFrom[0] == nullptr)
   {
     mError::set( MERR_WRONG_ARGUMENT, 3 );
-    mError::message("Wrong third argument","mTransformer::rotation");
-    if ( putFrom.status() == STATUS::TEMPORARY ) delete &putFrom;
-    if ( about.status() == STATUS::TEMPORARY )   delete &about;
+    mError::message("Wrong third argument","mTransformer::rotate(real,const matrix&,const matrix&)");
     return;
   }
   if ( about[0] == nullptr)
   {
     mError::set( MERR_WRONG_ARGUMENT, 2 );
-    mError::message("Wrong second argument","mTransformer::rotation");
-    if ( putFrom.status() == STATUS::TEMPORARY ) delete &putFrom;
-    if ( about.status() == STATUS::TEMPORARY )   delete &about;
+    mError::message("Wrong second argument","mTransformer::rotate(real,const matrix&,const matrix&)");
     return;
   }                          
  
-  mTransformer *r = new mTransformer; 
-  if( r == nullptr)
-  {
-    mError::set( MERR_INSUFFICIENT_MEMORY, 1 );
-    mError::message("Not enough memory","mTransformer::rotation");
-    if ( putFrom.status() == STATUS::TEMPORARY ) delete &putFrom;
-    if ( about.status() == STATUS::TEMPORARY )   delete &about;
-    return;
-  } 
-  if ( (*r)[0] == nullptr)
+  mTransformer transformer; 
+  if (transformer[0] == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
-    mError::message("Not enough memory","mTransformer::rotation");
-    if ( putFrom.status() == STATUS::TEMPORARY ) delete &putFrom;
-    if ( about.status() == STATUS::TEMPORARY )   delete &about;
-    delete r;
-    return;
+    mError::message("Not enough memory","mTransformer::rotate(real,const matrix&,const matrix&)");
+	return;
   }
 
 #if defined(I387_32)
@@ -384,18 +369,18 @@ pop_4_and_finish:
 
 	real ABZ1  = a*b*Z1;
 	real CZ2 = c*z2;
-	(*r)[0][1] = (real)(ABZ1 - CZ2);
-	(*r)[1][0] = (real)(ABZ1 + CZ2);
+	transformer[0][1] = (real)(ABZ1 - CZ2);
+	transformer[1][0] = (real)(ABZ1 + CZ2);
 
 	real ACZ1  = a*c*Z1;
 	real BZ2 = b*z2;
-	(*r)[0][2] = (real)(ACZ1 + BZ2);
-	(*r)[2][0] = (real)(ACZ1 - BZ2);
+	transformer[0][2] = (real)(ACZ1 + BZ2);
+	transformer[2][0] = (real)(ACZ1 - BZ2);
 
 	real BCZ1  = b*c*Z1;
 	real AZ2 = a*z2;
-	(*r)[1][2] = (real)(BCZ1 - AZ2);
-	(*r)[2][1] = (real)(BCZ1 + AZ2);
+	transformer[1][2] = (real)(BCZ1 - AZ2);
+	transformer[2][1] = (real)(BCZ1 + AZ2);
 
 	real b_2 = b*b;
 	real c_2 = c*c;
@@ -405,40 +390,32 @@ pop_4_and_finish:
 	real Z1C_2 = Z1-Z1c_2;
 	real Z1v_2 = Z1b_2+Z1c_2;
 
-	(*r)[0][0] = (real)(1 - Z1v_2);
-	(*r)[1][1] = (real)(1 - Z1B_2);
-	(*r)[2][2] = (real)(1 - Z1C_2);
+	transformer[0][0] = (real)(1 - Z1v_2);
+	transformer[1][1] = (real)(1 - Z1B_2);
+	transformer[2][2] = (real)(1 - Z1C_2);
 
 	real t1=putFrom[0][0]; real t2=putFrom[0][1]; real t3=putFrom[0][2];
-	(*r)[3][0] = (real)( t1*Z1v_2 - t2*(*r)[1][0] - t3*(*r)[2][0] );
-	(*r)[3][1] = (real)( t2*Z1B_2 - t3*(*r)[2][1] - t1*(*r)[0][1] );
-	(*r)[3][2] = (real)( t3*Z1C_2 - t1*(*r)[0][2] - t2*(*r)[1][2] );
+	transformer[3][0] = (real)( t1*Z1v_2 - t2*transformer[1][0] - t3*transformer[2][0] );
+	transformer[3][1] = (real)( t2*Z1B_2 - t3*transformer[2][1] - t1*transformer[0][1] );
+	transformer[3][2] = (real)( t3*Z1C_2 - t1*transformer[0][2] - t2*transformer[1][2] );
 
-	(*r)[0][3] = 0.0;
-	(*r)[1][3] = 0.0;
-	(*r)[2][3] = 0.0;
-	(*r)[3][3] = 1.0;
+	transformer[0][3] = 0.0;
+	transformer[1][3] = 0.0;
+	transformer[2][3] = 0.0;
+	transformer[3][3] = 1.0;
   }
 #endif	// I387_32
 
   if ( v != 0.0 )
-  {
-	if ( putFrom.status() == STATUS::TEMPORARY ) delete &putFrom;
-	if ( about.status() == STATUS::TEMPORARY )   delete &about;
-	(*this) *= *r;
-  }
+	(*this) *= transformer;
   else
   {
 	mError::set( MERR_ZERO_LENGTH );
-	mError::message("Do not know how to rotate about a zero length vector","mTransformer::rotation");
-	if ( putFrom.status() == STATUS::TEMPORARY ) delete &putFrom;
-	if ( about.status() == STATUS::TEMPORARY )   delete &about;
+	mError::message("Do not know how to rotate about a zero length vector","mTransformer::rotate(real,const matrix&,const matrix&)");
   }
-
-  delete r;
 }
 
-void mTransformer::rotate(real through, mLine& about )
+void mTransformer::rotate(real through, const mLine& about )
 {
 mPoint p0 = about.point(0);
 mPoint p1 = about.point(1);
@@ -452,26 +429,14 @@ void mTransformer::rotateX(real through)
 //Chapter22:
 {
   mError::set();
-  mTransformer *r = new mTransformer;
-  if ( r == nullptr)
-  {
-    mError::set( MERR_INSUFFICIENT_MEMORY, 1 );
-    mError::message("Not enough memory","rotationX");
+  mTransformer transformer;
+  if (transformer[0] == nullptr)
     return;
-  }      
-  if ( (*r)[0] == nullptr)
-  {
-    mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
-    mError::message("Not enough memory","rotationX");
-    delete r;
-    return;
-  }      
 
-  (*r)[1][1] = (*r)[2][2] = (real)std::cos(through);
-  (*r)[2][1] = (*r)[1][2] = (real)std::sin(through);
-  (*r)[1][2] *= (real) -1.0;
-  (*this) *= *r;
-  delete r;
+  transformer[1][1] = transformer[2][2] = (real)std::cos(through);
+  transformer[2][1] = transformer[1][2] = (real)std::sin(through);
+  transformer[1][2] *= (real) -1.0;
+  (*this) *= transformer;
 }  
 
 void mTransformer::rotateY(real through)
@@ -480,26 +445,18 @@ void mTransformer::rotateY(real through)
 //Chapter22:
 {
   mError::set();
-  mTransformer *r = new mTransformer;
-  if ( r == nullptr)
-  {
-    mError::set( MERR_INSUFFICIENT_MEMORY, 1 );
-    mError::message("Not enough memory","rotationY");
-    return;
-  }      
-  if ( (*r)[0] == nullptr)
+  mTransformer transformer;
+  if (transformer[0] == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
-    mError::message("Not enough memory","rotationY");
-    delete r;
+    mError::message("Not enough memory","mTransformer::rotateY(real through)");
     return;
   }      
 
-  (*r)[0][0] = (*r)[2][2] = (real)std::cos(through);
-  (*r)[2][0] = (*r)[0][2] = (real)std::sin(through);
-  (*r)[2][0] *= (real) -1.0;
-  (*this) *= *r;
-  delete r;
+  transformer[0][0] = transformer[2][2] = (real)std::cos(through);
+  transformer[2][0] = transformer[0][2] = (real)std::sin(through);
+  transformer[2][0] *= (real) -1.0;
+  (*this) *= transformer;
 }  
 
 void mTransformer::rotateZ(real through)
@@ -508,29 +465,21 @@ void mTransformer::rotateZ(real through)
 //Chapter22:
 {
   mError::set();
-  mTransformer *r = new mTransformer;
-  if ( r == nullptr)
-  {
-    mError::set( MERR_INSUFFICIENT_MEMORY, 1 );
-    mError::message("Not enough memory","rotationZ");
-    return;
-  }      
-  if ( (*r)[0] == nullptr)
+  mTransformer transformer;
+  if (transformer[0] == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
-    mError::message("Not enough memory","rotationZ");
-    delete r;
+    mError::message("Not enough memory","mTransformer::rotateZ(real)");
     return;
   }      
 
-  (*r)[0][0] = (*r)[1][1] = (real)std::cos(through);
-  (*r)[1][0] = (*r)[0][1] = (real)std::sin(through);
-  (*r)[0][1] *= (real) -1.0;
-  (*this) *= *r;
-  delete r;
+  transformer[0][0] = transformer[1][1] = (real)std::cos(through);
+  transformer[1][0] = transformer[0][1] = (real)std::sin(through);
+  transformer[0][1] *= (real) -1.0;
+  (*this) *= transformer;
 }  
  
-void mTransformer::translate(matrix& to, matrix& putFrom)
+void mTransformer::translate(const matrix& to, const matrix& putFrom)
 //William M. Newman, Robert F. Sproull; 
 //Principles of interactive computer graphics, McGRAW-HILL
 //Chapter22:
@@ -539,46 +488,32 @@ void mTransformer::translate(matrix& to, matrix& putFrom)
   if ( putFrom[0] == nullptr)
   {
     mError::set( MERR_WRONG_ARGUMENT, 2 );
-    mError::message("Wrong second argument","mTransformer::translation");
-    if ( putFrom.status() == STATUS::TEMPORARY ) delete &putFrom;
-    if ( to.status() == STATUS::TEMPORARY )      delete &to;
+    mError::message("Wrong second argument","mTransformer::translate(const matrix&, const matrix&)");
     return;
   }
   if ( to[0] == nullptr)
   {
     mError::set( MERR_WRONG_ARGUMENT, 1 );
-    mError::message("Wrong first argument","mTransformer::translation");
-    if ( putFrom.status() == STATUS::TEMPORARY ) delete &putFrom;
-    if ( to.status() == STATUS::TEMPORARY )      delete &to;
+    mError::message("Wrong first argument","mTransformer::translate(const matrix&, const matrix&)");
     return;
   }                          
 
-  mTransformer *r = new mTransformer;
-  if ( r == nullptr)
-  {
-    mError::set( MERR_INSUFFICIENT_MEMORY, 1 );
-    mError::message("Not enough memory","translation");
-    return;
-  }      
-  if ( (*r)[0] == nullptr)
+  mTransformer transformer;
+  if (transformer[0] == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
-    mError::message("Not enough memory","translation");
-    delete r;
+    mError::message("Not enough memory","mTransformer::translate(const matrix&, const matrix&)");
     return;
   }      
 
-  (*r)[3][0] = (real) ( to[0][0] - putFrom[0][0] );
-  (*r)[3][1] = (real) ( to[0][1] - putFrom[0][1] );
-  (*r)[3][2] = (real) ( to[0][2] - putFrom[0][2] );
+  transformer[3][0] = (real) ( to[0][0] - putFrom[0][0] );
+  transformer[3][1] = (real) ( to[0][1] - putFrom[0][1] );
+  transformer[3][2] = (real) ( to[0][2] - putFrom[0][2] );
 
-  if ( to.status()== STATUS::TEMPORARY ) delete &to;
-  if ( putFrom.status()== STATUS::TEMPORARY ) delete &putFrom;
-  (*this) *= *r;
-  delete r;
+  (*this) *= transformer;
 }
 
-void mTransformer::translate(real x,real y,real z, matrix& putFrom)
+void mTransformer::translate(real x,real y,real z, const matrix& putFrom)
 //William M. Newman, Robert F. Sproull; 
 //Principles of interactive computer graphics, McGRAW-HILL
 //Chapter22:
@@ -587,36 +522,26 @@ void mTransformer::translate(real x,real y,real z, matrix& putFrom)
   if ( putFrom[0] == nullptr)
   {
     mError::set( MERR_WRONG_ARGUMENT, 4 );
-    mError::message("Wrong fourth argument","mTransformer::translation");
-    if ( putFrom.status() == STATUS::TEMPORARY ) delete &putFrom;
+    mError::message("Wrong fourth argument","mTransformer::translate(real, real, real, const matrix&)");
     return;
   }
 
-  mTransformer *r = new mTransformer;
-  if ( r == nullptr)
-  {
-    mError::set( MERR_INSUFFICIENT_MEMORY, 1 );
-    mError::message("Not enough memory","translation");
-    return;
-  }      
-  if ( (*r)[0] == nullptr)
+  mTransformer transformer;
+  if (transformer[0] == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
-    mError::message("Not enough memory","translation");
-    delete r;
+    mError::message("Not enough memory","mTransformer::translate(real, real, real, const matrix&)");
     return;
   }      
 
-  (*r)[3][0] = (real) ( x-putFrom[0][0] );
-  (*r)[3][1] = (real) ( y-putFrom[0][1] );
-  (*r)[3][2] = (real) ( z-putFrom[0][2] );
+  transformer[3][0] = (real) ( x-putFrom[0][0] );
+  transformer[3][1] = (real) ( y-putFrom[0][1] );
+  transformer[3][2] = (real) ( z-putFrom[0][2] );
 
-  if ( putFrom.status()== STATUS::TEMPORARY ) delete &putFrom;
-  (*this) *= *r;
-  delete r;
+  (*this) *= transformer;
 }  
   
-void mTransformer::scale(real Kx,real Ky,real Kz, matrix& about)
+void mTransformer::scale(real Kx,real Ky,real Kz, const matrix& about)
 //William M. Newman, Robert F. Sproull; 
 //Principles of interactive computer graphics, McGRAW-HILL
 //Chapter22:
@@ -625,43 +550,33 @@ void mTransformer::scale(real Kx,real Ky,real Kz, matrix& about)
   if ( about[0] == nullptr)
   {
     mError::set( MERR_WRONG_ARGUMENT, 4 );
-    mError::message("Wrong fourth argument","mTransformer::scaling");
-    if ( about.status() == STATUS::TEMPORARY )   delete &about;
+    mError::message("Wrong fourth argument", "mTransformer::scale(real, real, real, const matrix&)");
     return;
   }                          
 
-  mTransformer *r = new mTransformer;
-  if ( r == nullptr)
-  {
-    mError::set( MERR_INSUFFICIENT_MEMORY, 1 );
-    mError::message("Not enough memory","scaling");
-    return;
-  }      
-  if ( (*r)[0] == nullptr)
+  mTransformer transformer;
+  if (transformer[0] == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
-    mError::message("Not enough memory","scaling");
-    delete r;
+    mError::message("Not enough memory","mTransformer::scale(real, real, real, const matrix&)");
     return;
   }      
 
-  (*r)[0][0] = (real) Kx;
-  (*r)[1][1] = (real) Ky;
-  (*r)[2][2] = (real) Kz;
-  (*r)[3][0] = (real) ( about[0][0]*(1.0-Kx) );
-  (*r)[3][1] = (real) ( about[0][1]*(1.0-Ky) );
-  (*r)[3][2] = (real) ( about[0][2]*(1.0-Kz) );
-  (*r)[3][3] = (real) 1.0;
+  transformer[0][0] = (real) Kx;
+  transformer[1][1] = (real) Ky;
+  transformer[2][2] = (real) Kz;
+  transformer[3][0] = (real) ( about[0][0]*(1.0-Kx) );
+  transformer[3][1] = (real) ( about[0][1]*(1.0-Ky) );
+  transformer[3][2] = (real) ( about[0][2]*(1.0-Kz) );
+  transformer[3][3] = (real) 1.0;
    
-  if ( about.status()== STATUS::TEMPORARY ) delete &about;
-  (*this) *= *r;
-  delete r;
+  (*this) *= transformer;
 }  
 
 // This function is purposed to hide the multiplication
 // operator in case I decide to speed up calculations
 // using different algorithm (transposed transformer)
-void mTransformer::concatenate( mTransformer& t )
+void mTransformer::concatenate(const mTransformer& t)
 {
 	*this *= t;
 }
@@ -690,11 +605,11 @@ int step = 4;
 	}
 }
 
-mTransformable::mTransformable(mTransformable& t) : matrix( t ) {}
+mTransformable::mTransformable(const mTransformable& t) : matrix( t ) {}
 
 mTransformable::mTransformable( void ) : matrix() {}
 
-void mTransformable::transform( mTransformer& t )
+void mTransformable::transform(const mTransformer& t)
 {
 	(*this)*=t;
 }

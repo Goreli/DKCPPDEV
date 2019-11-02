@@ -38,16 +38,16 @@ namespace dkmrx {
 	public:
 
 		mPoint(real x = 0, real y = 0, real z = 0, real w = 1);
-		mPoint(mPoint&);
+		mPoint(const mPoint&);
 
-		real	distance(mPoint&);
-		real	x(void) { return (*this)[0][0] / (*this)[0][3]; }
+		real	distance(const mPoint&) const;
+		real	x(void) const { return (*this)[0][0] / (*this)[0][3]; }
 		void	x(real X) { (*this)[0][0] = (real)((*this)[0][3] * X); }
-		real	y(void) { return (*this)[0][1] / (*this)[0][3]; }
+		real	y(void) const { return (*this)[0][1] / (*this)[0][3]; }
 		void	y(real Y) { (*this)[0][1] = (real)((*this)[0][3] * Y); }
-		real	z(void) { return (*this)[0][2] / (*this)[0][3]; }
+		real	z(void) const { return (*this)[0][2] / (*this)[0][3]; }
 		void	z(real Z) { (*this)[0][2] = (real)((*this)[0][3] * Z); }
-		real	w(void) { return (*this)[0][3]; }
+		real	w(void) const { return (*this)[0][3]; }
 		void	w(real);
 	};
 
@@ -55,11 +55,11 @@ namespace dkmrx {
 	{
 	public:
 
-		mLine(mPoint& point1, mPoint& point2, real par1 = 0, real par2 = 1);
+		mLine(const mPoint& point1, const mPoint& point2, real par1 = 0, real par2 = 1);
 		mLine(void);
-		mLine(mLine&);
+		mLine(const mLine&);
 
-		mPoint& point(real par);
+		mPoint point(real par) const;
 	};
 
 }	// namespace dkmrx

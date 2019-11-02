@@ -66,18 +66,12 @@ std::streamsize tempPrecision = out.precision();
 	}
 	out<<"\n";
 
-	if ( mx.Status== STATUS::TEMPORARY ) delete &mx;
 	return out;
 }
 
 std::istream& dkmrx::operator>>(std::istream& in,matrix& mx)
 {    
     mError::set();
-    if ( mx.Status== STATUS::TEMPORARY )
-    {
-      delete &mx;
-      return in;                                            
-    }  
     if ( mx.Values != nullptr)
 	mx.empty();
 // READ HEADER             

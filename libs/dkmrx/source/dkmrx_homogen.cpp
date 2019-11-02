@@ -41,24 +41,17 @@ matrix& getNonHG(matrix&);
 int matrix::toHG(real scaleFactor)    // to HomoGeneous form
 {
   mError::set();
-  if ( Status == STATUS::TEMPORARY )
-  {
-    mError::set( MERR_WRONG_THIS_OBJECT, 3 );
-    mError::message("Can not apply to a TEMPORARY object","matrix::toHG");
-    delete  this;
-    return 1;
-  }
   if ( Values == nullptr ) 
   {
     mError::set( MERR_WRONG_THIS_OBJECT, 0 );
-    mError::message("Can not apply to an EMPTY object","matrix::toHG");
+    mError::message("Can not apply to an EMPTY object","matrix::toHG(real)");
     return 2;
   }
   real* newval = new real [(Columns+1) * Rows];
   if ( newval == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY );
-    mError::message("Not enough memory","convertToHG");
+    mError::message("Not enough memory","matrix::toHG(real)");
     return 3;
   }
 
@@ -92,33 +85,22 @@ int matrix::toHG(real scaleFactor)    // to HomoGeneous form
 int matrix::fromHG()    // from HomoGeneous form
 {
   mError::set();
-  if ( Status == STATUS::TEMPORARY )
-  {
-    mError::set( MERR_WRONG_THIS_OBJECT, 3 );
-    mError::message("Can not apply to a TEMPORARY object","matrix::fromHG");
-    delete this;
-    return 1;
-  }
   if ( Values == nullptr)
   {
     mError::set( MERR_WRONG_THIS_OBJECT, 0 );
-    mError::message("Can not apply to an EMPTY object","matrix::fromHG");
+    mError::message("Can not apply to an EMPTY object","matrix::fromHG()");
     return 2;
   }
   if ( Columns == 1 ) 
   {
     mError::set( MERR_WRONG_THIS_OBJECT, 1 );
-    mError::message("Can not apply to a 1 column object","matrix::fromHG");
+    mError::message("Can not apply to a 1 column object","matrix::fromHG()");
     return 3;
   }
   real* newval = new real [(Columns-1) * Rows];
   if ( newval == nullptr)
-  {
-    mError::set( MERR_INSUFFICIENT_MEMORY );
-    mError::message("Not enough memory","convertToHG");
     return 4;
-  }
-
+  
   int step=Columns-1;
   real* Target=newval;
   real* Source=Values;

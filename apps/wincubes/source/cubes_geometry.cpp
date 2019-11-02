@@ -61,7 +61,8 @@ matrix mrx(8, 3);
 		for (int j = 0; j < 3; j++)
 			mrx[i][j] = init[i][j];
 	mrx.toHG();
-	cubes_[0][0] = mrx;
+	matrix& tmpRef = cubes_[0][0];
+	tmpRef = mrx;
 
 mTransformer t;
 	t.scale(1.0 / 2.7, 1.0 / 2.7, 1.0 / 2.7, origin_);
@@ -69,7 +70,8 @@ mTransformer t;
 
 	for (int i = 1; i <= 8; i++)
 	{
-		cubes_[i][0] = mrx;
+		matrix& tmpRef = cubes_[i][0];
+		tmpRef = mrx;
 		t.reset();
 		t.translate(init[i - 1][0] * 2, init[i - 1][1] * 2, init[i - 1][2] * 2, origin_);
 		cubes_[i][0].transform(t);

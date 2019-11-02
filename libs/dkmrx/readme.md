@@ -93,6 +93,9 @@ No optimisation has been used in the Debug configuration. Specifically in the Re
 2. Transition to the Move Semantics based handling of temporary objects created by overloaded operators like *, /, + etc. There are relevant talks on Youtube that we may be able to use for the prototyping purposes:
  - https://www.youtube.com/watch?v=St0MNEU5b0o
  - https://www.youtube.com/watch?v=XS2JddPq7GQ
+ 
+   **Done. Introduced the Big Five member functions as of 2/Nov/2019. Also, retired the home-grown mechanism of handling the temporaries.**
+
 3. Establish a namespace. **Done. Introduced the dkmrx namespace as of 30/Oct/2019**;
 4. Transition to a generic type based implementation. Should be able to choose the underlying data type using a template parameter.
 5. Use Uniform Initialisation to initialise matrix objects.

@@ -26,13 +26,14 @@ Modification history:
 
 */
 
+#include <memory>
 #include "dkmrx_matrix.hpp"
 #include "dkmrx_error.hpp"
 #include "dkmrx_gausseln.hpp"
 
 using namespace dkmrx;
 
-matrix& matrix::operator / (matrix& A)
+matrix matrix::operator / (matrix& A) const
 {
 	mError::set();
 	if( (A.Columns  != A.Rows)     ||
@@ -42,58 +43,46 @@ matrix& matrix::operator / (matrix& A)
 	  )
 	{
 		mError::set( MERR_INCOMPATIBLE_MATRICES );
-		mError::message("Incompatible matrices","matrix::operator /");
-		if ( A.Status==STATUS::TEMPORARY ) delete &A;
-		if ( Status==STATUS::TEMPORARY ) delete this;
-		matrix *x=new matrix;
-		x->Status= STATUS::TEMPORARY;
-		return *x;
+		mError::message("Incompatible matrices","matrix::operator / (const matrix& A) const");
+		return matrix();
 	}
 
     int gaussError=0;
-	matrix *x = new matrix(*this);
+	matrix mrx(*this);
     
-	if( x->Values== nullptr)
+	if(mrx.Values == nullptr)
 	{
 	    mError::set( MERR_INSUFFICIENT_MEMORY );
-	    mError::message("Not enough memory","matrix::operator /");
+	    mError::message("Not enough memory","matrix::operator / (const matrix& A) const");
 	}
 	else if ( A.storeValues(STORE_OPERATION::SAVE) )
 	{
 	 mError::set( MERR_INSUFFICIENT_MEMORY_OR_DISK );
-	 mError::message("Can not store Values","matrix::operator /");
+	 mError::message("Can not store Values","matrix::operator / (const matrix& A) const");
 	}
-      else gaussError=gauss_elimination(A.Columns,x->Columns,A.Values,x->Values);
+      else gaussError=gauss_elimination(A.Columns,mrx.Columns,A.Values,mrx.Values);
+
     A.storeValues(STORE_OPERATION::LOAD);
-	if ( A.Status== STATUS::TEMPORARY ) delete &A;
-	x->Status=STATUS::TEMPORARY;
+
 	if ( gaussError > 0 )
 	{
 	  mError::set( MERR_NO_SOLUTION );
-	  mError::message("System of linear equations has no solution","matrix::operator /");
-	  x->empty();
-	  return *x;
+	  mError::message("System of linear equations has no solution","matrix::operator / (const matrix& A) const");
+	  mrx.empty();
+	  return mrx;
 	}
+
 	if ( gaussError < 0 )
 	{
 	  mError::set( MERR_MANY_SOLUTIONS, -gaussError );
-	  mError::message("System of linear equations has many solutions","matrix::operator /");
+	  mError::message("System of linear equations has many solutions","matrix::operator / (const matrix& A) const");
 	}
-	return *x;
+	return mrx;
 }
   
 matrix& matrix::operator /= (matrix& A)
 {
 	mError::set();
-	if ( Status== STATUS::TEMPORARY )
-	{
-	    mError::set( MERR_LVALUE );
-	    mError::message("Inappropriate lvalue","matrix::operator /=");
-	    if ( A.Status== STATUS::TEMPORARY ) delete &A;
-	    empty();
-	    delete this;  //  Speculation, but mhat
-	    return *this; //  else can I do? Do something!!
-	}
 	if( (A.Columns  != A.Rows)     ||
 	    (A.Columns  != Rows)       ||
 	    (A.Values == nullptr)         ||
@@ -101,11 +90,8 @@ matrix& matrix::operator /= (matrix& A)
 	  )
 	{
 		mError::set( MERR_INCOMPATIBLE_MATRICES );
-		mError::message("Incompatible matrices","matrix::operator /=");
-		if ( A.Status== STATUS::TEMPORARY ) delete &A;
-		matrix *x=new matrix;
-		x->Status= STATUS::TEMPORARY;
-		return *x;
+		mError::message("Incompatible matrices","matrix::operator /= (const matrix& A)");
+		return *this;
 	}
 
     int gaussError=0;
@@ -113,27 +99,28 @@ matrix& matrix::operator /= (matrix& A)
     if ( A.storeValues(STORE_OPERATION::SAVE) )
     {
 	 mError::set( MERR_INSUFFICIENT_MEMORY_OR_DISK );
-	 mError::message("Can not store Values","matrix::operator /=");
+	 mError::message("Can not store Values","matrix::operator /= (const matrix& A)");
     }
     else gaussError=gauss_elimination(A.Columns,this->Columns,A.Values,this->Values);
+
     A.storeValues(STORE_OPERATION::LOAD);
-	if ( A.Status== STATUS::TEMPORARY ) delete &A;
+
 	if ( gaussError > 0 )
 	{
 	  mError::set( MERR_NO_SOLUTION );
-	  mError::message("System of linear equations has no solution","matrix::operator /=");
+	  mError::message("System of linear equations has no solution","matrix::operator /= (const matrix& A)");
 	  empty();
 	  return *this;
 	}
 	if ( gaussError < 0 )
 	{
 	  mError::set( MERR_MANY_SOLUTIONS, -gaussError );
-	  mError::message("System of linear equations has many solutions","matrix::operator /=");
+	  mError::message("System of linear equations has many solutions","matrix::operator /= (const matrix& A)");
 	}
 	return *this;
 }
 
-matrix&  matrix::operator ~  (void)
+matrix  matrix::operator ~ (void)
 {
 	mError::set();
 	if( (this->Columns  != Rows)     ||
@@ -141,22 +128,18 @@ matrix&  matrix::operator ~  (void)
 	  )
 	{
 		mError::set( MERR_WRONG_THIS_OBJECT );
-		mError::message("Inappropriate matrix (this)","matrix::operator ~");
-		if ( Status== STATUS::TEMPORARY ) return *this;
-		matrix *x=new matrix;
-		x->Status= STATUS::TEMPORARY;
-		return *x;
+		mError::message("Inappropriate matrix (this)","matrix::operator ~ (void) const");
+		return matrix();
 	}
 
-    matrix *I = new matrix( matrix::identity(this->Columns) );
-	if( I->Values== nullptr)
+    matrix mrx = std::move( matrix::identity(this->Columns) );
+	if( mrx.Values== nullptr)
 	{
 	    mError::set( MERR_INSUFFICIENT_MEMORY );
-	    mError::message("Not enough memory","matrix::operator ~");
+	    mError::message("Not enough memory","matrix::operator ~ (void) const");
 	}
-	else *I /= *this;
-	if ( this->Status == STATUS::TEMPORARY ) delete this;// mhat else?
-	I->Status=STATUS::TEMPORARY;
-	return *I;                                            
+	else
+		mrx /= *this;
+	return mrx;
 }                                                                          
 

@@ -33,7 +33,7 @@ Modification history:
 
 namespace dkmrx {
 
-	enum class STATUS { PERMANENT, TEMPORARY };
+	//enum class STATUS { PERMANENT, TEMPORARY };
 	enum class STORE_OPERATION { SAVE, LOAD };
 
 	class matrix
@@ -43,27 +43,31 @@ namespace dkmrx {
 		matrix(void);
 		matrix(int rows, int columns);
 		matrix(real init_value, int rows, int columns);
-		matrix(matrix&);
-		~matrix();
+		matrix(const matrix&);
+		matrix(matrix&&) noexcept;
 
-		matrix& operator +      (matrix&);
-		matrix& operator +      (double);
-		matrix& operator -      (matrix&);
-		matrix& operator -      (double);
-		matrix& operator *      (matrix&);
-		matrix& operator *      (double);
-		matrix& operator *=     (matrix&);
-		matrix& operator /      (matrix&);
-		matrix& operator /=     (matrix&);
-		matrix& operator ~      (void);
-		virtual	matrix& operator =      (matrix&);
+		virtual ~matrix();
+
+		matrix& operator =      (const matrix&);
+		matrix& operator =      (matrix&&) noexcept;
+
+		matrix operator +      (const matrix&) const;
+		matrix operator +      (double) const;
+		matrix operator -      (const matrix&) const;
+		matrix operator -      (double) const;
+		matrix operator *      (const matrix&) const;
+		matrix operator *      (double) const;
+		matrix& operator *=     (const matrix&);
+		matrix operator /      (matrix&) const;	// Need to make the parameter const. There is a dependency on storeValues - sort out why.
+		matrix& operator /=     (matrix&);	// Need to make the parameter const. There is a dependency on storeValues - sort out why.
+		matrix operator ~      (void);	// Need to make the overloaded operator const. Depends on operator /=.
 		void     normalise(void);
 		void     minmax(real* min, real* max);
 		real     average(void);
 		real     mean_square(void);
 		real     det(void);
 		real     trace(void);
-		real* operator []    (int i) { return Values + (((long long)Columns) * ((long long)i)); }
+		real* operator [] (int i) const { return Values + (((long long)Columns) * ((long long)i)); }
 		int      transpose(void);
 		matrix& extract(int FirstRow, int FirstCol,
 			int RowsTotal, int ColsTotal);
@@ -77,11 +81,11 @@ namespace dkmrx {
 		int      is_empty(void) { return !Rows; }
 		void     name(const char*);
 		char* name(void) { return Name; }
-		int      columns(void) { return Columns; }
-		int      rows(void) { return Rows; }
-		STATUS   status(void) { return Status; }
-		void     status(STATUS s) { Status = s; }
-		static  matrix& identity(int);
+		int      columns(void) const { return Columns; }
+		int      rows(void) const { return Rows; }
+		//STATUS   status(void) { return Status; }
+		//void     status(STATUS s) { Status = s; }
+		static  matrix identity(int);
 		// Homogeneous group
 		int             toHG(real = 1.0);
 		int             fromHG(void);
@@ -98,7 +102,7 @@ namespace dkmrx {
 	private:
 
 		real* Values;
-		STATUS  Status;
+		//STATUS  Status;
 		int     Rows, Columns;
 		struct { real* MemoryArea; char* FileName; } Storage;
 		char* Name;
