@@ -30,7 +30,7 @@ Modification history:
 
 using namespace dkmrx;
 
-const double myPi = 3.14159265358979323846;
+const double myPi = 3.141592653589793238463;
 
 CubesGeometry::CubesGeometry(void):radius_(0.0), xdim_(0), ydim_(0),
 	inxStepAct1_(0), dParamAct2_(0.0), dParamAct3_(0.0),

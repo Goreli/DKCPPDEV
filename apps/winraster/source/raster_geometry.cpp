@@ -35,7 +35,7 @@ using namespace dkmrx;
 using std::ios;
 using std::fstream;
 
-const double myPi = 3.14159265358979323846;
+const double myPi = 3.141592653589793238463;
 
 struct RasterGeometry::RGBPixel_
 {
