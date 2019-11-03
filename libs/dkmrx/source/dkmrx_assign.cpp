@@ -35,27 +35,27 @@ matrix& matrix::operator=(const matrix& mx)
 {
 	mError::set();
 
-	if( mx.Values == nullptr)
+	if( mx.pValues_ == nullptr)
 	{
 	    empty();
 	    return *this;
 	}
 
-	if ( Values != nullptr) delete [] Values;
-	Rows=mx.Rows;
-	Columns=mx.Columns;
-	size_t MatSize = mx.Rows * mx.Columns;
-	Values= new real[MatSize];
-	if ( Values == nullptr)
+	if ( pValues_ != nullptr) delete [] pValues_;
+	iRows_=mx.iRows_;
+	iColumns_=mx.iColumns_;
+	size_t MatSize = mx.iRows_ * mx.iColumns_;
+	pValues_= new real[MatSize];
+	if ( pValues_ == nullptr)
 	{
 	    mError::set( MERR_INSUFFICIENT_MEMORY );
 	    mError::message("Not enough memory","matrix::operator=(const matrix& mx)");
-	    Rows=Columns=0;
+	    iRows_=iColumns_=0;
 	    return *this;
 	}
 	real *index1,*index2,*top;
-	index1= Values;
-	index2= mx.Values;
+	index1= pValues_;
+	index2= mx.pValues_;
 	top   = index1 + MatSize;
 	while ( index1<top ) *index1++ = *index2++;
 	return *this;
@@ -65,19 +65,19 @@ matrix& matrix::operator=(matrix&& mx) noexcept
 {
 	mError::set();
 
-	if (mx.Values == nullptr)
+	if (mx.pValues_ == nullptr)
 	{
 		empty();
 		return *this;
 	}
 
-	if (Values != nullptr) delete[] Values;
-	Rows = mx.Rows;
-	Columns = mx.Columns;
-	Values = mx.Values;
+	if (pValues_ != nullptr) delete[] pValues_;
+	iRows_ = mx.iRows_;
+	iColumns_ = mx.iColumns_;
+	pValues_ = mx.pValues_;
 
-	mx.Values = nullptr;
-	mx.Rows = 0;
-	mx.Columns = 0;
+	mx.pValues_ = nullptr;
+	mx.iRows_ = 0;
+	mx.iColumns_ = 0;
 	return *this;
 }

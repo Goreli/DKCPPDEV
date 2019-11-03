@@ -36,10 +36,10 @@ using namespace dkmrx;
 matrix matrix::operator / (matrix& A) const
 {
 	mError::set();
-	if( (A.Columns  != A.Rows)     ||
-	    (A.Columns  != Rows)       ||
-	    (A.Values == nullptr)         ||
-	    (Values == nullptr)
+	if( (A.iColumns_  != A.iRows_)     ||
+	    (A.iColumns_  != iRows_)       ||
+	    (A.pValues_ == nullptr)         ||
+	    (pValues_ == nullptr)
 	  )
 	{
 		mError::set( MERR_INCOMPATIBLE_MATRICES );
@@ -50,19 +50,13 @@ matrix matrix::operator / (matrix& A) const
     int gaussError=0;
 	matrix mrx(*this);
     
-	if(mrx.Values == nullptr)
+	if(mrx.pValues_ == nullptr)
 	{
 	    mError::set( MERR_INSUFFICIENT_MEMORY );
 	    mError::message("Not enough memory","matrix::operator / (const matrix& A) const");
 	}
-	else if ( A.storeValues(STORE_OPERATION::SAVE) )
-	{
-	 mError::set( MERR_INSUFFICIENT_MEMORY_OR_DISK );
-	 mError::message("Can not store Values","matrix::operator / (const matrix& A) const");
-	}
-      else gaussError=gauss_elimination(A.Columns,mrx.Columns,A.Values,mrx.Values);
-
-    A.storeValues(STORE_OPERATION::LOAD);
+    else
+		gaussError=gauss_elimination(A.iColumns_,mrx.iColumns_,A.pValues_,mrx.pValues_);
 
 	if ( gaussError > 0 )
 	{
@@ -79,14 +73,43 @@ matrix matrix::operator / (matrix& A) const
 	}
 	return mrx;
 }
-  
+
+matrix matrix::operator / (real k) const
+{
+	mError::set();
+
+	if (pValues_ == nullptr)
+	{
+		mError::set(MERR_WRONG_THIS_OBJECT);
+		mError::message("Matrix has no values", "matrix::operator / (real) const");
+		return matrix();
+	}
+
+	matrix mrx(iRows_, iColumns_);
+	if (mrx.pValues_ == nullptr)
+	{
+		mError::set(MERR_INSUFFICIENT_MEMORY);
+		mError::message("Not enough memory", "matrix::operator / (real) const");
+	}
+	else
+	{
+		real* pThis = pValues_;
+		real* pTop = pThis + iColumns_ * iRows_;
+		real* pThat = mrx.pValues_;
+		while (pThis < pTop)
+			*(pThat++) = *(pThis++) / k;
+	}
+	return mrx;
+}
+
+
 matrix& matrix::operator /= (matrix& A)
 {
 	mError::set();
-	if( (A.Columns  != A.Rows)     ||
-	    (A.Columns  != Rows)       ||
-	    (A.Values == nullptr)         ||
-	    (this->Values == nullptr)
+	if( (A.iColumns_  != A.iRows_)     ||
+	    (A.iColumns_  != iRows_)       ||
+	    (A.pValues_ == nullptr)         ||
+	    (this->pValues_ == nullptr)
 	  )
 	{
 		mError::set( MERR_INCOMPATIBLE_MATRICES );
@@ -96,14 +119,7 @@ matrix& matrix::operator /= (matrix& A)
 
     int gaussError=0;
     
-    if ( A.storeValues(STORE_OPERATION::SAVE) )
-    {
-	 mError::set( MERR_INSUFFICIENT_MEMORY_OR_DISK );
-	 mError::message("Can not store Values","matrix::operator /= (const matrix& A)");
-    }
-    else gaussError=gauss_elimination(A.Columns,this->Columns,A.Values,this->Values);
-
-    A.storeValues(STORE_OPERATION::LOAD);
+    gaussError=gauss_elimination(A.iColumns_,this->iColumns_,A.pValues_,this->pValues_);
 
 	if ( gaussError > 0 )
 	{
@@ -120,11 +136,29 @@ matrix& matrix::operator /= (matrix& A)
 	return *this;
 }
 
+matrix& matrix::operator /= (real k)
+{
+	mError::set();
+	if (pValues_ == nullptr)
+	{
+		mError::set(MERR_INCOMPATIBLE_MATRICES);
+		mError::message("Matrix has no values", "matrix::operator /= (real)");
+		return *this;
+	}
+
+	real* pThis = pValues_;
+	real* pTop = pThis + iRows_ * iColumns_;
+	while (pThis < pTop)
+		*pThis++ /= k;
+
+	return *this;
+}
+
 matrix  matrix::operator ~ (void)
 {
 	mError::set();
-	if( (this->Columns  != Rows)     ||
-	    (this->Values == nullptr)
+	if( (this->iColumns_  != iRows_)     ||
+	    (this->pValues_ == nullptr)
 	  )
 	{
 		mError::set( MERR_WRONG_THIS_OBJECT );
@@ -132,8 +166,8 @@ matrix  matrix::operator ~ (void)
 		return matrix();
 	}
 
-    matrix mrx = std::move( matrix::identity(this->Columns) );
-	if( mrx.Values== nullptr)
+    matrix mrx = std::move( matrix::identity(this->iColumns_) );
+	if( mrx.pValues_== nullptr)
 	{
 	    mError::set( MERR_INSUFFICIENT_MEMORY );
 	    mError::message("Not enough memory","matrix::operator ~ (void) const");

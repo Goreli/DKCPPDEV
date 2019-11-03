@@ -34,10 +34,10 @@ using namespace dkmrx;
 matrix matrix::operator - (const matrix& mx) const
 {
 	mError::set();
-	if( (Rows != mx.Rows) ||
-	    (Columns != mx.Columns) ||
-	    (Values== nullptr)      ||
-	    (mx.Values== nullptr)
+	if( (iRows_ != mx.iRows_) ||
+	    (iColumns_ != mx.iColumns_) ||
+	    (pValues_== nullptr)      ||
+	    (mx.pValues_== nullptr)
 	  )
 	{
 		mError::set( MERR_INCOMPATIBLE_MATRICES );
@@ -45,10 +45,10 @@ matrix matrix::operator - (const matrix& mx) const
 		return matrix();
 	}
 
-	size_t MatSize=Rows*Columns;
+	size_t MatSize=iRows_*iColumns_;
 
-	matrix mrx(Rows, Columns);
-	if(mrx.Values == nullptr)
+	matrix mrx(iRows_, iColumns_);
+	if(mrx.pValues_ == nullptr)
 	{
 	  mError::set( MERR_INSUFFICIENT_MEMORY );
 	  mError::message("Not enough memory", "matrix::operator - (const matrix&) const");
@@ -57,9 +57,9 @@ matrix matrix::operator - (const matrix& mx) const
 	{    
 	 real *index1,*index2,*index3,*top;
 	 
-		index1 = top = Values;
-		index2 = mx.Values;
-		index3 = mrx.Values;
+		index1 = top = pValues_;
+		index2 = mx.pValues_;
+		index3 = mrx.pValues_;
 		top   += MatSize;
 		for (; index1<top; index1++,index2++,index3++)
 		while( index1<top ) *index3++ = *index1++ - *index2++;
@@ -67,33 +67,73 @@ matrix matrix::operator - (const matrix& mx) const
 	return mrx;
 }
 
-matrix matrix::operator - (double k) const
+matrix matrix::operator - (real k) const
 {
 	mError::set();
 
-	if( Values == nullptr)
+	if( pValues_ == nullptr)
 	{
 		mError::set( MERR_WRONG_THIS_OBJECT );
-		mError::message("Matrix has no values","matrix::operator - (double) const");
+		mError::message("Matrix has no values","matrix::operator - (real) const");
 		return matrix();
 	}     
 
-real *start = Values;
-real *finish = start + Columns*Rows;
+real *start = pValues_;
+real *finish = start + iColumns_*iRows_;
 
-	matrix mrx(Rows, Columns);
-	if(mrx.Values == nullptr)
+	matrix mrx(iRows_, iColumns_);
+	if(mrx.pValues_ == nullptr)
 	{
 		mError::set( MERR_INSUFFICIENT_MEMORY );
-		mError::message("Not enough memory","matrix::operator - (double) const");
+		mError::message("Not enough memory","matrix::operator - (real) const");
 	}
 	else
 	{
-	 	real *dest = mrx.Values;
+	 	real *dest = mrx.pValues_;
 		while( start < finish )
-			*(dest++) = *(start++) - (real)k;
+			*(dest++) = *(start++) - k;
 	}
 
     return mrx;
 }
 
+matrix& matrix::operator -= (const matrix& mx)
+{
+	mError::set();
+	if ((iRows_ != mx.iRows_) ||
+		(iColumns_ != mx.iColumns_) ||
+		(pValues_ == nullptr) ||
+		(mx.pValues_ == nullptr)
+		)
+	{
+		mError::set(MERR_INCOMPATIBLE_MATRICES);
+		mError::message("Incompatible matrices", "matrix::operator -= (const matrix&)");
+		return *this;
+	}
+
+	real* pThis = pValues_;
+	real* pThat = mx.pValues_;
+	real* pTop = pThis + iRows_ * iColumns_;
+	while (pThis < pTop)
+		*pThis++ -= *pThat++;
+
+	return *this;
+}
+
+matrix& matrix::operator -= (real k)
+{
+	mError::set();
+	if (pValues_ == nullptr)
+	{
+		mError::set(MERR_INCOMPATIBLE_MATRICES);
+		mError::message("Matrix has no values", "matrix::operator -= (real)");
+		return *this;
+	}
+
+	real* pThis = pValues_;
+	real* pTop = pThis + iRows_ * iColumns_;
+	while (pThis < pTop)
+		*pThis++ -= k;
+
+	return *this;
+}

@@ -31,48 +31,13 @@ Modification history:
 
 using namespace dkmrx;
 
-#if defined(I387_32)
-static void multiply_in_assembler_on_4_by_4
-(real* ToTransform, real* Transformer, real* Transformed, unsigned long Rows);
-// Implementation of the function allows to specify the Transformed pointer equal to
-// the ToTransform pointer. In this case a product will be written to the source matrix.
-// We can take advantage of this in the *= operator in order not to allocate the temp area.
-#endif	// I387_32
 
-matrix matrix::operator * (double k) const
-{
-	mError::set();
-
-	if( Values == nullptr)
-	{
-		mError::set( MERR_WRONG_THIS_OBJECT );
-		mError::message("Matrix has no values","matrix::operator * (double) const");
-		return matrix();
-	}             
-
-real *start = Values;
-real *finish = start + Columns*Rows;
-
-	matrix mrx(Rows, Columns);
-	if( mrx.Values== nullptr)
-	{
-		mError::set( MERR_INSUFFICIENT_MEMORY );
-		mError::message("Not enough memory","matrix::operator * (double) const");
-	}
-	else
-	{
-	 	real *dest = mrx.Values;
-		while( start < finish )
-			*(dest++) = *(start++) * (real)k;
-	}
-    return mrx;
-}
 matrix matrix::operator * (const matrix& mx) const
 {
 	mError::set();
-	if( (Columns != mx.Rows) ||
-	    (Values== nullptr)      ||
-	    (mx.Values== nullptr)
+	if( (iColumns_ != mx.iRows_) ||
+	    (pValues_== nullptr)      ||
+	    (mx.pValues_== nullptr)
 	  )
 	{
 		mError::set( MERR_INCOMPATIBLE_MATRICES );
@@ -80,8 +45,8 @@ matrix matrix::operator * (const matrix& mx) const
 		return matrix();
 	}
 
-	matrix mrx(Rows,mx.Columns);
-	if( mrx.Values== nullptr)
+	matrix mrx(iRows_,mx.iColumns_);
+	if( mrx.pValues_== nullptr)
 	{
 	  mError::set( MERR_INSUFFICIENT_MEMORY );
 	  mError::message("Not enough memory","matrix::operator * (const matrix& mx) const");
@@ -98,14 +63,14 @@ real* s2Top;
 real* firstS2;
 real *firstD, *mx1_values, *firstDTop, *dTop;
 
-columns    = mx.Columns;
-firstD     = mrx.Values;
-firstDTop  = mrx.Values +   mx.Columns;
-dTop       = mrx.Values + ( mx.Columns * mrx.Rows );
-firstS2    = mx.Values;
-s2Top      = mx.Values  + ( mx.Columns * mx.Rows );
-s1         = Values;
-mx1_values = Values;
+columns    = mx.iColumns_;
+firstD     = mrx.pValues_;
+firstDTop  = mrx.pValues_ +   mx.iColumns_;
+dTop       = mrx.pValues_ + ( mx.iColumns_ * mrx.iRows_ );
+firstS2    = mx.pValues_;
+s2Top      = mx.pValues_  + ( mx.iColumns_ * mx.iRows_ );
+s1         = pValues_;
+mx1_values = pValues_;
 
 	while( firstD < firstDTop )
 	{
@@ -132,12 +97,41 @@ mx1_values = Values;
 	return mrx;
 }
 
+matrix matrix::operator * (real k) const
+{
+	mError::set();
+
+	if (pValues_ == nullptr)
+	{
+		mError::set(MERR_WRONG_THIS_OBJECT);
+		mError::message("Matrix has no values", "matrix::operator * (real) const");
+		return matrix();
+	}
+
+	matrix mrx(iRows_, iColumns_);
+	if (mrx.pValues_ == nullptr)
+	{
+		mError::set(MERR_INSUFFICIENT_MEMORY);
+		mError::message("Not enough memory", "matrix::operator * (real) const");
+	}
+	else
+	{
+		real* pThis = pValues_;
+		real* pTop = pThis + iColumns_ * iRows_;
+		real* pThat = mrx.pValues_;
+		while (pThis < pTop)
+			*(pThat++) = *(pThis++) * k;
+	}
+	return mrx;
+}
+
+
 matrix& matrix::operator *= (const matrix& mx)
 {
 	mError::set();
-	if( (this->Columns != mx.Rows)  ||
-		(this->Values== nullptr)       ||
-		(mx.Values== nullptr)
+	if( (this->iColumns_ != mx.iRows_)  ||
+		(this->pValues_== nullptr)       ||
+		(mx.pValues_== nullptr)
 	  )
 	{
 		mError::set( MERR_INCOMPATIBLE_MATRICES );
@@ -145,7 +139,7 @@ matrix& matrix::operator *= (const matrix& mx)
 		return *this;
 	}
 
-	real *temp = new real[(this->Rows)*(mx.Columns)];
+	real *temp = new real[(this->iRows_)*(mx.iColumns_)];
 	if( temp == nullptr)
 	{
 	  mError::set( MERR_INSUFFICIENT_MEMORY );
@@ -163,17 +157,17 @@ real* dTop;
 real *firstD, *mx1_values, *firstDTop;
 
 firstD     = temp;
-firstDTop  = temp +  mx.Columns;
-dTop       = temp + ( mx.Columns * this->Rows );
-firstS2    = mx.Values;
-s1         = this->Values;
-mx1_values = this->Values;
+firstDTop  = temp +  mx.iColumns_;
+dTop       = temp + ( mx.iColumns_ * this->iRows_ );
+firstS2    = mx.pValues_;
+s1         = this->pValues_;
+mx1_values = this->pValues_;
 
-  if( this->Columns==4 && mx.Columns==4 )
+  if( this->iColumns_==4 && mx.iColumns_==4 )
   // This case is to support a fast multiplication for the geometry.
   {
 #if defined(I387_32)
-	multiply_in_assembler_on_4_by_4(this->Values, mx.Values, temp, this->rows());
+	multiply_in_assembler_on_4_by_4(this->pValues_, mx.pValues_, temp, this->rows());
 #else	// I387_32
 	while( firstD < firstDTop )
 	{
@@ -197,8 +191,8 @@ mx1_values = this->Values;
 	int   columns;
 	real* s2Top;
 
-	columns    = mx.Columns;
-	s2Top      = mx.Values  + ( mx.Columns * mx.Rows );
+	columns    = mx.iColumns_;
+	s2Top      = mx.pValues_  + ( mx.iColumns_ * mx.iRows_ );
 
 	while( firstD < firstDTop )
 	{
@@ -223,127 +217,26 @@ mx1_values = this->Values;
 }
 // ***************** End of the actual multiplication
 
-	this->Columns = mx.Columns;
-	delete [] this->Values;
-	this->Values = temp;
+	this->iColumns_ = mx.iColumns_;
+	delete [] this->pValues_;
+	this->pValues_ = temp;
 	return *this;
 }
 
-#if defined(I387_32)
-static void multiply_in_assembler_on_4_by_4
-(real* ToTransform, real* Transformer, real* Transformed, unsigned long Rows)
+matrix& matrix::operator *= (real k)
 {
-real*	CoordPtr=ToTransform;			// Source.
-real*	TransPtr=Transformer;			// Transformer.
-real*	ResultPtr=Transformed;			// Destination.
-unsigned long	NumRows=Rows;			// Number of rows in the source array.
+	mError::set();
+	if (pValues_ == nullptr)
+	{
+		mError::set(MERR_INCOMPATIBLE_MATRICES);
+		mError::message("Matrix has no values", "matrix::operator *= (real)");
+		return *this;
+	}
 
-__asm
-{
-	pushad	;// Save registers.
+	real* pThis = pValues_;
+	real* pTop = pThis + iRows_ * iColumns_;
+	while (pThis < pTop)
+		*pThis++ *= k;
 
-	;// Initialize pointers to the arrays.
-	mov	eax, CoordPtr			;// Initialize a pointer to a row of coordinates.
-	mov	ebx, TransPtr			;// Initialize a pointer to a column of the Transformer.
-	mov	edx, ResultPtr			;// Initialize the result pointer.
-	mov	ecx, NumRows			;// Load the row counter.
-
-	;// Load the coprocessor with one row of coordinates.
-	;// This will bring us to a state that we will call "INITIAL STATE".
-load_coordinates:
-	fld	qword ptr (0*8)[eax]	;// Load the first quantity of the row.
-	fld	qword ptr (1*8)[eax]
-	fld	qword ptr (2*8)[eax]
-	fld	qword ptr (3*8)[eax]	;// Load the last quantity of the row.
-
-	;// Load the coprocessor with the first column from the Transformer matrix
-	;// and perform a scalar multiplication on the row of coordinates already kept there.
-	fld	qword ptr ( 0*8)[ebx]	;// Load the first quantity of the column
-	fmul	st, st(4)			;// and multiply it by the first coordinate.
-;// Take advantage of the parallel processing and advance a pointer sitting in eax.
-add	eax, 4*8					;// Point to the next row of coordinates.
-	fld	qword ptr ( 4*8)[ebx]	;// Load the second quantity of the column
-	fmul	st, st(4)			;// and multiply it by the second coordinate.
-	fld	qword ptr ( 8*8)[ebx]	;// Load the third quantity of the column
-	fmul	st, st(4)			;// and multiply it by the third coordinate.
-	fld	qword ptr (12*8)[ebx]	;// Load the fourth quantity of the column
-	fmul	st, st(4)			;// and multiply it by the fourth coordinate.
-	;// Calculate and save the sum of the four products.
-	fadd						;// Fourth + Third
-	fadd						;// Fourth + Third + Second
-	fadd						;// Fourth + Third + Second + First
-	fstp	qword ptr ( 0*8)[edx]	;// Record the sum.
-	;// At this stage we are back to the INITIAL STATE when the coprocessor is loaded
-	;// with four quantities from a row of the Coordinates matrix.
-
-	;// Load the coprocessor with the second column from the Transformer matrix
-	;// and perform a scalar multiplication on the row of coordinates already kept there.
-	fld	qword ptr ( 1*8)[ebx]	;// Load the first quantity of the column
-	fmul	st, st(4)			;// and multiply it by the first coordinate.
-	fld	qword ptr ( 5*8)[ebx]	;// Load the second quantity of the column
-	fmul	st, st(4)			;// and multiply it by the second coordinate.
-	fld	qword ptr ( 9*8)[ebx]	;// Load the third quantity of the column
-	fmul	st, st(4)			;// and multiply it by the third coordinate.
-	fld	qword ptr (13*8)[ebx]	;// Load the fourth quantity of the column
-	fmul	st, st(4)			;// and multiply it by the fourth coordinate.
-	;// Calculate and save the sum of the four products.
-	fadd						;// Fourth + Third
-	fadd						;// Fourth + Third + Second
-	fadd						;// Fourth + Third + Second + First
-	fstp	qword ptr ( 1*8)[edx]	;// Record the sum.
-	;// At this stage we are back to the INITIAL STATE when the coprocessor is loaded
-	;// with four quantities from a row of the Coordinates matrix.
-
-	;// Load the coprocessor with the third column from the Transformer matrix
-	;// and perform a scalar multiplication on the row of coordinates already kept there.
-	fld	qword ptr ( 2*8)[ebx]	;// Load the first quantity of the column
-	fmul	st, st(4)			;// and multiply it by the first coordinate.
-	fld	qword ptr ( 6*8)[ebx]	;// Load the second quantity of the column
-	fmul	st, st(4)			;// and multiply it by the second coordinate.
-	fld	qword ptr (10*8)[ebx]	;// Load the third quantity of the column
-	fmul	st, st(4)			;// and multiply it by the third coordinate.
-	fld	qword ptr (14*8)[ebx]	;// Load the fourth quantity of the column
-	fmul	st, st(4)			;// and multiply it by the fourth coordinate.
-	;// Calculate and save the sum of the four products.
-	fadd						;// Fourth + Third
-	fadd						;// Fourth + Third + Second
-	fadd						;// Fourth + Third + Second + First
-	fstp	qword ptr ( 2*8)[edx]	;// Record the sum.
-	;// At this stage we are back to the INITIAL STATE when the coprocessor is loaded
-	;// with four quantities from a row of the Coordinates matrix.
-
-	;// Load the coprocessor with the fourth column from the Transformer matrix
-	;// and perform a scalar multiplication on the row of coordinates already kept there.
-	fld	qword ptr ( 3*8)[ebx]	;// Load the first quantity of the column
-	fmul	st, st(4)			;// and multiply it by the first coordinate.
-	fld	qword ptr ( 7*8)[ebx]	;// Load the second quantity of the column
-	fmul	st, st(4)			;// and multiply it by the second coordinate.
-	fld	qword ptr (11*8)[ebx]	;// Load the third quantity of the column
-	fmul	st, st(4)			;// and multiply it by the third coordinate.
-	fld	qword ptr (15*8)[ebx]	;// Load the fourth quantity of the column
-	fmul	st, st(4)			;// and multiply it by the fourth coordinate.
-	;// Calculate and save the sum of the four products.
-	fadd						;// Fourth + Third
-	fadd						;// Fourth + Third + Second
-	fadd						;// Fourth + Third + Second + First
-	fstp	qword ptr ( 3*8)[edx]	;// Record the sum.
-	;// At this stage we are back to the INITIAL STATE when the coprocessor is loaded
-	;// with four quantities from a row of the Coordinates matrix.
-
-	;// Flush the coprocessor by poping four initial coordinates from the coprocessor in order
-	;// not to generate an exception during the next session.
-	fcompp						;// Pop two registers from the coprocessor.
-;// Take advantage of the parallel processing and advance a pointer sitting in edx.
-add	edx, 4*8					;// Point to the next row of results.
-	fcompp						;// Pop two registers from the coprocessor.
-
-	;// Process the next row. CODE FROM THIS BLOCK MUST BE SPREAD INTO THE PREVIOUS
-	;// SECTION IN ORDER TO TAKE ADVANTAGE OF THE PARALLEL PROCESSING.
-	dec	ecx						;// The loopd statement does not work here unfortunately
-	jnz	load_coordinates		;// because it attempts to make a short jump.
-
-	popad						;// Restore registers.
-}	// __asm
+	return *this;
 }
-#endif	// I387_32
-

@@ -48,15 +48,15 @@ std::streamsize tempPrecision = out.precision();
 	}
 
     out<<"Matrix: "; 
-    if ( mx.Name != nullptr) out<<mx.Name;
+    if ( mx.pName_ != nullptr) out<<mx.pName_;
     out<<"\n";
-    out<<"rows "<<mx.Rows<<"; columns "<<mx.Columns;
+    out<<"rows "<<mx.iRows_<<"; columns "<<mx.iColumns_;
     out<<"; width "<<tempWidth<<"; precision "<<tempPrecision<<"\n";
     
-	if ( mx.Values != nullptr)
-	for ( int i=0; i<mx.Rows; i++ )
+	if ( mx.pValues_ != nullptr)
+	for ( int i=0; i<mx.iRows_; i++ )
 	{
-	  for ( int j=0; j<mx.Columns; j++ )
+	  for ( int j=0; j<mx.iColumns_; j++ )
 	  {
 	    out.width(tempWidth);
 	    out.precision(tempPrecision);
@@ -72,7 +72,7 @@ std::streamsize tempPrecision = out.precision();
 std::istream& dkmrx::operator>>(std::istream& in,matrix& mx)
 {    
     mError::set();
-    if ( mx.Values != nullptr)
+    if ( mx.pValues_ != nullptr)
 	mx.empty();
 // READ HEADER             
 int   chcount = 81; // both header strings are assumed to be less than 80 ch long
@@ -118,14 +118,14 @@ int flag = 0;
 	if( tempptr != nullptr)
 	{
 	  tempptr += std::strlen("rows")+1;
-	  mx.Rows = std::atoi(tempptr);
+	  mx.iRows_ = std::atoi(tempptr);
 	} 
 	else flag++;
 	tempptr = std::strstr(str_lwr(str),"columns");
 	if( tempptr != nullptr)
 	{
 	  tempptr += std::strlen("columns")+1;
-	  mx.Columns = std::atoi(tempptr);
+	  mx.iColumns_ = std::atoi(tempptr);
 	} 
 	else flag++;
 int wid=0;
@@ -137,8 +137,8 @@ int wid=0;
 	} 
 	else flag++;
 	if( 
-		mx.Rows    == 0  ||
-		mx.Columns == 0  ||
+		mx.iRows_    == 0  ||
+		mx.iColumns_ == 0  ||
 		wid        == 0  ||
 		flag       != 0
 	  )
@@ -150,7 +150,7 @@ int wid=0;
       return in;
 	}
 // READ VALUES
-chcount = mx.Columns * wid * 2;
+chcount = mx.iColumns_ * wid * 2;
 delete [] str;
 	str    = new char[chcount];
 	if ( str == nullptr)
@@ -160,8 +160,8 @@ delete [] str;
 	  mError::message("Not enough memory","matrix::operator >>");
 	  return in;
 	}
-	mx.Values = new real [ mx.Rows * mx.Columns ];
-	if ( mx.Values == nullptr)
+	mx.pValues_ = new real [ mx.iRows_ * mx.iColumns_ ];
+	if ( mx.pValues_ == nullptr)
 	{
 	  delete [] str;
 	  mx.empty();
@@ -169,7 +169,7 @@ delete [] str;
 	  mError::message("Not enough memory","matrix::operator >>");
 	  return in;
 	}         
-	for(int row=0; row<mx.Rows; row++)
+	for(int row=0; row<mx.iRows_; row++)
 	{   
 		in.getline(str,chcount);
 		if(in.eof())
@@ -181,7 +181,7 @@ delete [] str;
 		  return in;
 		} 
 		tempptr = std::strtok(str," \t,;");
-		for(int col=0; col<mx.Columns; col++)
+		for(int col=0; col<mx.iColumns_; col++)
 		{
 		  mx[row][col] = (real)std::atof(tempptr);
 		  tempptr = std::strtok(nullptr," \t,;");

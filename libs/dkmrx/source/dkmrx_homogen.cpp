@@ -41,13 +41,13 @@ matrix& getNonHG(matrix&);
 int matrix::toHG(real scaleFactor)    // to HomoGeneous form
 {
   mError::set();
-  if ( Values == nullptr ) 
+  if ( pValues_ == nullptr ) 
   {
     mError::set( MERR_WRONG_THIS_OBJECT, 0 );
     mError::message("Can not apply to an EMPTY object","matrix::toHG(real)");
     return 2;
   }
-  real* newval = new real [(Columns+1) * Rows];
+  real* newval = new real [(iColumns_+1) * iRows_];
   if ( newval == nullptr)
   {
     mError::set( MERR_INSUFFICIENT_MEMORY );
@@ -56,10 +56,10 @@ int matrix::toHG(real scaleFactor)    // to HomoGeneous form
   }
 
   real* Target=newval;
-  real* Source=Values;
-  real* sourceBorder=Source+Columns;
-  real* sourceTop=Source+Columns*Rows;
-  int step=Columns;
+  real* Source=pValues_;
+  real* sourceBorder=Source+iColumns_;
+  real* sourceTop=Source+iColumns_*iRows_;
+  int step=iColumns_;
 
   if ( scaleFactor == (real) 1 ) 
     while ( sourceBorder <= sourceTop )
@@ -76,36 +76,36 @@ int matrix::toHG(real scaleFactor)    // to HomoGeneous form
       sourceBorder += step;
     }
         
-  delete [] Values;
-  Values = newval;
-  Columns++;
+  delete [] pValues_;
+  pValues_ = newval;
+  iColumns_++;
   return 0;
 }
 
 int matrix::fromHG()    // from HomoGeneous form
 {
   mError::set();
-  if ( Values == nullptr)
+  if ( pValues_ == nullptr)
   {
     mError::set( MERR_WRONG_THIS_OBJECT, 0 );
     mError::message("Can not apply to an EMPTY object","matrix::fromHG()");
     return 2;
   }
-  if ( Columns == 1 ) 
+  if ( iColumns_ == 1 ) 
   {
     mError::set( MERR_WRONG_THIS_OBJECT, 1 );
     mError::message("Can not apply to a 1 column object","matrix::fromHG()");
     return 3;
   }
-  real* newval = new real [(Columns-1) * Rows];
+  real* newval = new real [(iColumns_-1) * iRows_];
   if ( newval == nullptr)
     return 4;
   
-  int step=Columns-1;
+  int step=iColumns_-1;
   real* Target=newval;
-  real* Source=Values;
+  real* Source=pValues_;
   real* targetBorder=Target+step;
-  real* sourceTop=Values+Columns*Rows;
+  real* sourceTop=pValues_+iColumns_*iRows_;
   real scaleFactor;
 
   while ( Source < sourceTop )
@@ -121,8 +121,8 @@ int matrix::fromHG()    // from HomoGeneous form
     Source++;
   }
 
-  --Columns;
-  delete [] Values;
-  Values = newval;
+  --iColumns_;
+  delete [] pValues_;
+  pValues_ = newval;
   return 0;
 }

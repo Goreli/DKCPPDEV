@@ -32,7 +32,7 @@ I wrote the first modules of the library in C when I was a uni student. I was in
 ```C++
 m2 + m3;
 ```
-results in a temporary matrix object. Different types of handling are required depending on whether the result is immediately assigned to another matrix object or reused as an operand in another operation. The former requires to take over the content of the temporary object. The latter requires eventual deallocation of the temporary object.
+results in a temporary matrix object. Different types of handling are required depending on whether the result is immediately assigned to another matrix object or reused as an operand in another operation. The former may require to take over the content of the temporary object. The latter may need to eventually deallocate the temporary object.
 
 In the following example the overloaded addition operator creates a temporary object that is immediately assigned to object mrx3. Object mrx3 takes over the content of the temporary object.
 ```C++
