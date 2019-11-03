@@ -68,7 +68,7 @@ matrix matrix::identity(int Dim)
 	}
 	else
 	{
-		matrix identityMatrix(0.0, Dim, Dim);
+		matrix identityMatrix(Dim, Dim, 0.0);
 		if (identityMatrix.pValues_ == nullptr)
 		{
 			mError::set(MERR_INSUFFICIENT_MEMORY);
@@ -79,7 +79,8 @@ matrix matrix::identity(int Dim)
 			int   step = Dim + 1;
 			real* Ptr;
 			real* PtrTop = identityMatrix.pValues_ + Dim * Dim;
-			for (Ptr = identityMatrix.pValues_; Ptr < PtrTop; Ptr += step) *Ptr = 1.0;
+			for (Ptr = identityMatrix.pValues_; Ptr < PtrTop; Ptr += step)
+				*Ptr = 1.0;
 		}
 		return identityMatrix;
 	}

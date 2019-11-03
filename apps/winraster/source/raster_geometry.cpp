@@ -196,7 +196,7 @@ matrix mrxColorData;
 	{	// Create an artificial image just to keep going.
 	int rows = 90;
 	int cols = 3*rows;
-	matrix tempMatrix( 0.0, rows, cols );
+	matrix tempMatrix( rows, cols, 0.0);
 	    for ( int r = 0; r < rows; r++ )
 		for( int c = 0; c < cols; c++ )
 			if( c < cols/3 )
@@ -247,10 +247,8 @@ double w1,w2,w3;
 	w1 = 4 * w2; 
 	w3 = w1 * (windowRadius_/rasterRadius_ - 1);
 
-matrix aboutZ(0.0,1,3);
-	aboutZ[0][0]=0; aboutZ[0][1]=0; aboutZ[0][2]=1;
-matrix aboutX(0.0,1,3);
-	aboutX[0][0]=1; aboutX[0][1]=0; aboutX[0][2]=0;
+matrix aboutZ { {0, 0, 1} };
+matrix aboutX { {1, 0, 0} };
 
 mTransformer trans;
 	trans.rotate( -w1*frameCounter_/2, aboutZ, *rasterCentre_);
@@ -261,14 +259,6 @@ mPoint dest( -windowCentre_->x(), -rasterRadius_ );
 mPoint putFrom( dest.x(), -dest.y() + rasterRadius_ );
 	trans.rotate( -w2*frameCounter_/2, aboutX, putFrom );
 
-/*
-mTransformer tempTrans;
-	tempTrans.rotate( PI/2, aboutZ, dest );
-mLine newAbout(*windowDiag_);
-	newAbout.transform( tempTrans );
-
-	trans.rotate( -w2*frameCounter_/6, newAbout );
-*/
 	trans.rotate(  -w3*frameCounter_/2, aboutZ, *windowCentre_ );
 	transformedCoords_ = std::make_unique<mTransformable>(*initialCoords_);
 	transformedCoords_->transform( trans );

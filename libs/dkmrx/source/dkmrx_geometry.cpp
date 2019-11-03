@@ -33,15 +33,15 @@ Modification history:
 
 using namespace dkmrx;
 
-mPoint::mPoint(double x, double y, double z, double w)
+mPoint::mPoint(real x, real y, real z, real w)
 	: mTransformable(1)
 {
 real *ptr = (*this)[0];
 
-	*(ptr++) = (real) (x*w);
-	*(ptr++) = (real) (y*w);
-	*(ptr++) = (real) (z*w);
-	*ptr     = (real) w;
+	*(ptr++) = x*w;
+	*(ptr++) = y*w;
+	*(ptr++) = z*w;
+	*ptr     = w;
 }
 mPoint::mPoint(const mPoint& point) : mTransformable(point) {}
 
@@ -81,11 +81,10 @@ real *ptr = (*this)[0];
 	*ptr      = (real) M;
 }
 
-mLine::mLine(const mPoint& point1, const mPoint& point2, double par1, double par2)
+mLine::mLine(const mPoint& point1, const mPoint& point2, real par1, real par2)
 	:mTransformable(2)
 {
 	mError::set();
-matrix pars(2,2);
 	if( point1.columns() != 4 )
 	{
 		mError::set( MERR_WRONG_ARGUMENT, 1 );
@@ -98,10 +97,12 @@ matrix pars(2,2);
 		mError::message("Wrong second argument","mLine::mLine(const mPoint&, const mPoint&, double, double)");
 		return;
 	}
-	pars[0][0]    = (real) par1;
-	pars[1][0]    = (real) par2;
-	pars[0][1]    = pars[1][1] = 1.0;
-/*      
+
+matrix pars{ 
+	{par1, 1},
+	{par2, 1}
+};
+
 	(*this)[0][0] = point1[0][0];
 	(*this)[0][1] = point1[0][1];
 	(*this)[0][2] = point1[0][2];
@@ -111,46 +112,26 @@ matrix pars(2,2);
 	(*this)[1][2] = point2[0][2];
 	(*this)[1][3] = point2[0][3];
 	*this /= pars;
-*/      
-matrix temp(2,4);      
-matrix temp1;  
-	temp[0][0] = point1[0][0];
-	temp[0][1] = point1[0][1];
-	temp[0][2] = point1[0][2];
-	temp[0][3] = point1[0][3];
-	temp[1][0] = point2[0][0];
-	temp[1][1] = point2[0][1];
-	temp[1][2] = point2[0][2];
-	temp[1][3] = point2[0][3];
-	temp1 = temp/pars;
-	(*this)[0][0] = temp1[0][0];
-	(*this)[0][1] = temp1[0][1];
-	(*this)[0][2] = temp1[0][2];
-	(*this)[0][3] = temp1[0][3];
-	(*this)[1][0] = temp1[1][0];
-	(*this)[1][1] = temp1[1][1];
-	(*this)[1][2] = temp1[1][2];
-	(*this)[1][3] = temp1[1][3];
 }
 mLine::mLine(const mLine& line):mTransformable(line) {}
 mLine::mLine(void):mTransformable(1,2) {}
 
-mPoint mLine::point(double par) const
+mPoint mLine::point(real par) const
 {
 	mError::set();
-matrix *pnt = new matrix;
+	mPoint pnt;
 
-	if ( pnt == nullptr )
+	if (pnt.is_empty())
 	{
-	    mError::set( MERR_INSUFFICIENT_MEMORY );
-	    mError::message("Not enough memory","mLine::point");
-	    return *((mPoint*)nullptr);
+		mError::set(MERR_INSUFFICIENT_MEMORY);
+		mError::message("Not enough memory", "mLine::point(real par) const");
+		return pnt;
 	}
 
-matrix temp(1,2);
+	matrix temp{ {par, 1} };
 
-	temp[0][0] = (real) par;
-	temp[0][1] = 1;
-	*pnt = temp * *this;
-	return *((mPoint*)pnt);
+	matrix& mPnt = pnt;
+	mPnt = temp * *this;
+
+	return pnt;
 }

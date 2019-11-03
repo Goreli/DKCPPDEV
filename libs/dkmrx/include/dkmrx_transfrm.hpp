@@ -50,14 +50,13 @@ namespace dkmrx {
 		void translate(real x, real y, real z, const matrix& putFrom);
 		void scale(real Kx, real Ky, real Kz, const matrix& about);
 		void reset(void);
-		void concatenate(const mTransformer&);
 	};
 
 	class mTransformable : public matrix
 	{
 	public:
-		mTransformable(int rows);
-		mTransformable(real init_value, int rows);
+		mTransformable(int dim);
+		mTransformable(int dim, real init_value);
 		mTransformable(const mTransformable&);
 		mTransformable(void);
 

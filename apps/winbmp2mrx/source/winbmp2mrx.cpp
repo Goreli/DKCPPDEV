@@ -75,7 +75,7 @@ int main(int iArgC, char** lplpszArgV)
 
 	// Populate a dkmrx matrix with the image data and write it out
 	// to the output file using the standard dkmrx io interface.
-	dkmrx::matrix mrx(0.0, winBmpInfoHeader.getHeight(), winBmpInfoHeader.getWidth());
+	dkmrx::matrix mrx(winBmpInfoHeader.getHeight(), winBmpInfoHeader.getWidth(), 0.0);
 	winBmpInfoHeader.wbmp2mrx(fileHeader.bfOffBits, inStream, mrx);
 	char* strOutFileName = *(lplpszArgV + 2);
 	writeMatrix(mrx, strOutFileName);

@@ -82,7 +82,7 @@ void CubesGeometry::setSize(unsigned xdim, unsigned ydim)
 {
 unsigned minDim;
 double tmp_scale;
-matrix temp(0.0,1,3);
+matrix temp(1,3, 0.0);
 mTransformer kit;
 
 	xdim_ = xdim;
@@ -218,7 +218,10 @@ mTransformer kit;
 		mTransformer kit1;
 		kit1.scale(scale, scale, scale, centre_[i]);
 		kit1.translate((centre_[0]-centre_[i])*p,origin_ );
-		kit1.concatenate( kit );
+
+		// Concatenate the two transformations: kit1 and kit.
+		kit1 *= kit;
+
 		cubes_[i][2] = cubes_[i][1];
 		cubes_[i][2].transform( kit1 );
 	}

@@ -39,7 +39,9 @@ namespace dkmrx {
 
 		matrix(void);
 		matrix(int rows, int columns);
-		matrix(real init_value, int rows, int columns);
+		matrix(int rows, int columns, real init_value);
+		matrix(const std::initializer_list<const std::initializer_list<real>>&);
+
 		matrix(const matrix&);
 		matrix(matrix&&) noexcept;
 
@@ -48,7 +50,7 @@ namespace dkmrx {
 		matrix& operator =      (const matrix&);
 		matrix& operator =      (matrix&&) noexcept;
 
-		real* operator [] (int i) const { return pValues_ + (((long long)iColumns_) * ((long long)i)); }
+		real* operator [] (size_t i) const { return pValues_ + (((long long)iColumns_) * ((long long)i)); }
 		friend  std::ostream& operator <<    (std::ostream&, matrix&);
 		friend  std::istream& operator >>    (std::istream&, matrix&);
 		
