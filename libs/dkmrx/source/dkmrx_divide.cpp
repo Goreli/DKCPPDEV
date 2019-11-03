@@ -26,7 +26,6 @@ Modification history:
 
 */
 
-#include <memory>
 #include "dkmrx_matrix.hpp"
 #include "dkmrx_error.hpp"
 #include "dkmrx_gausseln.hpp"
@@ -153,27 +152,4 @@ matrix& matrix::operator /= (real k)
 
 	return *this;
 }
-
-matrix  matrix::operator ~ (void)
-{
-	mError::set();
-	if( (this->iColumns_  != iRows_)     ||
-	    (this->pValues_ == nullptr)
-	  )
-	{
-		mError::set( MERR_WRONG_THIS_OBJECT );
-		mError::message("Inappropriate matrix (this)","matrix::operator ~ (void) const");
-		return matrix();
-	}
-
-    matrix mrx = std::move( matrix::identity(this->iColumns_) );
-	if( mrx.pValues_== nullptr)
-	{
-	    mError::set( MERR_INSUFFICIENT_MEMORY );
-	    mError::message("Not enough memory","matrix::operator ~ (void) const");
-	}
-	else
-		mrx /= *this;
-	return mrx;
-}                                                                          
 

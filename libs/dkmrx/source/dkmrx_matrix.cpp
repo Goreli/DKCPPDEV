@@ -175,40 +175,6 @@ void matrix::empty()
 	}
 }
 
-matrix matrix::identity(int Dim)
-{
-	mError::set();
-	matrix identityMatrix;
-
-  if ( Dim <= 0 )
-  {
-    mError::set( MERR_ILLEGAL_DIMENSION );
-    mError::message("Illegal dimension","matrix::identity");
-    //matrix *I = new matrix;
-    //I->Status = STATUS::TEMPORARY;
-    //return *I;
-  }
-  else
-  {
-	  identityMatrix = matrix(0.0, Dim, Dim);
-	  if (identityMatrix.pValues_ == nullptr)
-	  {
-		  mError::set(MERR_INSUFFICIENT_MEMORY);
-		  mError::message("Not enough memory", "matrix::identity");
-	  }
-	  else
-	  {
-		  int   step = Dim + 1;
-		  real* Ptr;
-		  real* PtrTop = identityMatrix.pValues_ + Dim * Dim;
-		  for (Ptr = identityMatrix.pValues_; Ptr < PtrTop; Ptr += step) *Ptr = 1.0;
-	  }
-  }
-
-  //I->Status = STATUS::TEMPORARY;
-  return identityMatrix;
-}
-
 void matrix::name(const char* N)
 {                     
   mError::set();

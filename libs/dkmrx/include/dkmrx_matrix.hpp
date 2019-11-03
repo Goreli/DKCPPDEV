@@ -99,6 +99,7 @@ namespace dkmrx {
 		matrix operator ~ (void);
 
 		static  matrix identity(int);
+
 		// Homogeneous group
 		int             toHG(real = 1.0);
 		int             fromHG(void);

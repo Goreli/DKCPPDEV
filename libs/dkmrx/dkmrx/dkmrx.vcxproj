@@ -25,6 +25,7 @@
     <ClCompile Include="..\source\dkmrx_error.cpp" />
     <ClCompile Include="..\source\dkmrx_geometry.cpp" />
     <ClCompile Include="..\source\dkmrx_homogen.cpp" />
+    <ClCompile Include="..\source\dkmrx_inverse.cpp" />
     <ClCompile Include="..\source\dkmrx_io.cpp" />
     <ClCompile Include="..\source\dkmrx_matrix.cpp" />
     <ClCompile Include="..\source\dkmrx_multiply.cpp" />
