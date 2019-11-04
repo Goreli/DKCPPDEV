@@ -98,7 +98,7 @@ No optimisation has been used in the Debug configuration. Specifically in the Re
 
 3. Establish a namespace. **Done. Introduced the dkmrx namespace as of 30/Oct/2019**;
 4. Transition to a generic type based implementation. Should be able to choose the underlying data type using a template parameter.
-5. Use Uniform Initialisation to initialise matrix objects.
+5. Use Uniform Initialisation to initialise matrix objects. **Done as of 4/Nov/2019.**
 6. Improve IO. Should be able to read/write delimited format files as well as *.mrx files. Add a parameter to specify the NaN->0.0 type conversion;
 7. Support for large matrices. Memory mapped binary files?
 8. Performance optimisation: multiplication using the L1 cache read ahead feature?
@@ -107,3 +107,4 @@ No optimisation has been used in the Debug configuration. Specifically in the Re
 11. Convenient Data Science specific interface. Shortcuts for data preprocessing/cleanup, dimensionality reduction etc;
 12. Automatic testing;
 13. Remove standard C library include files (e.g. stdlib.h in dkmrx_add.cpp etc). **Done. 31/Oct/2019**
+14. Replace the legacy error handling mechanism with C++ Structured Exception Handling. **Done as of 4/Nov/2019.**
