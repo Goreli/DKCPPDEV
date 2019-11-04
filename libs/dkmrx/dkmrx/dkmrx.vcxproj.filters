@@ -24,9 +24,6 @@
     <ClCompile Include="..\source\dkmrx_divide.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\dkmrx_error.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\dkmrx_geometry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -53,9 +50,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\dkmrx_error.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\dkmrx_gausseln.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -66,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\dkmrx_transfrm.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\dkmrx_gausselnx.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

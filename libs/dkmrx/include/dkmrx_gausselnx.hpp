@@ -26,32 +26,26 @@ Modification history:
 
 */
 
+#ifndef dkmrx_gausselnx_hpp
+#define dkmrx_gausselnx_hpp 
+
 #include <stdexcept>
-#include <memory>
+#include <string>
 #include "dkmrx_matrix.hpp"
 
-using namespace dkmrx;
+namespace dkmrx {
 
-matrix  matrix::operator ~ ()
-{
-	bool bIncompatible = (iColumns_ != iRows_);
-	_validate(pValues_ == nullptr, false, bIncompatible, "matrix::operator ~ ()");
+	class GaussEliminationException : public std::runtime_error
+	{
+	public:
+		GaussEliminationException(std::string sMsg, size_t iNumSols, dkmrx::matrix&& mrx)
+			: std::runtime_error(sMsg), iNumSols_(iNumSols), mrx_(mrx) {}
+		size_t numSolutions() const { return iNumSols_; }
+		const dkmrx::matrix& solutionMatrix() const { return mrx_; }
 
-    matrix mrx = std::move( matrix::identity(iColumns_) );
-	mrx /= *this;
-
-	return mrx;
-}                                                                          
-
-matrix matrix::identity(int Dim)
-{
-	if (Dim <= 0)
-		throw std::logic_error("Non-positive dimension in static matrix::identity(int)");
-
-	matrix identityMatrix(Dim, Dim, 0.0);
-	int   step = Dim + 1;
-	real* pTop = identityMatrix.pValues_ + Dim * Dim;
-	for (real* pDst = identityMatrix.pValues_; pDst < pTop; pDst += step)
-		*pDst = 1;
-	return identityMatrix;
-}
+	private:
+		size_t iNumSols_;
+		dkmrx::matrix mrx_;
+	};
+} // namespace dkmrx
+#endif // dkmrx_gausselnx_hpp

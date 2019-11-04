@@ -30,7 +30,6 @@ Modification history:
 #include <cstring>
 #include <cctype>
 #include "dkmrx_matrix.hpp"
-#include "dkmrx_error.hpp"
 
 using namespace dkmrx;
 
@@ -48,7 +47,7 @@ std::streamsize tempPrecision = out.precision();
 	}
 
     out<<"Matrix: "; 
-    if ( mx.pName_ != nullptr) out<<mx.pName_;
+    //if ( mx.pName_ != nullptr) out<<mx.pName_;
     out<<"\n";
     out<<"rows "<<mx.iRows_<<"; columns "<<mx.iColumns_;
     out<<"; width "<<tempWidth<<"; precision "<<tempPrecision<<"\n";
@@ -71,19 +70,12 @@ std::streamsize tempPrecision = out.precision();
 
 std::istream& dkmrx::operator>>(std::istream& in,matrix& mx)
 {    
-    mError::set();
     if ( mx.pValues_ != nullptr)
-	mx.empty();
+		mx.empty();
 // READ HEADER             
 int   chcount = 81; // both header strings are assumed to be less than 80 ch long
 char* tempptr;     
 	char* str    = new char[chcount];
-	if ( str == nullptr)
-	{
-		mError::set( MERR_INSUFFICIENT_MEMORY );
-		mError::message("Not enough memory","matrix::operator >>");
-      		return in;
-	}
 // read and parse the first header row
     do
     {
@@ -94,24 +86,22 @@ char* tempptr;
     if( in.eof() )
     {
       delete [] str;
-      mError::set( MERR_HEADER_READ, 1 );
-      mError::message("can not find first header row","matrix::operator >>");
-      return in;
+	  throw std::logic_error("Cannot find the first header row in dkmrx::operator>>(std::istream&, matrix&)");
+      //return in;
     }                                                       
     tempptr += std::strlen("matrix:");
     while( *tempptr == ' ' )
-	tempptr++;
-	if(std::strlen(tempptr) != 0 )
-		mx.name( tempptr );
+		tempptr++;
+	//if(std::strlen(tempptr) != 0 )
+		//mx.name( tempptr );
 // read and and parse the second header row
 	in.getline(str,chcount);
     if( in.eof() )
     {
       delete [] str;
       mx.empty();
-      mError::set( MERR_HEADER_READ, 2 );
-      mError::message("can not find second header row","matrix::operator >>");
-      return in;
+	  throw std::logic_error("Cannot find the second header row in dkmrx::operator>>(std::istream&, matrix&)");
+      //return in;
     }
 int flag = 0;
 	tempptr = std::strstr(str_lwr(str),"rows");
@@ -145,30 +135,14 @@ int wid=0;
 	{
       delete [] str;
       mx.empty();
-      mError::set( MERR_HEADER_READ, 2, 1 );
-      mError::message("invalid second header row","matrix::operator >>");
-      return in;
+	  throw std::logic_error("Invalid second header row in dkmrx::operator>>(std::istream&, matrix&)");
+      //return in;
 	}
 // READ VALUES
 chcount = mx.iColumns_ * wid * 2;
 delete [] str;
 	str    = new char[chcount];
-	if ( str == nullptr)
-	{
-	  mx.empty();
-	  mError::set( MERR_INSUFFICIENT_MEMORY );
-	  mError::message("Not enough memory","matrix::operator >>");
-	  return in;
-	}
 	mx.pValues_ = new real [ mx.iRows_ * mx.iColumns_ ];
-	if ( mx.pValues_ == nullptr)
-	{
-	  delete [] str;
-	  mx.empty();
-	  mError::set( MERR_INSUFFICIENT_MEMORY );
-	  mError::message("Not enough memory","matrix::operator >>");
-	  return in;
-	}         
 	for(int row=0; row<mx.iRows_; row++)
 	{   
 		in.getline(str,chcount);
@@ -176,9 +150,8 @@ delete [] str;
 		{
 		  delete [] str;
 		  mx.empty();
-		  mError::set( MERR_UNEXPECTED_EOF );
-    		  mError::message("Unexpected end of file","matrix::operator >>");
-		  return in;
+		  throw std::logic_error("Unexpected end of file in dkmrx::operator>>(std::istream&, matrix&)");
+		  //return in;
 		} 
 		tempptr = std::strtok(str," \t,;");
 		for(int col=0; col<mx.iColumns_; col++)
@@ -194,19 +167,8 @@ delete [] str;
 
 char* str_lwr(char* str)
 {
-/*
-char* c=str;
-
-	while( *c != '\000' )
-	{
-		if( isupper(*c) ) *c = (char) tolower(*c);
-		c++;
-	}
-	return str;
-*/
 char* c = str;
 	while (*c != '\000')
 		*c++ = (char)std::tolower(*c);
 	return str;
 }
-

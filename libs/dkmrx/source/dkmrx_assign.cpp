@@ -27,57 +27,56 @@ Modification history:
 */
 
 #include "dkmrx_matrix.hpp"
-#include "dkmrx_error.hpp"
 
 using namespace dkmrx;
 
-matrix& matrix::operator=(const matrix& mx)
+matrix& matrix::operator=(const matrix& mrx)
 {
-	mError::set();
-
-	if( mx.pValues_ == nullptr)
-	{
-	    empty();
-	    return *this;
-	}
-
-	if ( pValues_ != nullptr) delete [] pValues_;
-	iRows_=mx.iRows_;
-	iColumns_=mx.iColumns_;
-	size_t MatSize = mx.iRows_ * mx.iColumns_;
-	pValues_= new real[MatSize];
-	if ( pValues_ == nullptr)
-	{
-	    mError::set( MERR_INSUFFICIENT_MEMORY );
-	    mError::message("Not enough memory","matrix::operator=(const matrix& mx)");
-	    iRows_=iColumns_=0;
-	    return *this;
-	}
-	real *index1,*index2,*top;
-	index1= pValues_;
-	index2= mx.pValues_;
-	top   = index1 + MatSize;
-	while ( index1<top ) *index1++ = *index2++;
-	return *this;
-}
-
-matrix& matrix::operator=(matrix&& mx) noexcept
-{
-	mError::set();
-
-	if (mx.pValues_ == nullptr)
+	// Make sure the response to the empty agrument case is consistent with the move assignment operator.
+	// The move assignment operator is expected to be noexcept, so we wont throw an exception here either.
+	if(mrx.pValues_ == nullptr)
 	{
 		empty();
 		return *this;
 	}
 
-	if (pValues_ != nullptr) delete[] pValues_;
-	iRows_ = mx.iRows_;
-	iColumns_ = mx.iColumns_;
-	pValues_ = mx.pValues_;
+	if (pValues_ != nullptr) 
+		delete[] pValues_;
+	size_t MatSize = mrx.iRows_ * mrx.iColumns_;
+	try {
+		pValues_ = new real[MatSize];
+	}
+	catch (...) {
+		iRows_ = iColumns_ = 0;
+		throw;
+	}
+	iRows_ = mrx.iRows_;
+	iColumns_ = mrx.iColumns_;
 
-	mx.pValues_ = nullptr;
-	mx.iRows_ = 0;
-	mx.iColumns_ = 0;
+	real* pSrc = mrx.pValues_;
+	real* pDst = pValues_;
+	real* pTop = pDst + MatSize;
+	while (pDst < pTop)
+		*pDst++ = *pSrc++;
+	return *this;
+}
+
+matrix& matrix::operator=(matrix&& mrx) noexcept
+{
+	if(mrx.pValues_ == nullptr)
+	{
+		empty();
+		return *this;
+	}
+
+	if (pValues_ != nullptr)
+		delete[] pValues_;
+	iRows_ = mrx.iRows_;
+	iColumns_ = mrx.iColumns_;
+	pValues_ = mrx.pValues_;
+
+	mrx.pValues_ = nullptr;
+	mrx.iRows_ = 0;
+	mrx.iColumns_ = 0;
 	return *this;
 }

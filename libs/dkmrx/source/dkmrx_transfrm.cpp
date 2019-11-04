@@ -28,8 +28,8 @@ Modification history:
 
 // All coordinates are considered in the world (right) coordinate system.
 #include <cmath>
+#include <stdexcept>
 #include "dkmrx_geometry.hpp"
-#include "dkmrx_error.hpp"
 
 using namespace dkmrx;
 
@@ -55,39 +55,23 @@ real* values = (*this)[0];
 	*++values=0;	*++values=0;	*++values=0;	*++values=1;
 }
 
-void mTransformer::rotate(real through,const matrix& about,const matrix& putFrom)
+void mTransformer::rotate(real through,const matrix& mrxAbout,const matrix& mrxPutFrom)
 //William M. Newman, Robert F. Sproull; 
 //Principles of interactive computer graphics, McGRAW-HILL
 //Chapter22:
 {
-  mError::set();
-  if ( putFrom[0] == nullptr)
-  {
-    mError::set( MERR_WRONG_ARGUMENT, 3 );
-    mError::message("Wrong third argument","mTransformer::rotate(real,const matrix&,const matrix&)");
-    return;
-  }
-  if ( about[0] == nullptr)
-  {
-    mError::set( MERR_WRONG_ARGUMENT, 2 );
-    mError::message("Wrong second argument","mTransformer::rotate(real,const matrix&,const matrix&)");
-    return;
-  }                          
- 
-  mTransformer transformer; 
-  if (transformer[0] == nullptr)
-  {
-    mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
-    mError::message("Not enough memory","mTransformer::rotate(real,const matrix&,const matrix&)");
-	return;
-  }
+const char* sFunctionSignature = "mTransformer::rotate(real, const matrix&, const matrix&)";
+	_validate(mrxAbout[0] == nullptr, mrxPutFrom[0] == nullptr, false, sFunctionSignature);
 
+	mTransformer transformer; 
 
-  //Normalization.
-  real a=about[0][0];   real b=about[0][1];   real c=about[0][2];
+	//Normalization.
+  real a= mrxAbout[0][0];   real b= mrxAbout[0][1];   real c= mrxAbout[0][2];
   real v = a*a+b*b+c*c;
 
-  if ( v != 0.0 )
+  if (v == 0.0)
+	  throw std::runtime_error(std::string("Illegal attempt to rotate about a zero length vector ") + sFunctionSignature);
+  else
   {
 	v=std::pow(v,0.5);
 	a/=v; b/=v; c/=v;
@@ -123,7 +107,7 @@ void mTransformer::rotate(real through,const matrix& about,const matrix& putFrom
 	transformer[1][1] = (real)(1 - Z1B_2);
 	transformer[2][2] = (real)(1 - Z1C_2);
 
-	real t1=putFrom[0][0]; real t2=putFrom[0][1]; real t3=putFrom[0][2];
+	real t1= mrxPutFrom[0][0]; real t2= mrxPutFrom[0][1]; real t3= mrxPutFrom[0][2];
 	transformer[3][0] = (real)( t1*Z1v_2 - t2*transformer[1][0] - t3*transformer[2][0] );
 	transformer[3][1] = (real)( t2*Z1B_2 - t3*transformer[2][1] - t1*transformer[0][1] );
 	transformer[3][2] = (real)( t3*Z1C_2 - t1*transformer[0][2] - t2*transformer[1][2] );
@@ -132,14 +116,8 @@ void mTransformer::rotate(real through,const matrix& about,const matrix& putFrom
 	transformer[1][3] = 0.0;
 	transformer[2][3] = 0.0;
 	transformer[3][3] = 1.0;
-  }
 
-  if ( v != 0.0 )
 	(*this) *= transformer;
-  else
-  {
-	mError::set( MERR_ZERO_LENGTH );
-	mError::message("Do not know how to rotate about a zero length vector","mTransformer::rotate(real,const matrix&,const matrix&)");
   }
 }
 
@@ -156,10 +134,7 @@ void mTransformer::rotateX(real through)
 //Principles of interactive computer graphics, McGRAW-HILL
 //Chapter22:
 {
-  mError::set();
   mTransformer transformer;
-  if (transformer[0] == nullptr)
-    return;
 
   transformer[1][1] = transformer[2][2] = (real)std::cos(through);
   transformer[2][1] = transformer[1][2] = (real)std::sin(through);
@@ -172,14 +147,7 @@ void mTransformer::rotateY(real through)
 //Principles of interactive computer graphics, McGRAW-HILL
 //Chapter22:
 {
-  mError::set();
   mTransformer transformer;
-  if (transformer[0] == nullptr)
-  {
-    mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
-    mError::message("Not enough memory","mTransformer::rotateY(real through)");
-    return;
-  }      
 
   transformer[0][0] = transformer[2][2] = (real)std::cos(through);
   transformer[2][0] = transformer[0][2] = (real)std::sin(through);
@@ -192,14 +160,7 @@ void mTransformer::rotateZ(real through)
 //Principles of interactive computer graphics, McGRAW-HILL
 //Chapter22:
 {
-  mError::set();
   mTransformer transformer;
-  if (transformer[0] == nullptr)
-  {
-    mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
-    mError::message("Not enough memory","mTransformer::rotateZ(real)");
-    return;
-  }      
 
   transformer[0][0] = transformer[1][1] = (real)std::cos(through);
   transformer[1][0] = transformer[0][1] = (real)std::sin(through);
@@ -207,98 +168,55 @@ void mTransformer::rotateZ(real through)
   (*this) *= transformer;
 }  
  
-void mTransformer::translate(const matrix& to, const matrix& putFrom)
+void mTransformer::translate(const matrix& mrxTo, const matrix& mrxPutFrom)
 //William M. Newman, Robert F. Sproull; 
 //Principles of interactive computer graphics, McGRAW-HILL
 //Chapter22:
 {
-  mError::set();
-  if ( putFrom[0] == nullptr)
-  {
-    mError::set( MERR_WRONG_ARGUMENT, 2 );
-    mError::message("Wrong second argument","mTransformer::translate(const matrix&, const matrix&)");
-    return;
-  }
-  if ( to[0] == nullptr)
-  {
-    mError::set( MERR_WRONG_ARGUMENT, 1 );
-    mError::message("Wrong first argument","mTransformer::translate(const matrix&, const matrix&)");
-    return;
-  }                          
+const char* sFunctionSignature = "matrix::translate(const matrix&, const matrix&)";
+	_validate(mrxTo[0] == nullptr, mrxPutFrom[0] == nullptr, false, sFunctionSignature);
 
-  mTransformer transformer;
-  if (transformer[0] == nullptr)
-  {
-    mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
-    mError::message("Not enough memory","mTransformer::translate(const matrix&, const matrix&)");
-    return;
-  }      
+	mTransformer transformer;
 
-  transformer[3][0] = (real) ( to[0][0] - putFrom[0][0] );
-  transformer[3][1] = (real) ( to[0][1] - putFrom[0][1] );
-  transformer[3][2] = (real) ( to[0][2] - putFrom[0][2] );
+	transformer[3][0] = (real) (mrxTo[0][0] - mrxPutFrom[0][0] );
+	transformer[3][1] = (real) (mrxTo[0][1] - mrxPutFrom[0][1] );
+	transformer[3][2] = (real) (mrxTo[0][2] - mrxPutFrom[0][2] );
 
-  (*this) *= transformer;
+	(*this) *= transformer;
 }
 
-void mTransformer::translate(real x,real y,real z, const matrix& putFrom)
+void mTransformer::translate(real x, real y, real z, const matrix& mrxPutFrom)
 //William M. Newman, Robert F. Sproull; 
 //Principles of interactive computer graphics, McGRAW-HILL
 //Chapter22:
 {
-  mError::set();
-  if ( putFrom[0] == nullptr)
-  {
-    mError::set( MERR_WRONG_ARGUMENT, 4 );
-    mError::message("Wrong fourth argument","mTransformer::translate(real, real, real, const matrix&)");
-    return;
-  }
+	_validate(mrxPutFrom[0] == nullptr, "mTransformer::translate(real,real,real, const matrix&)");
+	mTransformer transformer;
 
-  mTransformer transformer;
-  if (transformer[0] == nullptr)
-  {
-    mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
-    mError::message("Not enough memory","mTransformer::translate(real, real, real, const matrix&)");
-    return;
-  }      
+	transformer[3][0] = (real) ( x- mrxPutFrom[0][0] );
+	transformer[3][1] = (real) ( y- mrxPutFrom[0][1] );
+	transformer[3][2] = (real) ( z- mrxPutFrom[0][2] );
 
-  transformer[3][0] = (real) ( x-putFrom[0][0] );
-  transformer[3][1] = (real) ( y-putFrom[0][1] );
-  transformer[3][2] = (real) ( z-putFrom[0][2] );
-
-  (*this) *= transformer;
+	(*this) *= transformer;
 }  
   
-void mTransformer::scale(real Kx,real Ky,real Kz, const matrix& about)
+void mTransformer::scale(real Kx, real Ky, real Kz, const matrix& mrxAbout)
 //William M. Newman, Robert F. Sproull; 
 //Principles of interactive computer graphics, McGRAW-HILL
 //Chapter22:
 {
-  mError::set();
-  if ( about[0] == nullptr)
-  {
-    mError::set( MERR_WRONG_ARGUMENT, 4 );
-    mError::message("Wrong fourth argument", "mTransformer::scale(real, real, real, const matrix&)");
-    return;
-  }                          
+	_validate(mrxAbout[0] == nullptr, "mTransformer::scale(real, real, real, const matrix&)");
+	mTransformer transformer;
 
-  mTransformer transformer;
-  if (transformer[0] == nullptr)
-  {
-    mError::set( MERR_INSUFFICIENT_MEMORY, 2 );
-    mError::message("Not enough memory","mTransformer::scale(real, real, real, const matrix&)");
-    return;
-  }      
-
-  transformer[0][0] = (real) Kx;
-  transformer[1][1] = (real) Ky;
-  transformer[2][2] = (real) Kz;
-  transformer[3][0] = (real) ( about[0][0]*(1.0-Kx) );
-  transformer[3][1] = (real) ( about[0][1]*(1.0-Ky) );
-  transformer[3][2] = (real) ( about[0][2]*(1.0-Kz) );
-  transformer[3][3] = (real) 1.0;
+	transformer[0][0] = (real) Kx;
+	transformer[1][1] = (real) Ky;
+	transformer[2][2] = (real) Kz;
+	transformer[3][0] = (real) (mrxAbout[0][0]*(1.0-Kx) );
+	transformer[3][1] = (real) (mrxAbout[0][1]*(1.0-Ky) );
+	transformer[3][2] = (real) (mrxAbout[0][2]*(1.0-Kz) );
+	transformer[3][3] = (real) 1.0;
    
-  (*this) *= transformer;
+	(*this) *= transformer;
 }  
 
 mTransformable::mTransformable(int rows) : matrix(rows, 4)

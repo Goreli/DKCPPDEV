@@ -27,31 +27,16 @@ Modification history:
 */
 
 #include "dkmrx_matrix.hpp"
-#include "dkmrx_error.hpp"
 
 using namespace dkmrx;
 
 
-matrix matrix::operator * (const matrix& mx) const
+matrix matrix::operator * (const matrix& mrx) const
 {
-	mError::set();
-	if( (iColumns_ != mx.iRows_) ||
-	    (pValues_== nullptr)      ||
-	    (mx.pValues_== nullptr)
-	  )
-	{
-		mError::set( MERR_INCOMPATIBLE_MATRICES );
-		mError::message("Incompatible matrices","matrix::operator * (const matrix& mx) const");
-		return matrix();
-	}
+	bool bIncompatible = (iColumns_ != mrx.iRows_);
+	_validate(pValues_ == nullptr, mrx.pValues_ == nullptr, bIncompatible, "matrix::operator * (const matrix&) const");
 
-	matrix mrx(iRows_,mx.iColumns_);
-	if( mrx.pValues_== nullptr)
-	{
-	  mError::set( MERR_INSUFFICIENT_MEMORY );
-	  mError::message("Not enough memory","matrix::operator * (const matrix& mx) const");
-	}
-	else 
+	matrix mrxProduct(iRows_, mrx.iColumns_);
 // ***************** Start of the actual multiplication
 {
 real* s2;
@@ -63,12 +48,12 @@ real* s2Top;
 real* firstS2;
 real *firstD, *mx1_values, *firstDTop, *dTop;
 
-columns    = mx.iColumns_;
-firstD     = mrx.pValues_;
-firstDTop  = mrx.pValues_ +   mx.iColumns_;
-dTop       = mrx.pValues_ + ( mx.iColumns_ * mrx.iRows_ );
-firstS2    = mx.pValues_;
-s2Top      = mx.pValues_  + ( mx.iColumns_ * mx.iRows_ );
+columns    = mrx.iColumns_;
+firstD     = mrxProduct.pValues_;
+firstDTop  = mrxProduct.pValues_ + mrx.iColumns_;
+dTop       = mrxProduct.pValues_ + (mrx.iColumns_ * mrxProduct.iRows_ );
+firstS2    = mrx.pValues_;
+s2Top      = mrx.pValues_  + (mrx.iColumns_ * mrx.iRows_ );
 s1         = pValues_;
 mx1_values = pValues_;
 
@@ -94,58 +79,32 @@ mx1_values = pValues_;
 }
 // ***************** End of the actual multiplication
 
-	return mrx;
+	return mrxProduct;
 }
 
 matrix matrix::operator * (real k) const
 {
-	mError::set();
+	_validate(pValues_ == nullptr, "matrix::operator * (real) const");
 
-	if (pValues_ == nullptr)
-	{
-		mError::set(MERR_WRONG_THIS_OBJECT);
-		mError::message("Matrix has no values", "matrix::operator * (real) const");
-		return matrix();
-	}
+	matrix mrxProduct(iRows_, iColumns_);
 
-	matrix mrx(iRows_, iColumns_);
-	if (mrx.pValues_ == nullptr)
-	{
-		mError::set(MERR_INSUFFICIENT_MEMORY);
-		mError::message("Not enough memory", "matrix::operator * (real) const");
-	}
-	else
-	{
-		real* pThis = pValues_;
-		real* pTop = pThis + iColumns_ * iRows_;
-		real* pThat = mrx.pValues_;
-		while (pThis < pTop)
-			*(pThat++) = *(pThis++) * k;
-	}
-	return mrx;
+	real* pSrc = pValues_;
+	real* pDst = mrxProduct.pValues_;
+	real* pTop = pDst + iColumns_ * iRows_;
+
+	while (pDst < pTop)
+		*(pDst++) = *(pSrc++) * k;
+
+	return mrxProduct;
 }
 
-
-matrix& matrix::operator *= (const matrix& mx)
+matrix& matrix::operator *= (const matrix& mrx)
 {
-	mError::set();
-	if( (this->iColumns_ != mx.iRows_)  ||
-		(this->pValues_== nullptr)       ||
-		(mx.pValues_== nullptr)
-	  )
-	{
-		mError::set( MERR_INCOMPATIBLE_MATRICES );
-		mError::message("Incompatible matrices","matrix::operator *= (const matrix&)");
-		return *this;
-	}
+	bool bIncompatible = (this->iColumns_ != mrx.iRows_);
+	_validate(pValues_ == nullptr, mrx.pValues_ == nullptr, bIncompatible, "matrix::operator *= (const matrix&)");
 
-	real *temp = new real[(this->iRows_)*(mx.iColumns_)];
-	if( temp == nullptr)
-	{
-	  mError::set( MERR_INSUFFICIENT_MEMORY );
-	  mError::message("Not enough memory","matrix::operator *= (const matrix&)");
-	  return *this;
-	}
+	real *temp = new real[(this->iRows_)*(mrx.iColumns_)];
+
 // ***************** Start of the actual multiplication
 {
 real* s2;
@@ -157,18 +116,15 @@ real* dTop;
 real *firstD, *mx1_values, *firstDTop;
 
 firstD     = temp;
-firstDTop  = temp +  mx.iColumns_;
-dTop       = temp + ( mx.iColumns_ * this->iRows_ );
-firstS2    = mx.pValues_;
+firstDTop  = temp + mrx.iColumns_;
+dTop       = temp + (mrx.iColumns_ * this->iRows_ );
+firstS2    = mrx.pValues_;
 s1         = this->pValues_;
 mx1_values = this->pValues_;
 
-  if( this->iColumns_==4 && mx.iColumns_==4 )
+  if( this->iColumns_==4 && mrx.iColumns_==4 )
   // This case is to support a fast multiplication for the geometry.
   {
-#if defined(I387_32)
-	multiply_in_assembler_on_4_by_4(this->pValues_, mx.pValues_, temp, this->rows());
-#else	// I387_32
 	while( firstD < firstDTop )
 	{
 		d = firstD;
@@ -184,15 +140,14 @@ mx1_values = this->pValues_;
 		firstS2++;
 		s1 = mx1_values;
 	}
-#endif	// I387_32
   }
   else
   {
 	int   columns;
 	real* s2Top;
 
-	columns    = mx.iColumns_;
-	s2Top      = mx.pValues_  + ( mx.iColumns_ * mx.iRows_ );
+	columns    = mrx.iColumns_;
+	s2Top      = mrx.pValues_  + (mrx.iColumns_ * mrx.iRows_ );
 
 	while( firstD < firstDTop )
 	{
@@ -217,7 +172,7 @@ mx1_values = this->pValues_;
 }
 // ***************** End of the actual multiplication
 
-	this->iColumns_ = mx.iColumns_;
+	this->iColumns_ = mrx.iColumns_;
 	delete [] this->pValues_;
 	this->pValues_ = temp;
 	return *this;
@@ -225,18 +180,12 @@ mx1_values = this->pValues_;
 
 matrix& matrix::operator *= (real k)
 {
-	mError::set();
-	if (pValues_ == nullptr)
-	{
-		mError::set(MERR_INCOMPATIBLE_MATRICES);
-		mError::message("Matrix has no values", "matrix::operator *= (real)");
-		return *this;
-	}
+	_validate(pValues_ == nullptr, "matrix::operator *= (real)");
 
-	real* pThis = pValues_;
-	real* pTop = pThis + iRows_ * iColumns_;
-	while (pThis < pTop)
-		*pThis++ *= k;
+	real* pDst = pValues_;
+	real* pTop = pDst + iRows_ * iColumns_;
+	while (pDst < pTop)
+		*pDst++ *= k;
 
 	return *this;
 }

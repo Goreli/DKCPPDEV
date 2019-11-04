@@ -31,7 +31,7 @@ Modification history:
 namespace dkmrx {
 
 	template <class RealNumberA, class RealNumberB>
-	int gauss_elimination(int A_Columns, int B_Columns, RealNumberA* A_Values, RealNumberB* B_Values)
+	size_t gauss_elimination(int A_Columns, int B_Columns, RealNumberA* A_Values, RealNumberB* B_Values)
 	{
 		RealNumberA* TopPtrA = A_Values + A_Columns * A_Columns;
 		int iiStepA = A_Columns + 1;
@@ -49,7 +49,7 @@ namespace dkmrx {
 		RealNumberB* ijTopB;
 		RealNumberA* ijTopA = A_Values + A_Columns;
 		int   iStepB = B_Columns;
-		int   manySolutions = 0;
+		size_t   iNumSolutions = 1;
 		double  koeff;
 
 		if (B_Columns == 1)
@@ -92,10 +92,10 @@ namespace dkmrx {
 					*ijPtrB -= (RealNumberB)(*ijPtrA * *jPtrX); //(*x)[j][0];
 				if (*iiPtrA == 0.0)
 				{
-					if (*ijPtrB != 0.0) return 1;
+					if (*ijPtrB != 0.0) return 0;
 					else
 					{
-						manySolutions++;
+						iNumSolutions++;
 						*ijPtrB = (RealNumberB)0.0;
 					}
 				}
@@ -180,16 +180,16 @@ namespace dkmrx {
 						*ijPtrB -= (RealNumberB)(*ijPtrA * *jPtrX); //(*x)[j][0];       
 					if (*iiPtrA != 0.0) *ijPtrB /= (RealNumberB)*iiPtrA;
 					else
-						if (*ijPtrB != 0.0) return 1;
+						if (*ijPtrB != 0.0) return 0;
 						else
 						{
-							manySolutions++;
+							iNumSolutions++;
 							*ijPtrB = (RealNumberB)0.0;
 						}
 				}
 			}
 		}
-		return -manySolutions;
+		return iNumSolutions;
 	}
 
 } // namespace dkmrx

@@ -26,130 +26,88 @@ Modification history:
 
 */
 
-#include "dkmrx_matrix.hpp"
-#include "dkmrx_error.hpp"
+#include <memory>
+#include "dkmrx_gausselnx.hpp"
 #include "dkmrx_gausseln.hpp"
 
 using namespace dkmrx;
 
 matrix matrix::operator / (matrix& A) const
 {
-	mError::set();
-	if( (A.iColumns_  != A.iRows_)     ||
-	    (A.iColumns_  != iRows_)       ||
-	    (A.pValues_ == nullptr)         ||
-	    (pValues_ == nullptr)
-	  )
+	bool bIncompatible = (A.iColumns_ != A.iRows_) || (A.iColumns_ != iRows_);
+	_validate(pValues_ == nullptr, A.pValues_ == nullptr, bIncompatible, "matrix::operator / (matrix&) const");
+
+	matrix mrxX(*this);
+
+	size_t iNumSols = gauss_elimination(A.iColumns_, mrxX.iColumns_, A.pValues_, mrxX.pValues_);
+
+	if (iNumSols != 1)
 	{
-		mError::set( MERR_INCOMPATIBLE_MATRICES );
-		mError::message("Incompatible matrices","matrix::operator / (const matrix& A) const");
-		return matrix();
+		std::string sMsg = " in matrix::operator / (const matrix&) const";
+		if (iNumSols > 1)
+			sMsg = "System of linear equations has many solutions" + sMsg;
+		else
+		{
+			sMsg = "System of linear equations has no solution" + sMsg;
+			mrxX.empty();
+		}
+
+		throw GaussEliminationException(sMsg, iNumSols, std::move(mrxX));
 	}
 
-    int gaussError=0;
-	matrix mrx(*this);
-    
-	if(mrx.pValues_ == nullptr)
-	{
-	    mError::set( MERR_INSUFFICIENT_MEMORY );
-	    mError::message("Not enough memory","matrix::operator / (const matrix& A) const");
-	}
-    else
-		gaussError=gauss_elimination(A.iColumns_,mrx.iColumns_,A.pValues_,mrx.pValues_);
-
-	if ( gaussError > 0 )
-	{
-	  mError::set( MERR_NO_SOLUTION );
-	  mError::message("System of linear equations has no solution","matrix::operator / (const matrix& A) const");
-	  mrx.empty();
-	  return mrx;
-	}
-
-	if ( gaussError < 0 )
-	{
-	  mError::set( MERR_MANY_SOLUTIONS, -gaussError );
-	  mError::message("System of linear equations has many solutions","matrix::operator / (const matrix& A) const");
-	}
-	return mrx;
+	return mrxX;
 }
 
 matrix matrix::operator / (real k) const
 {
-	mError::set();
+	_validate(pValues_ == nullptr, "matrix::operator / (real) const");
 
-	if (pValues_ == nullptr)
-	{
-		mError::set(MERR_WRONG_THIS_OBJECT);
-		mError::message("Matrix has no values", "matrix::operator / (real) const");
-		return matrix();
-	}
+	matrix mrxDiv(iRows_, iColumns_);
 
-	matrix mrx(iRows_, iColumns_);
-	if (mrx.pValues_ == nullptr)
-	{
-		mError::set(MERR_INSUFFICIENT_MEMORY);
-		mError::message("Not enough memory", "matrix::operator / (real) const");
-	}
-	else
-	{
-		real* pThis = pValues_;
-		real* pTop = pThis + iColumns_ * iRows_;
-		real* pThat = mrx.pValues_;
-		while (pThis < pTop)
-			*(pThat++) = *(pThis++) / k;
-	}
-	return mrx;
+	real* pSrc = pValues_;
+	real* pDst = mrxDiv.pValues_;
+	real* pTop = pDst + iColumns_ * iRows_;
+	while (pDst < pTop)
+		*(pDst++) = *(pSrc++) / k;
+
+	return mrxDiv;
 }
 
 
 matrix& matrix::operator /= (matrix& A)
 {
-	mError::set();
-	if( (A.iColumns_  != A.iRows_)     ||
-	    (A.iColumns_  != iRows_)       ||
-	    (A.pValues_ == nullptr)         ||
-	    (this->pValues_ == nullptr)
-	  )
-	{
-		mError::set( MERR_INCOMPATIBLE_MATRICES );
-		mError::message("Incompatible matrices","matrix::operator /= (const matrix& A)");
-		return *this;
-	}
+	bool bIncompatible = (A.iColumns_ != A.iRows_) || (A.iColumns_ != iRows_);
+	_validate(pValues_ == nullptr, A.pValues_ == nullptr, bIncompatible, "matrix::operator /= (const matrix&)");
 
     int gaussError=0;
     
-    gaussError=gauss_elimination(A.iColumns_,this->iColumns_,A.pValues_,this->pValues_);
+	size_t iNumSols = gauss_elimination(A.iColumns_,this->iColumns_,A.pValues_,this->pValues_);
 
-	if ( gaussError > 0 )
+	if (iNumSols != 1)
 	{
-	  mError::set( MERR_NO_SOLUTION );
-	  mError::message("System of linear equations has no solution","matrix::operator /= (const matrix& A)");
-	  empty();
-	  return *this;
+		std::string sMsg = " in matrix::operator /= (const matrix&)";
+		if (iNumSols > 1)
+			sMsg = "System of linear equations has many solutions" + sMsg;
+		else
+		{
+			sMsg = "System of linear equations has no solution" + sMsg;
+			empty();
+		}
+
+		throw GaussEliminationException(sMsg, iNumSols, std::move(*this));
 	}
-	if ( gaussError < 0 )
-	{
-	  mError::set( MERR_MANY_SOLUTIONS, -gaussError );
-	  mError::message("System of linear equations has many solutions","matrix::operator /= (const matrix& A)");
-	}
+
 	return *this;
 }
 
 matrix& matrix::operator /= (real k)
 {
-	mError::set();
-	if (pValues_ == nullptr)
-	{
-		mError::set(MERR_INCOMPATIBLE_MATRICES);
-		mError::message("Matrix has no values", "matrix::operator /= (real)");
-		return *this;
-	}
+	_validate(pValues_ == nullptr, "matrix::operator /= (real)");
 
-	real* pThis = pValues_;
-	real* pTop = pThis + iRows_ * iColumns_;
-	while (pThis < pTop)
-		*pThis++ /= k;
+	real* pDst = pValues_;
+	real* pTop = pDst + iRows_ * iColumns_;
+	while (pDst < pTop)
+		*pDst++ /= k;
 
 	return *this;
 }
-

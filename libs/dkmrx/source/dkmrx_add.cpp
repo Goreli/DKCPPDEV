@@ -27,110 +27,65 @@ Modification history:
 */
 
 #include "dkmrx_matrix.hpp"
-#include "dkmrx_error.hpp"
 
 using namespace dkmrx;
 
-matrix matrix::operator + (const matrix& mx) const
+matrix matrix::operator + (const matrix& mrx) const
 {
-	mError::set();
-	if( (iRows_ != mx.iRows_) ||
-	    (iColumns_ != mx.iColumns_) ||
-	    (pValues_== nullptr)      ||
-	    (mx.pValues_== nullptr)
-	  )
-	{
-		mError::set( MERR_INCOMPATIBLE_MATRICES );
-		mError::message("Incompatible matrices","matrix::operator + (const matrix& mx) const");
-		return matrix();
-	}
+	bool bIncompatible = (iRows_ != mrx.iRows_) || (iColumns_ != mrx.iColumns_);
+	_validate(pValues_==nullptr, mrx.pValues_==nullptr, bIncompatible, "matrix::operator + (const matrix&) const");
 
 	size_t iMatSize=iRows_*iColumns_;
+	matrix mrxSum(iRows_,iColumns_);
 
-	matrix matrixSum(iRows_,iColumns_);
-	if(matrixSum.pValues_ == nullptr)
-	{
-		mError::set( MERR_INSUFFICIENT_MEMORY );
-		mError::message("Not enough memory","matrix::operator +");
-	}
-	else 
-	{    
-		real *index1,*index2,*index3,*top;
-	 
-		index1 = top = pValues_;
-		index2 = mx.pValues_;
-		index3 = matrixSum.pValues_;
-		top   += iMatSize;
-		while( index1<top ) *index3++ = *index1++ + *index2++;
-	}
-	return matrixSum;
+	real* pSrc1 = pValues_;
+	real* pSrc2 = mrx.pValues_;
+	real* pDst = mrxSum.pValues_;
+	real* pTop = pDst + iMatSize;
+	while(pDst < pTop)
+		*pDst++ = *pSrc1++ + *pSrc2++;
+
+	return mrxSum;
 }
 
 matrix matrix::operator + (real k) const
 {
-	mError::set();
-	if( pValues_ == nullptr)
-	{
-		mError::set( MERR_WRONG_THIS_OBJECT );
-		mError::message("Matrix has no values","matrix::operator + (real) const");
-		return matrix();
-	}             
+	_validate(pValues_==nullptr, "matrix::operator + (real) const");
 
-	matrix mrx(iRows_, iColumns_);
-	if( mrx.pValues_ == nullptr)
-	{
-		mError::set( MERR_INSUFFICIENT_MEMORY );
-		mError::message("Not enough memory","matrix::operator + (real) const");
-	}
-	else
-	{
-		real* pStart = pValues_;
-		real* pFinish = pStart + iColumns_ * iRows_;
-		real *pDest = mrx.pValues_;
+	matrix mrxSum(iRows_, iColumns_);
 
-		while( pStart < pFinish)
-			*(pDest++) = *(pStart++) + k;
-	}
-    return mrx;
+	real* pSrc = pValues_;
+	real* pDst = mrxSum.pValues_;
+	real* pTop = pDst + iColumns_ * iRows_;
+
+	while(pDst < pTop)
+		*(pDst++) = *(pSrc++) + k;
+
+	return mrxSum;
 }
 
-matrix& matrix::operator += (const matrix& mx)
+matrix& matrix::operator += (const matrix& mrx)
 {
-	mError::set();
-	if ((iRows_ != mx.iRows_) ||
-		(iColumns_ != mx.iColumns_) ||
-		(pValues_ == nullptr) ||
-		(mx.pValues_ == nullptr)
-		)
-	{
-		mError::set(MERR_INCOMPATIBLE_MATRICES);
-		mError::message("Incompatible matrices", "matrix::operator += (const matrix&)");
-		return *this;
-	}
+	bool bIncompatible = (iRows_ != mrx.iRows_) || (iColumns_ != mrx.iColumns_);
+	_validate(pValues_ == nullptr, mrx.pValues_ == nullptr, bIncompatible, "matrix::operator += (const matrix&)");
 
-	real* pThis = pValues_;
-	real* pThat = mx.pValues_;
-	real* pTop = pThis + iRows_ * iColumns_;
-	while (pThis < pTop)
-		*pThis++ += *pThat++;
+	real* pSrc = mrx.pValues_;
+	real* pDst = pValues_;
+	real* pTop = pDst + iRows_ * iColumns_;
+	while (pDst < pTop)
+		*pDst++ += *pSrc++;
 
 	return *this;
 }
 
 matrix& matrix::operator += (real k)
 {
-	mError::set();
-	if (pValues_ == nullptr)
-	{
-		mError::set(MERR_INCOMPATIBLE_MATRICES);
-		mError::message("Matrix has no values", "matrix::operator += (real)");
-		return *this;
-	}
+	_validate(pValues_ == nullptr, "matrix::operator += (real)");
 
-	real* pThis = pValues_;
-	real* pTop = pThis + iRows_ * iColumns_;
-	while (pThis < pTop)
-		*pThis++ += k;
+	real* pDst = pValues_;
+	real* pTop = pDst + iRows_ * iColumns_;
+	while (pDst < pTop)
+		*pDst++ += k;
 
 	return *this;
 }

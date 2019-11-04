@@ -22,7 +22,6 @@
     <ClCompile Include="..\source\dkmrx_add.cpp" />
     <ClCompile Include="..\source\dkmrx_assign.cpp" />
     <ClCompile Include="..\source\dkmrx_divide.cpp" />
-    <ClCompile Include="..\source\dkmrx_error.cpp" />
     <ClCompile Include="..\source\dkmrx_geometry.cpp" />
     <ClCompile Include="..\source\dkmrx_homogen.cpp" />
     <ClCompile Include="..\source\dkmrx_inverse.cpp" />
@@ -33,8 +32,8 @@
     <ClCompile Include="..\source\dkmrx_transfrm.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\dkmrx_error.hpp" />
     <ClInclude Include="..\include\dkmrx_gausseln.hpp" />
+    <ClInclude Include="..\include\dkmrx_gausselnx.hpp" />
     <ClInclude Include="..\include\dkmrx_geometry.hpp" />
     <ClInclude Include="..\include\dkmrx_matrix.hpp" />
     <ClInclude Include="..\include\dkmrx_transfrm.hpp" />

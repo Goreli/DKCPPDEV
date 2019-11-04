@@ -29,7 +29,6 @@ Modification history:
 // All coordinates are considered in the morld (right) coordinate system
 #include <cmath>
 #include "dkmrx_geometry.hpp"
-#include "dkmrx_error.hpp"
 
 using namespace dkmrx;
 
@@ -47,19 +46,8 @@ mPoint::mPoint(const mPoint& point) : mTransformable(point) {}
 
 double mPoint::distance(const mPoint& point) const
 {
-	mError::set();
-	if( point.columns() != 4 )
-	{
-		mError::set( MERR_WRONG_ARGUMENT, 1 );
-		mError::message("Argument is not homogenious","mPoint::distance(const mPoint&) const");
-		return 0.0;
-	}
-	if( this->columns() != 4 )
-	{
-		mError::set( MERR_WRONG_THIS_OBJECT, 4 );
-		mError::message("This object is not homogenious","mPoint::distance(const mPoint&) const");
-		return 0.0;
-	}
+	_validate((*this)[0] == nullptr, point[0] == nullptr, false, "mPoint::distance(const mPoint&) const");
+
 	double dist = std::pow
 			(
 				std::pow(this->x() - point.x(), 2.0) +
@@ -84,19 +72,7 @@ real *ptr = (*this)[0];
 mLine::mLine(const mPoint& point1, const mPoint& point2, real par1, real par2)
 	:mTransformable(2)
 {
-	mError::set();
-	if( point1.columns() != 4 )
-	{
-		mError::set( MERR_WRONG_ARGUMENT, 1 );
-		mError::message("Wrong first argument","mLine::mLine(const mPoint&, const mPoint&, double, double)");
-		return;
-	}
-	if( point2.columns() != 4 )
-	{
-		mError::set( MERR_WRONG_ARGUMENT, 2 );
-		mError::message("Wrong second argument","mLine::mLine(const mPoint&, const mPoint&, double, double)");
-		return;
-	}
+	_validate(point1[0] == nullptr, point2[0] == nullptr, false, "mLine::mLine(const mPoint&, const mPoint&, real, real)");
 
 matrix pars{ 
 	{par1, 1},
@@ -118,16 +94,7 @@ mLine::mLine(void):mTransformable(1,2) {}
 
 mPoint mLine::point(real par) const
 {
-	mError::set();
 	mPoint pnt;
-
-	if (pnt.is_empty())
-	{
-		mError::set(MERR_INSUFFICIENT_MEMORY);
-		mError::message("Not enough memory", "mLine::point(real par) const");
-		return pnt;
-	}
-
 	matrix temp{ {par, 1} };
 
 	matrix& mPnt = pnt;

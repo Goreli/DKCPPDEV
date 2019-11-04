@@ -26,10 +26,9 @@ Modification history:
 
 */
 
-#include <cstring>
-#include <cstdio>
+#include <stdexcept>
+#include <string>
 #include "dkmrx_matrix.hpp"    
-#include "dkmrx_error.hpp"
 
 using namespace dkmrx;
 
@@ -40,123 +39,85 @@ int matrix::iControlSum_ = 0;
 #endif
 
 matrix::matrix(void)
+	: pValues_{ nullptr }, iRows_{ 0 }, iColumns_{ 0 }
 {
 #if defined(MATRIX_TEST)
 	iConstructCount_++;
 	iSeqId_ = iConstructCount_;
 	iControlSum_ += iSeqId_;
 #endif
-	iRows_=iColumns_=0;
-	pValues_= nullptr;
-	pName_= nullptr;
 }
 
 matrix::matrix(int rows,int columns)
+	: pValues_{ nullptr }, iRows_{ rows }, iColumns_{ columns }
 {
 #if defined(MATRIX_TEST)
 	iConstructCount_++;
 	iSeqId_ = iConstructCount_;
 	iControlSum_ += iSeqId_;
 #endif
-	mError::set();
-	iRows_=rows;  iColumns_=columns;
-	pValues_= nullptr;
-	pName_= nullptr;
 
-	if ( (iRows_<=0) || (iColumns_<=0) )
-	{
-		if ( !(iRows_==0 && iColumns_==0) )
-		{
-			mError::set( MERR_ILLEGAL_DIMENSION );
-			mError::message("Illegal dimension","matrix::matrix(int, int)");
-		}
-		iRows_=iColumns_=0;
-	}
+	if ((iRows_ > 0) && (iColumns_ > 0))
+		pValues_ = new real[iRows_ * iColumns_];
 	else
 	{
-		size_t MatSize=iRows_ * iColumns_;
-		pValues_= new real[MatSize];
-		if ( pValues_ == nullptr)
-		{
-			iRows_=iColumns_=0;
-			mError::set( MERR_INSUFFICIENT_MEMORY );
-			mError::message("Not enough memory","matrix::matrix(int, int)");
-		}
+		iRows_ = iColumns_ = 0;
+		throw std::out_of_range("Dimension(s) out of range in matrix::matrix(int, int)");
 	}
 }
 
-matrix::matrix(int rows, int columns, real init_value)
+matrix::matrix(int rows, int columns, real initVal)
+	: pValues_{ nullptr }, iRows_{ rows }, iColumns_{ columns }
 {
 #if defined(MATRIX_TEST)
 	iConstructCount_++;
 	iSeqId_ = iConstructCount_;
 	iControlSum_ += iSeqId_;
 #endif
-	mError::set();
-	iRows_=rows;  iColumns_=columns;
-    pValues_= nullptr;
-	pName_= nullptr;
 
-	if ( (iRows_<=0) || (iColumns_<=0) )
+	if ((iRows_ > 0) && (iColumns_ > 0))
 	{
-		if ( !(iRows_==0 && iColumns_==0) )
-		{
-			mError::set( MERR_ILLEGAL_DIMENSION );
-			mError::message("Illegal dimension","matrix::matrix(real, int, int)");
-		}
-		iRows_=iColumns_=0;
+		size_t sizeMrx = iRows_ * iColumns_;
+		pValues_ = new real[sizeMrx];
+
+		real* pDst = pValues_;
+		real* pTop = pDst + sizeMrx;
+		while (pDst < pTop)
+			*pDst++ = initVal;
 	}
 	else
 	{
-		size_t MatSize=iRows_ * iColumns_;
-		pValues_= new real[MatSize];
-		if ( pValues_ == nullptr)
-		{
-			iRows_=iColumns_=0;
-			mError::set( MERR_INSUFFICIENT_MEMORY );
-			mError::message("Not enough memory","matrix::matrix(real, int, int)");
-		}
-		else
-		{
-		real *index,*top;
-
-			index = top = pValues_;
-			top  += MatSize;
-			while( index<top ) *index++ = init_value;
-		}
+		iRows_ = iColumns_ = 0;
+		throw std::out_of_range("Dimension(s) out of range in matrix::matrix(int, int, real)");
 	}
 }
 
 matrix::matrix(const matrix& m)
+	: pValues_{ nullptr }, iRows_{ 0 }, iColumns_{ 0 }
 {
 #if defined(MATRIX_TEST)
 	iConstructCount_++;
 	iSeqId_ = iConstructCount_;
 	iControlSum_ += iSeqId_;
 #endif
-	iRows_=0;  iColumns_=0;
-	pValues_= nullptr;
-	pName_= nullptr;
 
 	*this=m;
 }
 
 matrix::matrix(matrix&& m) noexcept
+	: pValues_{ nullptr }, iRows_{ 0 }, iColumns_{ 0 }
 {
 #if defined(MATRIX_TEST)
 	iConstructCount_++;
 	iSeqId_ = iConstructCount_;
 	iControlSum_ += iSeqId_;
 #endif
-	iRows_ = 0;  iColumns_ = 0;
-	pValues_ = nullptr;
-	pName_ = nullptr;
 
 	*this = m;
 }
 
 matrix::matrix(const std::initializer_list<const std::initializer_list<real>>& list)
-	: iRows_{ (int) list.size() }, iColumns_{ (int) list.begin()->size() }
+	: pValues_{nullptr}, iRows_ {(int)list.size()}, iColumns_{(int)list.begin()->size()}
 {
 #if defined(MATRIX_TEST)
 	iConstructCount_++;
@@ -164,51 +125,30 @@ matrix::matrix(const std::initializer_list<const std::initializer_list<real>>& l
 	iControlSum_ += iSeqId_;
 #endif
 
-	if ((iRows_ <= 0) || (iColumns_ <= 0))
+	if ((iRows_ > 0) && (iColumns_ > 0))
 	{
-		if (!(iRows_ == 0 && iColumns_ == 0))
+		size_t sizeMrx = iRows_ * iColumns_;
+		pValues_ = new real[sizeMrx];
+
+		// Copy the input data.
+		size_t inxRow{ 0 };
+		for (const auto& inputRow : list)
 		{
-			mError::set(MERR_ILLEGAL_DIMENSION);
-			mError::message("Illegal dimension", "matrix::matrix(const std::initializer_list<const std::initializer_list<real>>&)");
+			if (inputRow.size() != iColumns_)
+			{
+				iRows_ = iColumns_ = 0;
+				delete[] pValues_;
+				pValues_ = nullptr;
+			const char* sFunctionSignature = "matrix::matrix(const std::initializer_list<const std::initializer_list<real>>&)";
+				throw std::out_of_range(std::string("Inconsistent lengths of initialiser list entries in ") + sFunctionSignature);
+			}
+
+			std::copy(inputRow.begin(), inputRow.end(), (*this)[inxRow]);
+			inxRow++;
 		}
-		iRows_ = iColumns_ = 0;
 	}
 	else
-	{
-		size_t MatSize = iRows_ * iColumns_;
-		pValues_ = new real[MatSize];
-		if (pValues_ == nullptr)
-		{
-			iRows_ = iColumns_ = 0;
-			mError::set(MERR_INSUFFICIENT_MEMORY);
-			mError::message("Not enough memory", "matrix::matrix(const std::initializer_list<const std::initializer_list<real>>&)");
-		}
-		else
-		{
-			// Copy the input data.
-			size_t inxRow {0};
-			for (const auto& inputRow : list)
-			{
-				if (inputRow.size() != iColumns_)
-				{
-					mError::set(MERR_ILLEGAL_DIMENSION);
-					mError::message("Invalid input row size", "matrix::matrix(const std::initializer_list<const std::initializer_list<real>>&)");
-					iRows_ = iColumns_ = 0;
-					delete [] pValues_;
-					pValues_ = nullptr;
-					break;
-				}
-
-				size_t inxColumn {0};
-				for (const auto& realValue : inputRow)
-				{
-					(*this)[inxRow][inxColumn] = realValue;
-					++inxColumn;
-				}
-				++inxRow;
-			}
-		}
-	}
+		iRows_ = iColumns_ = 0;
 }
 
 matrix::~matrix()
@@ -217,8 +157,9 @@ matrix::~matrix()
 	iDestructCount_++;
 	iControlSum_ -= iSeqId_;
 #endif
-	if (pValues_ != nullptr) delete [] pValues_;
-	if (pName_   != nullptr) delete [] pName_;
+
+	if (pValues_ != nullptr)
+		delete [] pValues_;
 }
 
 void matrix::empty()
@@ -231,19 +172,16 @@ void matrix::empty()
 	}
 }
 
-void matrix::name(const char* N)
-{                     
-  mError::set();
-  delete [] pName_;
-  if ( N == nullptr) pName_ = nullptr;
-  else
-  {
-    pName_ = new char [ strlen(N) + 1 ];
-    if ( pName_ == nullptr)
-    {
-	mError::set( MERR_INSUFFICIENT_MEMORY );
-	mError::message("Not enough memory","matrix::setName");
-    }
-    else strcpy(pName_,N);
-  }
+void matrix::_validate(bool bFirstEmpty, bool bSecondEmpty, bool bIncompatible, const char* sFunctionSignature) {
+	if (bFirstEmpty)
+		throw std::invalid_argument(std::string("First matrix empty in ") + sFunctionSignature);
+	else if (bSecondEmpty)
+		throw std::invalid_argument(std::string("Second matrix empty in ") + sFunctionSignature);
+	else if (bIncompatible)
+		throw std::logic_error(std::string("Incompatible matrices in ") + sFunctionSignature);
+}
+
+void matrix::_validate(bool bEmpty, const char* sFunctionSignature) {
+	if (bEmpty)
+		throw std::invalid_argument(std::string("Matrix empty in ") + sFunctionSignature);
 }

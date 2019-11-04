@@ -98,18 +98,16 @@ namespace dkmrx {
 		// Returns an inverse of the *this matrix. Does not preserve the content
 		// because inplace Gauss elimination distorts it. Use a separate dedicated
 		// matrix if in need to preserve the content.
-		matrix operator ~ (void);
+		matrix operator ~ ();
 
 		static  matrix identity(int);
 
 		// Homogeneous group
-		int             toHG(real = 1.0);
-		int             fromHG(void);
+		void	toHG(real = 1.0);
+		void	fromHG(void);
 
 		void	empty(void); // Frees occupied memory
-		void	name(const char*);
-		char*	name(void) { return pName_; }
-		bool	is_empty(void) { return iRows_==0; }
+		bool	is_empty(void) { return pValues_; }
 		int		columns(void) const { return iColumns_; }
 		int		rows(void) const { return iRows_; }
 
@@ -124,7 +122,6 @@ namespace dkmrx {
 
 		real* pValues_;
 		int   iRows_, iColumns_;
-		char* pName_;
 
 #if defined(MATRIX_TEST)
 		static int iConstructCount_;
@@ -139,6 +136,12 @@ namespace dkmrx {
 		// Use the public static get... functions above to examine the values.
 		// Make sure to call resetCountsAndSum() before each test.
 #endif
+
+	protected:
+		// Validate the overloaded operator arguments
+		// and throw exceptions if necessary.
+		static void _validate(bool, bool, bool, const char*);
+		static void _validate(bool, const char*);
 	};
 
 } // namespace dkmrx

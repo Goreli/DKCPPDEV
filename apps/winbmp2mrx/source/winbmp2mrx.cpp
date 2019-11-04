@@ -90,7 +90,7 @@ void writeMatrix(dkmrx::matrix& mrx, const char* strOutFileName)
 	// Allow to output 24 bits - 8 decimal digits
 	file.width(14);
 	file.precision(8);
-	mrx.name("Contents of a Windows BMP file");
+	//mrx.name("Contents of a Windows BMP file");
 	file << mrx;
 }
 

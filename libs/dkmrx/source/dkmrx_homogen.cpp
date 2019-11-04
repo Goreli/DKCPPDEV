@@ -27,7 +27,6 @@ Modification history:
 */
 
 #include "dkmrx_matrix.hpp"
-#include "dkmrx_error.hpp"
 
 using namespace dkmrx;
 
@@ -38,22 +37,11 @@ matrix& getHG(matrix&);
 matrix& getNonHG(matrix&);
 */
 
-int matrix::toHG(real scaleFactor)    // to HomoGeneous form
+void matrix::toHG(real scaleFactor)    // to HomoGeneous form
 {
-  mError::set();
-  if ( pValues_ == nullptr ) 
-  {
-    mError::set( MERR_WRONG_THIS_OBJECT, 0 );
-    mError::message("Can not apply to an EMPTY object","matrix::toHG(real)");
-    return 2;
-  }
+  _validate(pValues_ == nullptr, "matrix::toHG(real)");
+
   real* newval = new real [(iColumns_+1) * iRows_];
-  if ( newval == nullptr)
-  {
-    mError::set( MERR_INSUFFICIENT_MEMORY );
-    mError::message("Not enough memory","matrix::toHG(real)");
-    return 3;
-  }
 
   real* Target=newval;
   real* Source=pValues_;
@@ -79,27 +67,14 @@ int matrix::toHG(real scaleFactor)    // to HomoGeneous form
   delete [] pValues_;
   pValues_ = newval;
   iColumns_++;
-  return 0;
 }
 
-int matrix::fromHG()    // from HomoGeneous form
+void matrix::fromHG()    // from HomoGeneous form
 {
-  mError::set();
-  if ( pValues_ == nullptr)
-  {
-    mError::set( MERR_WRONG_THIS_OBJECT, 0 );
-    mError::message("Can not apply to an EMPTY object","matrix::fromHG()");
-    return 2;
-  }
-  if ( iColumns_ == 1 ) 
-  {
-    mError::set( MERR_WRONG_THIS_OBJECT, 1 );
-    mError::message("Can not apply to a 1 column object","matrix::fromHG()");
-    return 3;
-  }
+  bool bIncompatible = (iColumns_ == 1);
+  _validate(pValues_ == nullptr, false, bIncompatible, "matrix::fromHG()");
+
   real* newval = new real [(iColumns_-1) * iRows_];
-  if ( newval == nullptr)
-    return 4;
   
   int step=iColumns_-1;
   real* Target=newval;
@@ -124,5 +99,4 @@ int matrix::fromHG()    // from HomoGeneous form
   --iColumns_;
   delete [] pValues_;
   pValues_ = newval;
-  return 0;
 }
