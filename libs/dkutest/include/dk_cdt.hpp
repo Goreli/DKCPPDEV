@@ -41,7 +41,28 @@ namespace dk {
 
 	public:
 		ConstDestTracker() noexcept;
+
+		// The copy constructor has only been introduced to
+		// preclude the default compiler generated construction.
+		// This is because we need to protect iObjSeqId_ from being
+		// corrupted.
+		ConstDestTracker(const ConstDestTracker&) noexcept;
+		// The move constructor serves a similar purpose - protect
+		// iObjSeqId_ from corruption in case a wrapper class applies
+		// brute force and tries to overwrite the content.
+		ConstDestTracker(ConstDestTracker&&) noexcept;
+
 		virtual ~ConstDestTracker() noexcept;
+
+		// The copy assignment operator below has only been introduced
+		// to preclude the default compiler generated assignment.
+		// This is because we need to protect iObjSeqId_ from being
+		// corrupted.
+		ConstDestTracker& operator = (const ConstDestTracker&) noexcept;
+		// The move assignment operator serves a similar purpose - protect
+		// iObjSeqId_ from corruption in case a wrapper class applies
+		// brute force and tries to overwrite the content.
+		ConstDestTracker& operator = (ConstDestTracker&&) noexcept;
 
 		static size_t getConstCount(void) noexcept;
 		static size_t getDestCount(void) noexcept;
@@ -67,6 +88,8 @@ namespace dk {
 		// distorting the value then we should see the following at the end of the
 		// test: iControlSum_ == 0.
 		size_t iObjSeqId_;
+
+		void init_() noexcept;
 	};
 }	// namespace dk
 

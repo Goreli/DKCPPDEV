@@ -34,22 +34,17 @@ matrix& matrix::operator=(const matrix& mrx)
 {
 	// Make sure the response to the empty agrument case is consistent with the move assignment operator.
 	// The move assignment operator is expected to be noexcept, so we wont throw an exception here either.
-	if(mrx.pValues_ == nullptr)
-	{
-		empty();
-		return *this;
-	}
+	empty();
 
-	if (pValues_ != nullptr) 
-		delete[] pValues_;
+	if(mrx.pValues_ == nullptr)
+		return *this;
+
 	size_t MatSize = mrx.iRows_ * mrx.iColumns_;
-	try {
-		pValues_ = new real[MatSize];
-	}
-	catch (...) {
-		iRows_ = iColumns_ = 0;
-		throw;
-	}
+	pValues_ = new real[MatSize];
+	// If memory cannot be allocated an exception will be thrown and 
+	// iRows_ and iColumns_ will remain equal to 0, which is what we
+	// would want in that scenario. Othwerwise, if memory is allocated
+	// successfuly iRows_ and iColumns_ will be reinitialised accordingly.
 	iRows_ = mrx.iRows_;
 	iColumns_ = mrx.iColumns_;
 
@@ -58,25 +53,23 @@ matrix& matrix::operator=(const matrix& mrx)
 	real* pTop = pDst + MatSize;
 	while (pDst < pTop)
 		*pDst++ = *pSrc++;
+
 	return *this;
 }
 
 matrix& matrix::operator=(matrix&& mrx) noexcept
 {
+	empty();
 	if(mrx.pValues_ == nullptr)
-	{
-		empty();
 		return *this;
-	}
 
-	if (pValues_ != nullptr)
-		delete[] pValues_;
 	iRows_ = mrx.iRows_;
 	iColumns_ = mrx.iColumns_;
 	pValues_ = mrx.pValues_;
 
-	mrx.pValues_ = nullptr;
 	mrx.iRows_ = 0;
 	mrx.iColumns_ = 0;
+	mrx.pValues_ = nullptr;
+
 	return *this;
 }

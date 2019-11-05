@@ -37,6 +37,21 @@ size_t ConstDestTracker::iControlSum_{ 0 };
 ConstDestTracker::ConstDestTracker() noexcept
 	: iObjSeqId_{ 0 }
 {
+	init_();
+}
+ConstDestTracker::ConstDestTracker(const ConstDestTracker&) noexcept
+	: iObjSeqId_{ 0 }
+{
+	init_();
+}
+ConstDestTracker::ConstDestTracker(ConstDestTracker&&) noexcept
+	: iObjSeqId_{ 0 }
+{
+	init_();
+}
+
+void ConstDestTracker::init_() noexcept
+{
 	iConstructorCount_++;
 	iObjSeqId_ = iConstructorCount_;
 	iControlSum_ += iObjSeqId_;
@@ -46,6 +61,16 @@ ConstDestTracker::~ConstDestTracker() noexcept
 {
 	iDestructorCount_++;
 	iControlSum_ -= iObjSeqId_;
+}
+
+ConstDestTracker& ConstDestTracker::operator = (const ConstDestTracker&) noexcept
+{
+	return *this; 
+}
+
+ConstDestTracker& ConstDestTracker::operator = (ConstDestTracker&&)  noexcept
+{
+	return *this;
 }
 
 size_t ConstDestTracker::getConstCount(void) noexcept

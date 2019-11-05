@@ -17,10 +17,12 @@ Refer individual readme.md files located in subdirectories of the directories li
 ### Content of the [apps](apps) directory 
  * [apps/winbmp2mrx](apps/winbmp2mrx) - a Windows Console application that converts Windows Bitmap files into DKMRX Matrix data files. The data files can then be consumed by the [apps/winraster](apps/winraster) sample application;
  * [apps/wincubes](apps/wincubes) - a sample Windows Desktop application that demonstrates how to use the [libs/dkmrx](libs/dkmrx) matrix library to perform 3D coordinate transformation in **Vector Graphics** applications;
- * [apps/winraster](apps/winraster) - a sample Windows Desktop program that demonstrates how to use the [libs/dkmrx](libs/dkmrx) matrix library to perform 3D coordinate transformation in **Raster Graphics** applications.
+ * [apps/winraster](apps/winraster) - a sample Windows Desktop program that demonstrates how to use the [libs/dkmrx](libs/dkmrx) matrix library to perform 3D coordinate transformation in **Raster Graphics** applications;
+ * [apps/testdkmrx](apps/testdkmrx) - A collection of unit tests to test the [libs/dkmrx](libs/dkmrx) library. Uses the [libs/dkutest](libs/dkutest) library.
 
 ### Content of the [libs](libs) directory 
- * [libs/dkmrx](libs/dkmrx) - A c++ library with a simple programming interface for coding matrix operations.
+ * [libs/dkmrx](libs/dkmrx) - A c++ library with a simple programming interface for coding matrix operations;
+ * [libs/dkutest](libs/dkutest) - An instrumentation tool to enhance unit testing capabilities. Detect imbalance between the counts of constructor and destructor execution in your instrumented class. Also, detect instances of object corruption.
 
 ## Build Notes
 
