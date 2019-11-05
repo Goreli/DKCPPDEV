@@ -33,8 +33,8 @@ using namespace dkmrx;
 
 matrix matrix::operator * (const matrix& mrx) const
 {
-	bool bIncompatible = (iColumns_ != mrx.iRows_);
-	_validate(pValues_ == nullptr, mrx.pValues_ == nullptr, bIncompatible, "matrix::operator * (const matrix&) const");
+	bool bCompatible = (iColumns_ == mrx.iRows_);
+	_validate(pValues_, mrx.pValues_, bCompatible, "matrix::operator * (const matrix&) const");
 
 	matrix mrxProduct(iRows_, mrx.iColumns_);
 // ***************** Start of the actual multiplication
@@ -84,7 +84,7 @@ mx1_values = pValues_;
 
 matrix matrix::operator * (real k) const
 {
-	_validate(pValues_ == nullptr, "matrix::operator * (real) const");
+	_validate(pValues_, "matrix::operator * (real) const");
 
 	matrix mrxProduct(iRows_, iColumns_);
 
@@ -100,8 +100,8 @@ matrix matrix::operator * (real k) const
 
 matrix& matrix::operator *= (const matrix& mrx)
 {
-	bool bIncompatible = (this->iColumns_ != mrx.iRows_);
-	_validate(pValues_ == nullptr, mrx.pValues_ == nullptr, bIncompatible, "matrix::operator *= (const matrix&)");
+	bool bCompatible = (this->iColumns_ == mrx.iRows_);
+	_validate(pValues_, mrx.pValues_, bCompatible, "matrix::operator *= (const matrix&)");
 
 	real *temp = new real[(this->iRows_)*(mrx.iColumns_)];
 
@@ -180,7 +180,7 @@ mx1_values = this->pValues_;
 
 matrix& matrix::operator *= (real k)
 {
-	_validate(pValues_ == nullptr, "matrix::operator *= (real)");
+	_validate(pValues_, "matrix::operator *= (real)");
 
 	real* pDst = pValues_;
 	real* pTop = pDst + iRows_ * iColumns_;

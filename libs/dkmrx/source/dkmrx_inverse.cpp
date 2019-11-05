@@ -34,8 +34,8 @@ using namespace dkmrx;
 
 matrix  matrix::operator ~ ()
 {
-	bool bIncompatible = (iColumns_ != iRows_);
-	_validate(pValues_ == nullptr, false, bIncompatible, "matrix::operator ~ ()");
+	bool bCompatible = (iColumns_ == iRows_);
+	_validate(pValues_, true, bCompatible, "matrix::operator ~ ()");
 
     matrix mrx = std::move( matrix::identity(iColumns_) );
 	mrx /= *this;

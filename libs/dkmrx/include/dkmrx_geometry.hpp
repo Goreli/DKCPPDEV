@@ -26,8 +26,8 @@ Modification history:
 
 */
 
-#ifndef dkmrx_geometry_hpp
-#define dkmrx_geometry_hpp
+#ifndef libs_dkmrx_geometry_hpp
+#define libs_dkmrx_geometry_hpp
 
 #include "dkmrx_transfrm.hpp"
 
@@ -63,4 +63,4 @@ namespace dkmrx {
 	};
 
 }	// namespace dkmrx
-#endif //dkmrx_geometry_hpp
+#endif	 // libs_dkmrx_geometry_hpp

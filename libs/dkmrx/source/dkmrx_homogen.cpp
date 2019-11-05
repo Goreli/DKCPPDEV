@@ -39,7 +39,7 @@ matrix& getNonHG(matrix&);
 
 void matrix::toHG(real scaleFactor)    // to HomoGeneous form
 {
-  _validate(pValues_ == nullptr, "matrix::toHG(real)");
+  _validate(pValues_, "matrix::toHG(real)");
 
   real* newval = new real [(iColumns_+1) * iRows_];
 
@@ -71,8 +71,8 @@ void matrix::toHG(real scaleFactor)    // to HomoGeneous form
 
 void matrix::fromHG()    // from HomoGeneous form
 {
-  bool bIncompatible = (iColumns_ == 1);
-  _validate(pValues_ == nullptr, false, bIncompatible, "matrix::fromHG()");
+  bool bCompatible = (iColumns_ > 1);
+  _validate(pValues_, true, bCompatible, "matrix::fromHG()");
 
   real* newval = new real [(iColumns_-1) * iRows_];
   

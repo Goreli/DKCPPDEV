@@ -26,10 +26,14 @@ Modification history:
 
 */
 
-#ifndef dkmrx_matrix_hpp
-#define dkmrx_matrix_hpp
+#ifndef libs_dkmrx_matrix_hpp
+#define libs_dkmrx_matrix_hpp
 
 #include <iosfwd>
+
+#if defined(DKMRX_MATRIX_TEST)
+#include "dk_cdt.hpp"
+#endif
 
 namespace dkmrx {
 
@@ -37,7 +41,7 @@ namespace dkmrx {
 	{
 	public:
 
-		matrix(void);
+		matrix(void) noexcept;
 		matrix(int rows, int columns);
 		matrix(int rows, int columns, real init_value);
 		matrix(const std::initializer_list<const std::initializer_list<real>>&);
@@ -106,43 +110,24 @@ namespace dkmrx {
 		void	toHG(real = 1.0);
 		void	fromHG(void);
 
-		void	empty(void); // Frees occupied memory
-		bool	is_empty(void) { return pValues_; }
+		void	empty(void) noexcept; // Frees occupied memory
+		bool	is_empty(void) const { return pValues_; }
 		int		columns(void) const { return iColumns_; }
 		int		rows(void) const { return iRows_; }
 
-#if defined(MATRIX_TEST)
-		static	int	getConstructCount(void) { return iConstructCount_; }
-		static	int	getDestructCount(void) { return iDestructCount_; }
-		static	int	getControlSum(void) { return iControlSum_; }
-		static void resetCountsAndSum() { iConstructCount_ = iDestructCount_ = iControlSum_ = 0;  }
-#endif
-
 	private:
-
 		real* pValues_;
-		int   iRows_, iColumns_;
+		int iRows_;
+		int iColumns_;
 
-#if defined(MATRIX_TEST)
-		static int iConstructCount_;
-		static int iDestructCount_;
-		static int iControlSum_;
-		int iSeqId_;
-		// The following is expected at the end of test execution:
-		// 1. iConstructCount_ should equal iDestructCount_.
-		//    These counts indicate the total number of matrix objects created;
-		// 2. iControlSum_ should equal 0.
-		//
-		// Use the public static get... functions above to examine the values.
-		// Make sure to call resetCountsAndSum() before each test.
+#if defined(DKMRX_MATRIX_TEST)
+		dk::ConstDestTracker tracker_;
 #endif
 
 	protected:
-		// Validate the overloaded operator arguments
-		// and throw exceptions if necessary.
+		// Validate function args and throw exceptions if necessary.
 		static void _validate(bool, bool, bool, const char*);
 		static void _validate(bool, const char*);
-	};
-
-} // namespace dkmrx
-#endif // dkmrx_matrix_hpp
+	};	// class matrix
+}	// namespace dkmrx
+#endif	// libs_dkmrx_matrix_hpp

@@ -32,8 +32,8 @@ using namespace dkmrx;
 
 matrix matrix::operator - (const matrix& mrx) const
 {
-	bool bIncompatible = (iRows_ != mrx.iRows_) || (iColumns_ != mrx.iColumns_);
-	_validate(pValues_ == nullptr, mrx.pValues_ == nullptr, bIncompatible, "matrix::operator - (const matrix&) const");
+	bool bCompatible = (iRows_ == mrx.iRows_) && (iColumns_ == mrx.iColumns_);
+	_validate(pValues_, mrx.pValues_, bCompatible, "matrix::operator - (const matrix&) const");
 
 	size_t iMatSize = iRows_*iColumns_;
 	matrix mrxSub(iRows_, iColumns_);
@@ -51,7 +51,7 @@ matrix matrix::operator - (const matrix& mrx) const
 
 matrix matrix::operator - (real k) const
 {
-	_validate(pValues_ == nullptr, "matrix::operator - (real) const");
+	_validate(pValues_, "matrix::operator - (real) const");
 
 	matrix mrxSub(iRows_, iColumns_);
 
@@ -67,8 +67,8 @@ matrix matrix::operator - (real k) const
 
 matrix& matrix::operator -= (const matrix& mrx)
 {
-	bool bIncompatible = (iRows_ != mrx.iRows_) || (iColumns_ != mrx.iColumns_);
-	_validate(pValues_ == nullptr, mrx.pValues_ == nullptr, bIncompatible, "matrix::operator -= (const matrix&)");
+	bool bCompatible = (iRows_ == mrx.iRows_) && (iColumns_ == mrx.iColumns_);
+	_validate(pValues_, mrx.pValues_, bCompatible, "matrix::operator -= (const matrix&)");
 
 	real* pSrc = mrx.pValues_;
 	real* pDst = pValues_;
@@ -81,7 +81,7 @@ matrix& matrix::operator -= (const matrix& mrx)
 
 matrix& matrix::operator -= (real k)
 {
-	_validate(pValues_ == nullptr, "matrix::operator -= (real)");
+	_validate(pValues_, "matrix::operator -= (real)");
 
 	real* pDst = pValues_;
 	real* pTop = pDst + iRows_ * iColumns_;

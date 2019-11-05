@@ -34,8 +34,8 @@ using namespace dkmrx;
 
 matrix matrix::operator / (matrix& A) const
 {
-	bool bIncompatible = (A.iColumns_ != A.iRows_) || (A.iColumns_ != iRows_);
-	_validate(pValues_ == nullptr, A.pValues_ == nullptr, bIncompatible, "matrix::operator / (matrix&) const");
+	bool bCompatible = (A.iColumns_ == A.iRows_) && (A.iColumns_ == iRows_);
+	_validate(pValues_, A.pValues_, bCompatible, "matrix::operator / (matrix&) const");
 
 	matrix mrxX(*this);
 
@@ -60,7 +60,7 @@ matrix matrix::operator / (matrix& A) const
 
 matrix matrix::operator / (real k) const
 {
-	_validate(pValues_ == nullptr, "matrix::operator / (real) const");
+	_validate(pValues_, "matrix::operator / (real) const");
 
 	matrix mrxDiv(iRows_, iColumns_);
 
@@ -76,8 +76,8 @@ matrix matrix::operator / (real k) const
 
 matrix& matrix::operator /= (matrix& A)
 {
-	bool bIncompatible = (A.iColumns_ != A.iRows_) || (A.iColumns_ != iRows_);
-	_validate(pValues_ == nullptr, A.pValues_ == nullptr, bIncompatible, "matrix::operator /= (const matrix&)");
+	bool bCompatible = (A.iColumns_ == A.iRows_) && (A.iColumns_ == iRows_);
+	_validate(pValues_, A.pValues_, bCompatible, "matrix::operator /= (const matrix&)");
 
     int gaussError=0;
     
@@ -102,7 +102,7 @@ matrix& matrix::operator /= (matrix& A)
 
 matrix& matrix::operator /= (real k)
 {
-	_validate(pValues_ == nullptr, "matrix::operator /= (real)");
+	_validate(pValues_, "matrix::operator /= (real)");
 
 	real* pDst = pValues_;
 	real* pTop = pDst + iRows_ * iColumns_;

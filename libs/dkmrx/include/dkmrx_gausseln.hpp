@@ -26,8 +26,8 @@ Modification history:
 
 */
 
-#ifndef dkmrx_gausseln_hpp
-#define dkmrx_gausseln_hpp 
+#ifndef libs_dkmrx_gausseln_hpp
+#define libs_dkmrx_gausseln_hpp 
 namespace dkmrx {
 
 	template <class RealNumberA, class RealNumberB>
@@ -193,4 +193,4 @@ namespace dkmrx {
 	}
 
 } // namespace dkmrx
-#endif // dkmrx_gausseln_hpp
+#endif // libs_dkmrx_gausseln_hpp

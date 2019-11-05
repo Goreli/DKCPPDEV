@@ -61,7 +61,7 @@ void mTransformer::rotate(real through,const matrix& mrxAbout,const matrix& mrxP
 //Chapter22:
 {
 const char* sFunctionSignature = "mTransformer::rotate(real, const matrix&, const matrix&)";
-	_validate(mrxAbout[0] == nullptr, mrxPutFrom[0] == nullptr, false, sFunctionSignature);
+	_validate(mrxAbout[0], mrxPutFrom[0], true, sFunctionSignature);
 
 	mTransformer transformer; 
 
@@ -174,7 +174,7 @@ void mTransformer::translate(const matrix& mrxTo, const matrix& mrxPutFrom)
 //Chapter22:
 {
 const char* sFunctionSignature = "matrix::translate(const matrix&, const matrix&)";
-	_validate(mrxTo[0] == nullptr, mrxPutFrom[0] == nullptr, false, sFunctionSignature);
+	_validate(mrxTo[0], mrxPutFrom[0], true, sFunctionSignature);
 
 	mTransformer transformer;
 
@@ -190,7 +190,7 @@ void mTransformer::translate(real x, real y, real z, const matrix& mrxPutFrom)
 //Principles of interactive computer graphics, McGRAW-HILL
 //Chapter22:
 {
-	_validate(mrxPutFrom[0] == nullptr, "mTransformer::translate(real,real,real, const matrix&)");
+	_validate(mrxPutFrom[0], "mTransformer::translate(real,real,real, const matrix&)");
 	mTransformer transformer;
 
 	transformer[3][0] = (real) ( x- mrxPutFrom[0][0] );
@@ -205,7 +205,7 @@ void mTransformer::scale(real Kx, real Ky, real Kz, const matrix& mrxAbout)
 //Principles of interactive computer graphics, McGRAW-HILL
 //Chapter22:
 {
-	_validate(mrxAbout[0] == nullptr, "mTransformer::scale(real, real, real, const matrix&)");
+	_validate(mrxAbout[0], "mTransformer::scale(real, real, real, const matrix&)");
 	mTransformer transformer;
 
 	transformer[0][0] = (real) Kx;

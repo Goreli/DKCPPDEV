@@ -26,43 +26,36 @@ Modification history:
 
 */
 
-#ifndef libs_dkmrx_transfrm_hpp
-#define libs_dkmrx_transfrm_hpp
+#include "dk_cdt.hpp"
 
-#include "dkmrx_matrix.hpp"
+using namespace dk;
 
-namespace dkmrx {
+size_t ConstDestTracker::iConstructorCount_{ 0 };
+size_t ConstDestTracker::iDestructorCount_{ 0 };
+size_t ConstDestTracker::iControlSum_{ 0 };
 
-	class mLine;
+ConstDestTracker::ConstDestTracker() noexcept
+	: iObjSeqId_{ 0 }
+{
+	iConstructorCount_++;
+	iObjSeqId_ = iConstructorCount_;
+	iControlSum_ += iObjSeqId_;
+}
 
-	class mTransformer : public matrix
-	{
-	public:
-		mTransformer(void);
-		mTransformer(const mTransformer&);
+ConstDestTracker::~ConstDestTracker() noexcept
+{
+	iDestructorCount_++;
+	iControlSum_ -= iObjSeqId_;
+}
 
-		void rotate(real through, const matrix& about, const matrix& putFrom);
-		void rotate(real through, const mLine& about);
-		void rotateX(real through);
-		void rotateY(real through);
-		void rotateZ(real through);
-		void translate(const matrix& to, const matrix& putFrom);
-		void translate(real x, real y, real z, const matrix& putFrom);
-		void scale(real Kx, real Ky, real Kz, const matrix& about);
-		void reset(void);
-	};
+size_t ConstDestTracker::getConstCount(void) noexcept
+{ return iConstructorCount_; }
 
-	class mTransformable : public matrix
-	{
-	public:
-		mTransformable(int dim);
-		mTransformable(int dim, real init_value);
-		mTransformable(const mTransformable&);
-		mTransformable(void);
+size_t ConstDestTracker::getDestCount(void) noexcept
+{ return iDestructorCount_; }
 
-		virtual	void transform(const mTransformer&);
-		//matrix& operator = (const matrix& m) { return matrix::operator=(m); }
-	};
+size_t ConstDestTracker::getCtrlSum(void) noexcept
+{ return iControlSum_; }
 
-} // namespace dkmrx
-#endif // libs_dkmrx_transfrm_hpp
+void ConstDestTracker::reset() noexcept
+{ iConstructorCount_ = iDestructorCount_ = iControlSum_ = 0; }

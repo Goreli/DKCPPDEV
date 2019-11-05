@@ -26,8 +26,8 @@ Modification history:
 
 */
 
-#ifndef dkmrx_gausselnx_hpp
-#define dkmrx_gausselnx_hpp 
+#ifndef libs_dkmrx_gausselnx_hpp
+#define libs_dkmrx_gausselnx_hpp 
 
 #include <stdexcept>
 #include <string>
@@ -48,4 +48,4 @@ namespace dkmrx {
 		dkmrx::matrix mrx_;
 	};
 } // namespace dkmrx
-#endif // dkmrx_gausselnx_hpp
+#endif // libs_dkmrx_gausselnx_hpp

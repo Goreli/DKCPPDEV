@@ -46,7 +46,7 @@ mPoint::mPoint(const mPoint& point) : mTransformable(point) {}
 
 double mPoint::distance(const mPoint& point) const
 {
-	_validate((*this)[0] == nullptr, point[0] == nullptr, false, "mPoint::distance(const mPoint&) const");
+	_validate((*this)[0], point[0], true, "mPoint::distance(const mPoint&) const");
 
 	double dist = std::pow
 			(
@@ -72,7 +72,7 @@ real *ptr = (*this)[0];
 mLine::mLine(const mPoint& point1, const mPoint& point2, real par1, real par2)
 	:mTransformable(2)
 {
-	_validate(point1[0] == nullptr, point2[0] == nullptr, false, "mLine::mLine(const mPoint&, const mPoint&, real, real)");
+	_validate(point1[0], point2[0], true, "mLine::mLine(const mPoint&, const mPoint&, real, real)");
 
 matrix pars{ 
 	{par1, 1},
