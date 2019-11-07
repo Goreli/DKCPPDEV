@@ -37,6 +37,9 @@
       <Project>{9efbb70d-3149-4e25-8e2c-f44e0e6c72db}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\readme.md" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{D33B90C0-3860-465B-A6E4-DE2BADFBC793}</ProjectGuid>

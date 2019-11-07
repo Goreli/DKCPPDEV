@@ -55,4 +55,7 @@
       <Filter>Source Files\dkmrx sources</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\readme.md" />
+  </ItemGroup>
 </Project>
