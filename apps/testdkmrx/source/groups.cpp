@@ -26,29 +26,20 @@ Modification history:
 
 */
 
-#include <iostream>
-#include <memory>
-#include "dk_cdt.hpp"
 #include "dk_utg.hpp"
-#include "dk_ut.hpp"
 
 using namespace dk;
 
-int main() {
+static const char* str10 =
+"This group tests raw ConstDestTracker objects. "
+"This is just to gain confidence that the dkutest "
+"library is functioning as expected.";
 
-	std::cout << "Groups" << std::endl;
-	for (auto& pGrp : UnitTestGroup::list())
-		std::cout << pGrp->getKey() << " " << pGrp->getDescription() << std::endl;
 
-	std::cout << std::endl;
-	std::cout << "Tests" << std::endl;
-	for (auto& pTst : UnitTest::list()) {
-		pTst->identify();
-		pTst->initCompositeKey();
-		std::cout << pTst->getKey().groupKey() << "." << pTst->getKey().testKey() << " " << pTst->getDescription() << std::endl;
-		if (pTst->exec())
-			std::cout << "\t" << "Passed" << std::endl;
-		else
-			std::cout << "\t" << "Failed" << std::endl;
-	}
-}
+
+static std::initializer_list<UnitTestGroup> groups{
+	UnitTestGroup(10, str10),
+	UnitTestGroup(20, "Test the matrix constructors."),
+	UnitTestGroup(30, "Test the matrix assignment operators."),
+	UnitTestGroup(40, "Test the matrix overloaded + operators.")
+};

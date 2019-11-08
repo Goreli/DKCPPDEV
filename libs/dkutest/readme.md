@@ -22,5 +22,6 @@ Here is the MS Visual Studio configuration log used to build the target in both 
 ## Roadmap
 
 1. Doco;
-2. Implement a multilevel hierarchical structure of groups. While the lowest level of the hierarchy is hard coded in the testing application itself, it should be possible to build a custom hierarchy on top of it to enable advanced filtering of tests. This is going to be handy in large scale testing applications involving hundreds of unit tests. The plan looks like this: provide a command line option to start a GUI hierarchy editor to edit the hierarchy. Also, provide a command line option to filter (XSLT/XPATH ?) tests using the hierarchy.
+2. Implement a multilevel hierarchical structure of groups. While the lowest level of the hierarchy is hard coded in the testing application itself, it should be possible to build a custom hierarchy on top of it to enable advanced filtering of tests. This is going to be handy in large scale testing applications involving hundreds of unit tests. The plan looks like this: provide a command line option to start a GUI hierarchy editor to edit the hierarchy. Also, provide a command line option to filter (XSLT/XPATH ?) tests using the hierarchy;
+3. Provide a preprocessor macro to minimise the amount of typing required to define unit tests.
 

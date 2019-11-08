@@ -26,29 +26,30 @@ Modification history:
 
 */
 
-#include <iostream>
-#include <memory>
-#include "dk_cdt.hpp"
-#include "dk_utg.hpp"
-#include "dk_ut.hpp"
+#include "dk_utk.hpp"
 
 using namespace dk;
 
-int main() {
-
-	std::cout << "Groups" << std::endl;
-	for (auto& pGrp : UnitTestGroup::list())
-		std::cout << pGrp->getKey() << " " << pGrp->getDescription() << std::endl;
-
-	std::cout << std::endl;
-	std::cout << "Tests" << std::endl;
-	for (auto& pTst : UnitTest::list()) {
-		pTst->identify();
-		pTst->initCompositeKey();
-		std::cout << pTst->getKey().groupKey() << "." << pTst->getKey().testKey() << " " << pTst->getDescription() << std::endl;
-		if (pTst->exec())
-			std::cout << "\t" << "Passed" << std::endl;
-		else
-			std::cout << "\t" << "Failed" << std::endl;
-	}
+UTKey::UTKey(unsigned uGroupKey, unsigned uTestKey)
+	: uGroupKey_{ uGroupKey }, uTestKey_{ uTestKey }
+{}
+UTKey::~UTKey()
+{}
+bool UTKey::operator < (const UTKey& key) const
+{
+	if (this->uGroupKey_ < key.uGroupKey_)
+		return true;
+	if (this->uGroupKey_ > key.uGroupKey_)
+		return false;
+	if (this->uTestKey_ < key.uTestKey_)
+		return true;
+	return false;
+}
+unsigned UTKey::groupKey() const noexcept
+{
+	return uGroupKey_;
+}
+unsigned UTKey::testKey() const noexcept
+{
+	return uTestKey_;
 }

@@ -54,6 +54,12 @@
     <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_transfrm.cpp">
       <Filter>Source Files\dkmrx sources</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\groups.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\tests000010.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\readme.md" />

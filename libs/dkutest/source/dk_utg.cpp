@@ -26,29 +26,35 @@ Modification history:
 
 */
 
-#include <iostream>
-#include <memory>
-#include "dk_cdt.hpp"
 #include "dk_utg.hpp"
-#include "dk_ut.hpp"
 
 using namespace dk;
 
-int main() {
+// UnitTestGroup objects are meant to be defined in the global scope.
+// Use the singleton pattern to initialise the list in a controlled
+// manner during the first invocation of the constructor.
+static UTGList& singleton() {
+	static UTGList list_;
+	return list_;
+}
 
-	std::cout << "Groups" << std::endl;
-	for (auto& pGrp : UnitTestGroup::list())
-		std::cout << pGrp->getKey() << " " << pGrp->getDescription() << std::endl;
-
-	std::cout << std::endl;
-	std::cout << "Tests" << std::endl;
-	for (auto& pTst : UnitTest::list()) {
-		pTst->identify();
-		pTst->initCompositeKey();
-		std::cout << pTst->getKey().groupKey() << "." << pTst->getKey().testKey() << " " << pTst->getDescription() << std::endl;
-		if (pTst->exec())
-			std::cout << "\t" << "Passed" << std::endl;
-		else
-			std::cout << "\t" << "Failed" << std::endl;
-	}
+UnitTestGroup::UnitTestGroup(unsigned uKey, const std::string& sDescription)
+	: uKey_{ uKey }, sDescription_{ sDescription }
+{
+	auto& list = singleton();
+	list.push_back(this);
+}
+UnitTestGroup::~UnitTestGroup()
+{}
+const UTGList& UnitTestGroup::list() noexcept
+{
+	return singleton();
+}
+unsigned UnitTestGroup::getKey() const noexcept
+{
+	return uKey_;
+}
+const std::string& UnitTestGroup::getDescription() const noexcept
+{
+	return sDescription_;
 }

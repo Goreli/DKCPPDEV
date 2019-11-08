@@ -26,29 +26,18 @@ Modification history:
 
 */
 
-#include <iostream>
-#include <memory>
-#include "dk_cdt.hpp"
-#include "dk_utg.hpp"
+#ifndef libs_dk_ut_macros_hpp
+#define libs_dk_ut_macros_hpp
+
 #include "dk_ut.hpp"
 
-using namespace dk;
+// Helper macros.
+#define _CONCATENATE_THEM_AGAIN_(X,Y) }}X##Y;
+#define _CONCATENATE_THEM_(X,Y) _CONCATENATE_THEM_AGAIN_(X,Y)
 
-int main() {
+// Main macros.
+#define DESCRIBE_UNIT_TEST static class : UnitTest { void identify() {
+#define DEFINE_UNIT_TEST } bool exec() {
+#define END_UNIT_TEST _CONCATENATE_THEM_(_,__LINE__)
 
-	std::cout << "Groups" << std::endl;
-	for (auto& pGrp : UnitTestGroup::list())
-		std::cout << pGrp->getKey() << " " << pGrp->getDescription() << std::endl;
-
-	std::cout << std::endl;
-	std::cout << "Tests" << std::endl;
-	for (auto& pTst : UnitTest::list()) {
-		pTst->identify();
-		pTst->initCompositeKey();
-		std::cout << pTst->getKey().groupKey() << "." << pTst->getKey().testKey() << " " << pTst->getDescription() << std::endl;
-		if (pTst->exec())
-			std::cout << "\t" << "Passed" << std::endl;
-		else
-			std::cout << "\t" << "Failed" << std::endl;
-	}
-}
+#endif	// libs_dk_ut_macros_hpp

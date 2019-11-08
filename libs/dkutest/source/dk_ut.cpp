@@ -26,29 +26,39 @@ Modification history:
 
 */
 
-#include <iostream>
-#include <memory>
-#include "dk_cdt.hpp"
-#include "dk_utg.hpp"
 #include "dk_ut.hpp"
 
 using namespace dk;
 
-int main() {
+// UnitTest objects are meant to be defined in the global scope.
+// Use the singleton pattern to initialise the list in a controlled
+// manner during the first invocation of the constructor.
+static UTList& singleton() {
+	static UTList list_;
+	return list_;
+}
 
-	std::cout << "Groups" << std::endl;
-	for (auto& pGrp : UnitTestGroup::list())
-		std::cout << pGrp->getKey() << " " << pGrp->getDescription() << std::endl;
-
-	std::cout << std::endl;
-	std::cout << "Tests" << std::endl;
-	for (auto& pTst : UnitTest::list()) {
-		pTst->identify();
-		pTst->initCompositeKey();
-		std::cout << pTst->getKey().groupKey() << "." << pTst->getKey().testKey() << " " << pTst->getDescription() << std::endl;
-		if (pTst->exec())
-			std::cout << "\t" << "Passed" << std::endl;
-		else
-			std::cout << "\t" << "Failed" << std::endl;
-	}
+UnitTest::UnitTest()
+	: group{ 0 }, test{ 0 }, description{ "" }, utkCompositeKey_{0, 0}
+{
+	auto& list = singleton();
+	list.push_back(this);
+}
+UnitTest::~UnitTest()
+{}
+const UTList& UnitTest::list() noexcept
+{
+	return singleton();
+}
+void UnitTest::initCompositeKey() noexcept
+{
+	utkCompositeKey_ = UTKey(group, test);
+}
+const UTKey& UnitTest::getKey() const noexcept
+{
+	return utkCompositeKey_;
+}
+const std::string& UnitTest::getDescription() const noexcept
+{
+	return description;
 }

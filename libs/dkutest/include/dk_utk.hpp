@@ -26,29 +26,25 @@ Modification history:
 
 */
 
-#include <iostream>
-#include <memory>
-#include "dk_cdt.hpp"
-#include "dk_utg.hpp"
-#include "dk_ut.hpp"
+#ifndef libs_dk_utk_hpp
+#define libs_dk_utk_hpp
 
-using namespace dk;
+namespace dk {
 
-int main() {
+	class UTKey{
+	public:
+		UTKey(unsigned, unsigned);
+		virtual ~UTKey();
 
-	std::cout << "Groups" << std::endl;
-	for (auto& pGrp : UnitTestGroup::list())
-		std::cout << pGrp->getKey() << " " << pGrp->getDescription() << std::endl;
+		bool operator < (const UTKey& key) const;
+		unsigned groupKey() const noexcept;
+		unsigned testKey() const noexcept;
 
-	std::cout << std::endl;
-	std::cout << "Tests" << std::endl;
-	for (auto& pTst : UnitTest::list()) {
-		pTst->identify();
-		pTst->initCompositeKey();
-		std::cout << pTst->getKey().groupKey() << "." << pTst->getKey().testKey() << " " << pTst->getDescription() << std::endl;
-		if (pTst->exec())
-			std::cout << "\t" << "Passed" << std::endl;
-		else
-			std::cout << "\t" << "Failed" << std::endl;
-	}
-}
+	private:
+		unsigned uGroupKey_;
+		unsigned uTestKey_;
+	};
+
+}	// namespace dk
+
+#endif	// libs_dk_utk_hpp

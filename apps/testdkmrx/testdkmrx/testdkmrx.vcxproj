@@ -30,7 +30,9 @@
     <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_multiply.cpp" />
     <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_subtract.cpp" />
     <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_transfrm.cpp" />
+    <ClCompile Include="..\source\groups.cpp" />
     <ClCompile Include="..\source\testdkmrx.cpp" />
+    <ClCompile Include="..\source\tests000010.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\libs\dkutest\dkutest\dkutest.vcxproj">

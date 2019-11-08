@@ -156,9 +156,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\dk_cdt.hpp" />
+    <ClInclude Include="..\include\dk_ut.hpp" />
+    <ClInclude Include="..\include\dk_utg.hpp" />
+    <ClInclude Include="..\include\dk_utk.hpp" />
+    <ClInclude Include="..\include\dk_ut_macros.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\dk_cdt.cpp" />
+    <ClCompile Include="..\source\dk_ut.cpp" />
+    <ClCompile Include="..\source\dk_utg.cpp" />
+    <ClCompile Include="..\source\dk_utk.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\readme.md" />
