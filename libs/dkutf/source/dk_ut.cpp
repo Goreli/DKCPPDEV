@@ -26,35 +26,49 @@ Modification history:
 
 */
 
-#include "dk_utg.hpp"
+#include <algorithm>
+#include "dk_ut.hpp"
 
 using namespace dk;
 
-// UnitTestGroup objects are meant to be defined in the global scope.
+// UnitTest objects are meant to be defined in the global scope.
 // Use the singleton pattern to initialise the list in a controlled
 // manner during the first invocation of the constructor.
-static UTGList& singleton() {
-	static UTGList list_;
+static UTList& singleton() {
+	static UTList list_;
 	return list_;
 }
 
-UnitTestGroup::UnitTestGroup(unsigned uKey, const std::string& sDescription)
-	: uKey_{ uKey }, sDescription_{ sDescription }
+UnitTest::UnitTest()
+	: group{ 0 }, test{ 0 }, description{ "" }, utkCompositeKey_{0, 0}
 {
 	auto& list = singleton();
 	list.push_back(this);
 }
-UnitTestGroup::~UnitTestGroup()
+UnitTest::~UnitTest()
 {}
-const UTGList& UnitTestGroup::list() noexcept
+static bool comparisonFunction(UnitTest* p1, UnitTest* p2)
+{
+	return p1->getKey() < p2->getKey();
+}
+void UnitTest::sort() noexcept
+{
+	auto& list = singleton();
+	std::sort(list.begin(), list.end(), comparisonFunction);
+}
+const UTList& UnitTest::list() noexcept
 {
 	return singleton();
 }
-unsigned UnitTestGroup::getKey() const noexcept
+void UnitTest::initCompositeKey() noexcept
 {
-	return uKey_;
+	utkCompositeKey_ = UTKey(group, test);
 }
-const std::string& UnitTestGroup::getDescription() const noexcept
+const UTKey& UnitTest::getKey() const noexcept
 {
-	return sDescription_;
+	return utkCompositeKey_;
+}
+const std::string& UnitTest::getDescription() const noexcept
+{
+	return description;
 }

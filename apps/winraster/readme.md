@@ -1,4 +1,4 @@
-# winraster.exe
+# WINRASTER.EXE
 
 This is a sample Windows Desktop application that demonstrates how to use the [../../libs/dkmrx](../../libs/dkmrx) matrix library to perform 3D coordinate transformation in **Raster Graphics** applications. It loads image color information from a *.mrx DKMRX data file and renders the image in a dance-like motion. The source code consists of three modules each responsible for a particular function, namely: Windows GUI, Windows **Raster Graphics** Rendering and Coordinate Transformation. The two Windows specific modules utilise the straightforward Windows API (no C++ toolkits involved). The Coordinate Transformation module is independent of OS. It is the Coordinate Transformation module that contains examples of using the library. 
 

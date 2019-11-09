@@ -22,7 +22,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{9EFBB70D-3149-4E25-8E2C-F44E0E6C72DB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>dkutest</RootNamespace>
+    <RootNamespace>dkutf</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -157,15 +157,22 @@
   <ItemGroup>
     <ClInclude Include="..\include\dk_cdt.hpp" />
     <ClInclude Include="..\include\dk_ut.hpp" />
+    <ClInclude Include="..\include\dk_utf.hpp" />
     <ClInclude Include="..\include\dk_utg.hpp" />
+    <ClInclude Include="..\include\dk_utgv.hpp" />
+    <ClInclude Include="..\include\dk_utg_macros.hpp" />
     <ClInclude Include="..\include\dk_utk.hpp" />
+    <ClInclude Include="..\include\dk_utv.hpp" />
     <ClInclude Include="..\include\dk_ut_macros.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\dk_cdt.cpp" />
     <ClCompile Include="..\source\dk_ut.cpp" />
+    <ClCompile Include="..\source\dk_utf.cpp" />
     <ClCompile Include="..\source\dk_utg.cpp" />
+    <ClCompile Include="..\source\dk_utgv.cpp" />
     <ClCompile Include="..\source\dk_utk.cpp" />
+    <ClCompile Include="..\source\dk_utv.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\readme.md" />

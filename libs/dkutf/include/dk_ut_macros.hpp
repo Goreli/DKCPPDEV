@@ -26,31 +26,19 @@ Modification history:
 
 */
 
-#ifndef libs_dk_utg_hpp
-#define libs_dk_utg_hpp
+#ifndef libs_dk_ut_macros_hpp
+#define libs_dk_ut_macros_hpp
 
-#include <string>
-#include <vector>
+#include "dk_ut.hpp"
 
-namespace dk {
-	class UnitTestGroup;
-	typedef std::vector<UnitTestGroup*> UTGList;
+// Helper macros.
+#define _UT_CONCATENATE_THEM_AGAIN_(X,Y) }X##Y;
+#define _UT_CONCATENATE_THEM_(X,Y) _UT_CONCATENATE_THEM_AGAIN_(X,Y)
 
-	class UnitTestGroup {
-	public:
-		UnitTestGroup(unsigned, const std::string&);
-		virtual ~UnitTestGroup();
+// Main macros to:
+//  - Minimise the typing effort;
+//	- Remove the burden of declaring unique global objects.
+#define BEGIN_UNIT_TEST static class : dk::UnitTest { 
+#define END_UNIT_TEST _UT_CONCATENATE_THEM_(ut_,__LINE__)
 
-		static const UTGList& list() noexcept;
-
-		unsigned getKey() const noexcept;
-		const std::string& getDescription() const noexcept;
-
-	private:
-		unsigned uKey_;
-		std::string sDescription_;
-	};
-}	// namespace dk
-
-
-#endif	// libs_dk_utg_hpp
+#endif	// libs_dk_ut_macros_hpp

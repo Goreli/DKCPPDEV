@@ -26,30 +26,28 @@ Modification history:
 
 */
 
-#include "dk_utk.hpp"
+#include "dk_utg_macros.hpp"
 
-using namespace dk;
+/*
+Use the following macro to create a group of unit tests:
 
-UTKey::UTKey(unsigned uGroupKey, unsigned uTestKey)
-	: uGroupKey_{ uGroupKey }, uTestKey_{ uTestKey }
-{}
-UTKey::~UTKey()
-{}
-bool UTKey::operator < (const UTKey& key) const
-{
-	if (this->uGroupKey_ < key.uGroupKey_)
-		return true;
-	if (this->uGroupKey_ > key.uGroupKey_)
-		return false;
-	if (this->uTestKey_ < key.uTestKey_)
-		return true;
-	return false;
-}
-unsigned UTKey::groupKey() const noexcept
-{
-	return uGroupKey_;
-}
-unsigned UTKey::testKey() const noexcept
-{
-	return uTestKey_;
-}
+CREATE_GROUP(unsigned int groupId, const char* description);
+
+Parameters:
+	groupId - a unique id of a group of unit tests. 
+	  If the id is not unique the program won't spit the dummy.
+		However, it will ignore unit tests pertaining to the
+		duplicate group and, if in the validation mode, report
+		the group as a duplicate.
+	  Do not use 0 (zero) as a group id as this number is reserved
+		for a system group. Custom groups defined using the reserved
+		id will be ignored. Custom unit tests allocated to such
+		a group will be ignored too.
+
+	description - the description of the group of unit tests. 
+*/
+
+CREATE_GROUP(110, "ConstDestTracker default constructor");
+CREATE_GROUP(120, "ConstDestTracker copy constructor");
+CREATE_GROUP(130, "ConstDestTracker move constructor");
+CREATE_GROUP(140, "ConstDestTracker overloaded assignment operators");

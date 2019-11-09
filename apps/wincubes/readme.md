@@ -1,4 +1,4 @@
-# wincubes.exe
+# WINCUBES.EXE
 
 This is a sample Windows Desktop application that demonstrates how to use the [../../libs/dkmrx](../../libs/dkmrx) matrix library to perform 3D coordinate transformation in **Vector Graphics** applications. It displays 9 cubes performing a dance-like motion consisting of 5 acts. The source code consists of three modules each responsible for a particular function, namely: Windows GUI, Windows **Vector Graphics** Rendering and Coordinate Transformation. The two Windows specific modules utilise the straightforward Windows API (no C++ toolkits involved). The Coordinate Transformation module is independent of OS. It is the Coordinate Transformation module that contains examples of using the library.
 

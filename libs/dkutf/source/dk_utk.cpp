@@ -26,25 +26,34 @@ Modification history:
 
 */
 
-#ifndef libs_dk_utk_hpp
-#define libs_dk_utk_hpp
+#include "dk_utk.hpp"
 
-namespace dk {
+using namespace dk;
 
-	class UTKey{
-	public:
-		UTKey(unsigned, unsigned);
-		virtual ~UTKey();
-
-		bool operator < (const UTKey& key) const;
-		unsigned groupKey() const noexcept;
-		unsigned testKey() const noexcept;
-
-	private:
-		unsigned uGroupKey_;
-		unsigned uTestKey_;
-	};
-
-}	// namespace dk
-
-#endif	// libs_dk_utk_hpp
+UTKey::UTKey(unsigned uGroupKey, unsigned uTestKey)
+	: uGroupKey_{ uGroupKey }, uTestKey_{ uTestKey }
+{}
+UTKey::~UTKey()
+{}
+bool UTKey::operator < (const UTKey& key) const
+{
+	if (uGroupKey_ < key.uGroupKey_)
+		return true;
+	if (uGroupKey_ > key.uGroupKey_)
+		return false;
+	if (uTestKey_ < key.uTestKey_)
+		return true;
+	return false;
+}
+bool UTKey::operator == (const UTKey& key) const
+{
+	return (uGroupKey_ == key.uGroupKey_) && (uTestKey_ == key.uTestKey_);
+}
+unsigned UTKey::groupKey() const noexcept
+{
+	return uGroupKey_;
+}
+unsigned UTKey::testKey() const noexcept
+{
+	return uTestKey_;
+}

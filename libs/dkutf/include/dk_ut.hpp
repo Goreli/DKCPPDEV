@@ -42,6 +42,7 @@ namespace dk {
 		UnitTest();
 		virtual ~UnitTest();
 
+		static void sort() noexcept;
 		static const UTList& list() noexcept;
 
 		// Expect a nonabstract override to be defined in the application module
@@ -51,7 +52,7 @@ namespace dk {
 		// minimise the amount of scripting in the application module. The motivation
 		// here is to make the process of defining application unit tests as user
 		// friendly as possible. Risks seem to be minimal in this context.
-		virtual void identify() = 0;
+		virtual void describe() = 0;
 
 		// Set the composite key once the application module has defined
 		// a nonabstract override of the identify() member function.
@@ -59,7 +60,7 @@ namespace dk {
 
 		// Expect a nonabstract override to be defined in the application module
 		// in order to execute the actual unit test.
-		virtual bool exec() = 0;
+		virtual bool execute() = 0;
 
 		const UTKey& getKey() const noexcept;
 		const std::string& getDescription() const noexcept;

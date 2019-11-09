@@ -1,5 +1,5 @@
-# DKMRX.LIB
-<p align="center">C++ matrix library with sample programs</p>
+# DKMRX.LIB - Matrix Library
+<p align="center">C++ library with sample graphical programs.</p><p align="center">Seen The Matrix?</p>
 
 ___
 

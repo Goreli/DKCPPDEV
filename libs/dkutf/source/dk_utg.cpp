@@ -26,18 +26,45 @@ Modification history:
 
 */
 
-#ifndef libs_dk_ut_macros_hpp
-#define libs_dk_ut_macros_hpp
+#include <algorithm>
+#include "dk_utg.hpp"
 
-#include "dk_ut.hpp"
+using namespace dk;
 
-// Helper macros.
-#define _CONCATENATE_THEM_AGAIN_(X,Y) }}X##Y;
-#define _CONCATENATE_THEM_(X,Y) _CONCATENATE_THEM_AGAIN_(X,Y)
+// UnitTestGroup objects are meant to be defined in the global scope.
+// Use the singleton pattern to initialise the list in a controlled
+// manner during the first invocation of the constructor.
+static UTGList& singleton() {
+	static UTGList list_;
+	return list_;
+}
 
-// Main macros.
-#define DESCRIBE_UNIT_TEST static class : UnitTest { void identify() {
-#define DEFINE_UNIT_TEST } bool exec() {
-#define END_UNIT_TEST _CONCATENATE_THEM_(_,__LINE__)
-
-#endif	// libs_dk_ut_macros_hpp
+UnitTestGroup::UnitTestGroup(unsigned uKey, const std::string& sDescription)
+	: uKey_{ uKey }, sDescription_{ sDescription }
+{
+	auto& list = singleton();
+	list.push_back(this);
+}
+UnitTestGroup::~UnitTestGroup()
+{}
+static bool comparisonFunction(UnitTestGroup* p1, UnitTestGroup* p2)
+{
+	return p1->getKey() < p2->getKey();
+}
+void UnitTestGroup::sort() noexcept
+{
+	auto& list = singleton();
+	std::sort(list.begin(), list.end(), comparisonFunction);
+}
+const UTGList& UnitTestGroup::list() noexcept
+{
+	return singleton();
+}
+unsigned UnitTestGroup::getKey() const noexcept
+{
+	return uKey_;
+}
+const std::string& UnitTestGroup::getDescription() const noexcept
+{
+	return sDescription_;
+}

@@ -26,20 +26,8 @@ Modification history:
 
 */
 
-#include "dk_utg.hpp"
-
-using namespace dk;
-
-static const char* str10 =
-"This group tests raw ConstDestTracker objects. "
-"This is just to gain confidence that the dkutest "
-"library is functioning as expected.";
+#include "dk_utg_macros.hpp"
 
 
-
-static std::initializer_list<UnitTestGroup> groups{
-	UnitTestGroup(10, str10),
-	UnitTestGroup(20, "Test the matrix constructors."),
-	UnitTestGroup(30, "Test the matrix assignment operators."),
-	UnitTestGroup(40, "Test the matrix overloaded + operators.")
-};
+CREATE_GROUP(120, "Test the constructors instrumented using ConstDestTracker.");
+CREATE_GROUP(130, "Test the assignment operators.");

@@ -31,7 +31,7 @@ Modification history:
 
 #include <iosfwd>
 
-#if defined(DKMRX_MATRIX_TEST)
+#if defined(DKUTF_CONST_DEST_TRACKER)
 #include "dk_cdt.hpp"
 #endif
 
@@ -120,7 +120,7 @@ namespace dkmrx {
 		int iRows_;
 		int iColumns_;
 
-#if defined(DKMRX_MATRIX_TEST)
+#if defined(DKUTF_CONST_DEST_TRACKER)
 		dk::ConstDestTracker tracker_;
 #endif
 

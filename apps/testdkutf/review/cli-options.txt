@@ -1,0 +1,122 @@
+https://www.gnu.org/software/libc/manual/html_node/Getopt-Long-Options.html
+25.2.3 Parsing Long Options with getopt_long
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html
+12. Utility Conventions
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+https://www.gnu.org/prep/standards/html_node/Command_002dLine-Interfaces.html
+
+4.7 Standards for Command Line Interfaces
+It is a good idea to follow the POSIX guidelines for the command-line options of a program. The easiest way to do this is to use getopt to parse them. Note that the GNU version of getopt will normally permit options anywhere among the arguments unless the special argument ‘--’ is used. This is not what POSIX specifies; it is a GNU extension.
+
+Please define long-named options that are equivalent to the single-letter Unix-style options. We hope to make GNU more user friendly this way. This is easy to do with the GNU function getopt_long.
+
+One of the advantages of long-named options is that they can be consistent from program to program. For example, users should be able to expect the “verbose” option of any GNU program which has one, to be spelled precisely ‘--verbose’. To achieve this uniformity, look at the table of common long-option names when you choose the option names for your program (see Option Table).
+
+It is usually a good idea for file names given as ordinary arguments to be input files only; any output files would be specified using options (preferably ‘-o’ or ‘--output’). Even if you allow an output file name as an ordinary argument for compatibility, try to provide an option as another way to specify it. This will lead to more consistency among GNU utilities, and fewer idiosyncrasies for users to remember.
+
+All programs should support two standard options: ‘--version’ and ‘--help’. CGI programs should accept these as command-line options, and also if given as the PATH_INFO; for instance, visiting ‘http://example.org/p.cgi/--help’ in a browser should output the same information as invoking ‘p.cgi --help’ from the command line.
+
+• --version:	  	The standard output for –version.
+• --help:	  	The standard output for –help.
+
+
+https://www.gnu.org/prep/standards/html_node/Option-Table.html#Option-Table
+
+‘all’
+‘-a’ in du, ls, nm, stty, uname, and unexpand.
+
+‘dry-run’
+‘-n’ in make.
+
+‘exclude-from’
+‘-X’ in tar.
+
+‘exec’
+Used in GDB.
+
+‘group’
+‘-g’ in install.
+
+‘help’
+Used to ask for brief usage information.
+
+‘ignore’
+‘-I’ in ls; ‘-x’ in recode.
+
+‘include’
+‘-i’ in etags; ‘-I’ in m4.
+
+‘info’
+‘-i’, ‘-l’, and ‘-m’ in Finger.
+
+‘interactive’
+‘-i’ in cp, ln, mv, rm; ‘-e’ in m4; ‘-p’ in xargs; ‘-w’ in tar.
+
+‘jobs’
+‘-j’ in make.
+
+‘just-print’
+‘-n’ in make.
+
+‘list’
+‘-t’ in cpio; ‘-l’ in recode.
+
+‘output’
+In various programs, specify the output file name.
+
+‘quiet’
+Used in many programs to inhibit the usual output. Every program accepting ‘--quiet’ should accept ‘--silent’ as a synonym.
+
+‘recursive’
+Used in chgrp, chown, cp, ls, diff, and rm.
+
+‘show-all’
+‘-A’ in cat.
+
+‘usage’
+Used in gawk; same as ‘--help’.
+
+‘verbose’
+Print more information about progress. Many programs support this.
+
+‘verify’
+‘-W’ in tar.
+
+‘version’
+Print the version number.
+
+‘zeros’
+‘-z’ in gprof.
+
+https://www.gnu.org/software/libc/manual/html_node/Argument-Syntax.html
+
+
+25.1.1 Program Argument Syntax Conventions
+POSIX recommends these conventions for command line arguments. getopt (see Getopt) and argp_parse (see Argp) make it easy to implement them.
+
+Arguments are options if they begin with a hyphen delimiter (‘-’).
+Multiple options may follow a hyphen delimiter in a single token if the options do not take arguments. Thus, ‘-abc’ is equivalent to ‘-a -b -c’.
+Option names are single alphanumeric characters (as for isalnum; see Classification of Characters).
+Certain options require an argument. For example, the ‘-o’ command of the ld command requires an argument—an output file name.
+An option and its argument may or may not appear as separate tokens. (In other words, the whitespace separating them is optional.) Thus, ‘-o foo’ and ‘-ofoo’ are equivalent.
+Options typically precede other non-option arguments.
+The implementations of getopt and argp_parse in the GNU C Library normally make it appear as if all the option arguments were specified before all the non-option arguments for the purposes of parsing, even if the user of your program intermixed option and non-option arguments. They do this by reordering the elements of the argv array. This behavior is nonstandard; if you want to suppress it, define the _POSIX_OPTION_ORDER environment variable. See Standard Environment.
+
+The argument ‘--’ terminates all options; any following arguments are treated as non-option arguments, even if they begin with a hyphen.
+A token consisting of a single hyphen character is interpreted as an ordinary non-option argument. By convention, it is used to specify input from or output to the standard input and output streams.
+Options may be supplied in any order, or appear multiple times. The interpretation is left up to the particular application program.
+GNU adds long options to these conventions. Long options consist of ‘--’ followed by a name made of alphanumeric characters and dashes. Option names are typically one to three words long, with hyphens to separate words. Users can abbreviate the option names as long as the abbreviations are unique.
+
+To specify an argument for a long option, write ‘--name=value’. This syntax enables a long option to accept an argument that is itself optional.
+
+Eventually, GNU systems will provide completion for long option names in the shell.
+
+Next: Parsing Program Arguments, Up: Program Arguments   [Contents][Index]
+

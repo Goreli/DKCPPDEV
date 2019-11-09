@@ -1,4 +1,4 @@
-# winbmp2mrx.exe
+# WINBMP2MRX.EXE
 
 This is a console program with a simple command line interface that can read color information from a Windows Bitmap file and write it to a DKMRX matrix data file. The purpose of the program is to provide additional color data files for the [../winraster](../winraster) demonstration purposes.
 

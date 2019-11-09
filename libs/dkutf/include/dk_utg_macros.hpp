@@ -26,16 +26,18 @@ Modification history:
 
 */
 
-#include "dk_utf.hpp"
-using namespace dk;
+#ifndef libs_dk_utg_macros_hpp
+#define libs_dk_utg_macros_hpp
 
-int main() {
-	UTGListVerifier utgVerifier;
-	UTListVerifier utVerifier;
+#include "dk_utg.hpp"
 
-	verify(utgVerifier, utVerifier);
-	run(utgVerifier.uniqueLinkedGroupList(),
-		utVerifier.uniqueLinkedUnitTestList()
-	);
-	return 0;
-}
+// Helper macros.
+#define _UTG_CONCATENATE_THEM_AGAIN_(X,Y) static dk::UnitTestGroup X##Y
+#define _UTG_CONCATENATE_THEM_(X,Y) _UTG_CONCATENATE_THEM_AGAIN_(X,Y)
+
+// Main macros to:
+//  - Minimise the typing effort;
+//	- Remove the burden of declaring unique global objects.
+#define CREATE_GROUP _UTG_CONCATENATE_THEM_(g_,__LINE__)
+
+#endif	// libs_dk_utg_macros_hpp

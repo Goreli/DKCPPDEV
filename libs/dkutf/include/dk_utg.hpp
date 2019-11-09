@@ -26,16 +26,32 @@ Modification history:
 
 */
 
-#include "dk_utf.hpp"
-using namespace dk;
+#ifndef libs_dk_utg_hpp
+#define libs_dk_utg_hpp
 
-int main() {
-	UTGListVerifier utgVerifier;
-	UTListVerifier utVerifier;
+#include <string>
+#include <vector>
 
-	verify(utgVerifier, utVerifier);
-	run(utgVerifier.uniqueLinkedGroupList(),
-		utVerifier.uniqueLinkedUnitTestList()
-	);
-	return 0;
-}
+namespace dk {
+	class UnitTestGroup;
+	typedef std::vector<UnitTestGroup*> UTGList;
+
+	class UnitTestGroup {
+	public:
+		UnitTestGroup(unsigned, const std::string&);
+		virtual ~UnitTestGroup();
+
+		static void sort() noexcept;
+		static const UTGList& list() noexcept;
+
+		unsigned getKey() const noexcept;
+		const std::string& getDescription() const noexcept;
+
+	private:
+		unsigned uKey_;
+		std::string sDescription_;
+	};
+}	// namespace dk
+
+
+#endif	// libs_dk_utg_hpp

@@ -26,39 +26,16 @@ Modification history:
 
 */
 
-#include "dk_ut.hpp"
+#ifndef libs_dk_utf_hpp
+#define libs_dk_utf_hpp
 
-using namespace dk;
+#include "dk_utv.hpp"
 
-// UnitTest objects are meant to be defined in the global scope.
-// Use the singleton pattern to initialise the list in a controlled
-// manner during the first invocation of the constructor.
-static UTList& singleton() {
-	static UTList list_;
-	return list_;
-}
+namespace dk {
 
-UnitTest::UnitTest()
-	: group{ 0 }, test{ 0 }, description{ "" }, utkCompositeKey_{0, 0}
-{
-	auto& list = singleton();
-	list.push_back(this);
-}
-UnitTest::~UnitTest()
-{}
-const UTList& UnitTest::list() noexcept
-{
-	return singleton();
-}
-void UnitTest::initCompositeKey() noexcept
-{
-	utkCompositeKey_ = UTKey(group, test);
-}
-const UTKey& UnitTest::getKey() const noexcept
-{
-	return utkCompositeKey_;
-}
-const std::string& UnitTest::getDescription() const noexcept
-{
-	return description;
-}
+	void verify(UTGListVerifier&, UTListVerifier&) noexcept;
+	void run(const UTGList&, const UTList&) noexcept;
+
+};	// namespace dk;
+
+#endif	// #ifndef libs_dk_utf_hpp

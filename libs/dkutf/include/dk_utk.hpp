@@ -26,16 +26,26 @@ Modification history:
 
 */
 
-#include "dk_utf.hpp"
-using namespace dk;
+#ifndef libs_dk_utk_hpp
+#define libs_dk_utk_hpp
 
-int main() {
-	UTGListVerifier utgVerifier;
-	UTListVerifier utVerifier;
+namespace dk {
 
-	verify(utgVerifier, utVerifier);
-	run(utgVerifier.uniqueLinkedGroupList(),
-		utVerifier.uniqueLinkedUnitTestList()
-	);
-	return 0;
-}
+	class UTKey{
+	public:
+		UTKey(unsigned, unsigned);
+		virtual ~UTKey();
+
+		bool operator < (const UTKey&) const;
+		bool operator == (const UTKey&) const;
+		unsigned groupKey() const noexcept;
+		unsigned testKey() const noexcept;
+
+	private:
+		unsigned uGroupKey_;
+		unsigned uTestKey_;
+	};
+
+}	// namespace dk
+
+#endif	// libs_dk_utk_hpp

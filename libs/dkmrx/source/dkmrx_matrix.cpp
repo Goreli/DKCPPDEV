@@ -26,6 +26,7 @@ Modification history:
 
 */
 
+#include <utility>
 #include <stdexcept>
 #include <string>
 #include "dkmrx_matrix.hpp"    
@@ -77,7 +78,7 @@ matrix::matrix(const matrix& m)
 matrix::matrix(matrix&& m) noexcept
 	: pValues_{ nullptr }, iRows_{ 0 }, iColumns_{ 0 }
 {
-	*this = m;
+	*this = std::move(m);
 }
 
 matrix::matrix(const std::initializer_list<const std::initializer_list<real>>& list)
