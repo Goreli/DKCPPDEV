@@ -1,6 +1,6 @@
 # TESTDKUTF.EXE
 
-This is a console application that executes a suite of unit tests to test functionality of the [../../libs/dkutf](../../libs/dkutf) unit test library. It can also be used as a boiler plate set of files for starting new unit test applications.
+This is a console application that executes a suite of unit tests to test functionality of the [../../libs/dkutf](../../libs/dkutf) unit test library. It can also be used as a boilerplate set of source files for starting new unit test applications.
 
 ## Build Notes
 
