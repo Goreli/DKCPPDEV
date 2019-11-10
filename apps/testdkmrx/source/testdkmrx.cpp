@@ -26,10 +26,15 @@ Modification history:
 
 */
 
+#include <iostream>
+#include <ctime>
 #include "dk_utf.hpp"
 using namespace dk;
 
 int main() {
+	std::time_t timeT = std::time(nullptr);
+	std::cout << "Started: " << std::asctime(std::localtime(&timeT));
+
 	UTGListVerifier utgVerifier;
 	UTListVerifier utVerifier;
 
@@ -37,5 +42,9 @@ int main() {
 	run(utgVerifier.uniqueLinkedGroupList(),
 		utVerifier.uniqueLinkedUnitTestList()
 	);
+
+	timeT = std::time(nullptr);
+	std::cout << "Completed: " << std::asctime(std::localtime(&timeT));
+
 	return 0;
 }
