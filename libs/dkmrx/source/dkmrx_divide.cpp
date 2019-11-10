@@ -27,8 +27,8 @@ Modification history:
 */
 
 #include <memory>
-#include "dkmrx_gausselnx.hpp"
 #include "dkmrx_gausseln.hpp"
+#include "dkmrx_gausselnx.hpp"
 
 using namespace dkmrx;
 
@@ -39,7 +39,7 @@ matrix matrix::operator / (matrix& A) const
 
 	matrix mrxX(*this);
 
-	size_t iNumSols = gauss_elimination(A.iColumns_, mrxX.iColumns_, A.pValues_, mrxX.pValues_);
+	size_t iNumSols = gauss_elimination(A.pValues_, A.iColumns_, mrxX.pValues_, mrxX.iColumns_);
 
 	if (iNumSols != 1)
 	{
@@ -79,9 +79,7 @@ matrix& matrix::operator /= (matrix& A)
 	bool bCompatible = (A.iColumns_ == A.iRows_) && (A.iColumns_ == iRows_);
 	_validate(pValues_, A.pValues_, bCompatible, "matrix::operator /= (const matrix&)");
 
-    int gaussError=0;
-    
-	size_t iNumSols = gauss_elimination(A.iColumns_,this->iColumns_,A.pValues_,this->pValues_);
+	size_t iNumSols = gauss_elimination(A.pValues_, A.iColumns_, this->pValues_, this->iColumns_);
 
 	if (iNumSols != 1)
 	{
@@ -110,4 +108,12 @@ matrix& matrix::operator /= (real k)
 		*pDst++ /= k;
 
 	return *this;
+}
+
+void matrix::makeUpperTriangular()
+{
+	bool bCompatible = (iColumns_ == iRows_);
+	_validate(pValues_, true, bCompatible, "matrix::makeUpperTriangular()");
+
+	make_upper_triangular(pValues_, iColumns_);
 }

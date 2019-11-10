@@ -47,7 +47,7 @@ void matrix::toHG(real scaleFactor)    // to HomoGeneous form
   real* Source=pValues_;
   real* sourceBorder=Source+iColumns_;
   real* sourceTop=Source+iColumns_*iRows_;
-  int step=iColumns_;
+  size_t step=iColumns_;
 
   if ( scaleFactor == (real) 1 ) 
     while ( sourceBorder <= sourceTop )
@@ -76,7 +76,7 @@ void matrix::fromHG()    // from HomoGeneous form
 
   real* newval = new real [(iColumns_-1) * iRows_];
   
-  int step=iColumns_-1;
+  size_t step=iColumns_-1;
   real* Target=newval;
   real* Source=pValues_;
   real* targetBorder=Target+step;

@@ -37,7 +37,7 @@ matrix::matrix(void) noexcept
 	: pValues_{ nullptr }, iRows_{ 0 }, iColumns_{ 0 }
 {}
 
-matrix::matrix(int rows,int columns)
+matrix::matrix(size_t rows, size_t columns)
 	: pValues_{ nullptr }, iRows_{ rows }, iColumns_{ columns }
 {
 	if ((iRows_ > 0) && (iColumns_ > 0))
@@ -49,7 +49,7 @@ matrix::matrix(int rows,int columns)
 	}
 }
 
-matrix::matrix(int rows, int columns, real initVal)
+matrix::matrix(size_t rows, size_t columns, real initVal)
 	: pValues_{ nullptr }, iRows_{ rows }, iColumns_{ columns }
 {
 	if ((iRows_ > 0) && (iColumns_ > 0))
@@ -82,7 +82,7 @@ matrix::matrix(matrix&& m) noexcept
 }
 
 matrix::matrix(const std::initializer_list<const std::initializer_list<real>>& list)
-	: pValues_{nullptr}, iRows_ {(int)list.size()}, iColumns_{(int)list.begin()->size()}
+	: pValues_{nullptr}, iRows_ {(size_t)list.size()}, iColumns_{(size_t)list.begin()->size()}
 {
 	if ((iRows_ > 0) && (iColumns_ > 0))
 	{
@@ -110,12 +110,31 @@ matrix::matrix(const std::initializer_list<const std::initializer_list<real>>& l
 		iRows_ = iColumns_ = 0;
 }
 
+matrix::matrix(size_t rows, const std::initializer_list<real>& list)
+	: pValues_{ nullptr }, iRows_{ rows }, iColumns_{ list.size() / rows }
+{
+	size_t sizeMrx = iRows_ * iColumns_;
+
+	if ((iRows_ > 0) && (iColumns_ > 0) && (list.size() == sizeMrx))
+	{
+		pValues_ = new real[sizeMrx];
+		// Copy the input data.
+		std::copy(list.begin(), list.end(), pValues_);
+	}
+	else
+	{
+		iRows_ = iColumns_ = 0;
+		throw std::out_of_range("Dimension(s) out of range in matrix::matrix(size_t rows, const std::initializer_list<real>& list)");
+	}
+}
+
+
+
 matrix::~matrix()
 {
 	if (pValues_ != nullptr)
 		delete [] pValues_;
 }
-
 void matrix::empty() noexcept
 {
 	iRows_=iColumns_=0;
@@ -125,21 +144,6 @@ void matrix::empty() noexcept
 		pValues_= nullptr;
 	}
 }
-/*
-void matrix::_validate(bool bFirstEmpty, bool bSecondEmpty, bool bIncompatible, const char* sFunctionSignature) {
-	if (bFirstEmpty)
-		throw std::invalid_argument(std::string("First matrix empty in ") + sFunctionSignature);
-	else if (bSecondEmpty)
-		throw std::invalid_argument(std::string("Second matrix empty in ") + sFunctionSignature);
-	else if (bIncompatible)
-		throw std::logic_error(std::string("Incompatible matrices in ") + sFunctionSignature);
-}
-
-void matrix::_validate(bool bEmpty, const char* sFunctionSignature) {
-	if (bEmpty)
-		throw std::invalid_argument(std::string("Matrix empty in ") + sFunctionSignature);
-}
-*/
 void matrix::_validate(bool bFirstAllocated, bool bSecondAllocated, bool bCompatible, const char* sFunctionSignature) {
 	if (!bFirstAllocated)
 		throw std::invalid_argument(std::string("First matrix empty in ") + sFunctionSignature);
@@ -148,7 +152,6 @@ void matrix::_validate(bool bFirstAllocated, bool bSecondAllocated, bool bCompat
 	else if (!bCompatible)
 		throw std::logic_error(std::string("Incompatible matrices in ") + sFunctionSignature);
 }
-
 void matrix::_validate(bool bAllocated, const char* sFunctionSignature) {
 	if (!bAllocated)
 		throw std::invalid_argument(std::string("Matrix empty in ") + sFunctionSignature);

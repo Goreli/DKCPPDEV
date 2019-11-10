@@ -33,6 +33,7 @@
     <ClCompile Include="..\source\groups.cpp" />
     <ClCompile Include="..\source\mrx_g0120.cpp" />
     <ClCompile Include="..\source\mrx_g0130.cpp" />
+    <ClCompile Include="..\source\mrx_g0190.cpp" />
     <ClCompile Include="..\source\testdkmrx.cpp" />
   </ItemGroup>
   <ItemGroup>

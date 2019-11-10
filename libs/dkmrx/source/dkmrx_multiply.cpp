@@ -43,7 +43,7 @@ real* s2;
 real  Sum;
 real* s1;
 real* d;
-int   columns;
+size_t   columns;
 real* s2Top;
 real* firstS2;
 real *firstD, *mx1_values, *firstDTop, *dTop;
@@ -143,7 +143,7 @@ mx1_values = this->pValues_;
   }
   else
   {
-	int   columns;
+	size_t columns;
 	real* s2Top;
 
 	columns    = mrx.iColumns_;

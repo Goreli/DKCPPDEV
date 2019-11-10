@@ -73,7 +73,7 @@ std::istream& dkmrx::operator>>(std::istream& in,matrix& mx)
     if ( mx.pValues_ != nullptr)
 		mx.empty();
 // READ HEADER             
-int   chcount = 81; // both header strings are assumed to be less than 80 ch long
+size_t   chcount = 81; // both header strings are assumed to be less than 80 ch long
 char* tempptr;     
 	char* str    = new char[chcount];
 // read and parse the first header row

@@ -43,13 +43,10 @@ matrix  matrix::operator ~ ()
 	return mrx;
 }                                                                          
 
-matrix matrix::identity(int Dim)
+matrix matrix::identity(size_t Dim)
 {
-	if (Dim <= 0)
-		throw std::logic_error("Non-positive dimension in static matrix::identity(int)");
-
 	matrix identityMatrix(Dim, Dim, 0.0);
-	int   step = Dim + 1;
+	size_t   step = Dim + 1;
 	real* pTop = identityMatrix.pValues_ + Dim * Dim;
 	for (real* pDst = identityMatrix.pValues_; pDst < pTop; pDst += step)
 		*pDst = 1;

@@ -63,6 +63,9 @@
     <ClCompile Include="..\source\mrx_g0130.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\mrx_g0190.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\readme.md" />

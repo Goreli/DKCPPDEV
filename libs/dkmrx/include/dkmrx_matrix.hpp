@@ -42,9 +42,10 @@ namespace dkmrx {
 	public:
 
 		matrix(void) noexcept;
-		matrix(int rows, int columns);
-		matrix(int rows, int columns, real init_value);
+		matrix(size_t rows, size_t columns);
+		matrix(size_t rows, size_t columns, real init_value);
 		matrix(const std::initializer_list<const std::initializer_list<real>>&);
+		matrix(size_t rows, const std::initializer_list<real>&);
 
 		matrix(const matrix&);
 		matrix(matrix&&) noexcept;
@@ -99,12 +100,14 @@ namespace dkmrx {
 
 		matrix& operator /=    (real);
 
+		void makeUpperTriangular();
+
 		// Returns an inverse of the *this matrix. Does not preserve the content
 		// because inplace Gauss elimination distorts it. Use a separate dedicated
 		// matrix if in need to preserve the content.
 		matrix operator ~ ();
 
-		static  matrix identity(int);
+		static  matrix identity(size_t);
 
 		// Homogeneous group
 		void	toHG(real = 1.0);
@@ -112,13 +115,13 @@ namespace dkmrx {
 
 		void	empty(void) noexcept; // Frees occupied memory
 		bool	is_empty(void) const { return pValues_; }
-		int		columns(void) const { return iColumns_; }
-		int		rows(void) const { return iRows_; }
+		size_t	columns(void) const { return iColumns_; }
+		size_t	rows(void) const { return iRows_; }
 
 	private:
 		real* pValues_;
-		int iRows_;
-		int iColumns_;
+		size_t iRows_;
+		size_t iColumns_;
 
 #if defined(DKUTF_CONST_DEST_TRACKER)
 		dk::ConstDestTracker tracker_;

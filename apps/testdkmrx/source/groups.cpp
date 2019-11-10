@@ -29,5 +29,11 @@ Modification history:
 #include "dk_utg_macros.hpp"
 
 
-CREATE_GROUP(120, "Test the constructors instrumented using ConstDestTracker.");
-CREATE_GROUP(130, "Test the assignment operators.");
+CREATE_GROUP(120, "Constructors");
+CREATE_GROUP(130, "Assignment operators");
+CREATE_GROUP(140, "Data access facilities");
+CREATE_GROUP(150, "Addition operators");
+CREATE_GROUP(160, "Subtraction operators");
+CREATE_GROUP(170, "Multiplication operators");
+CREATE_GROUP(180, "Division operators");
+CREATE_GROUP(190, "Determinant");

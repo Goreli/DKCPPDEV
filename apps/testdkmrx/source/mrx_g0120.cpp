@@ -26,6 +26,7 @@ Modification history:
 
 */
 
+#include <iostream>
 #include <utility>
 #include "dkmrx_matrix.hpp"
 #include "dk_ut_macros.hpp"
@@ -213,6 +214,85 @@ bool execute()
 		(mrx.rows() == iRows) &&
 		(mrx.columns() == iColumns) &&
 		(realSum == iRows * iColumns * realInitialValue);
+
+	return bPassed;
+}
+END_UNIT_TEST
+
+///////////////////////////////////////////////////////////////////////////////
+BEGIN_UNIT_TEST
+void describe()
+{
+	group = 120;
+	test = 8;
+	description = "Uniform initialisation: matrix(const std::initializer_list<const std::initializer_list<real>>&)";
+}
+real getSum(const matrix& mrx)
+{
+	real realSum = 0.0;
+	for (int iRow = 0; iRow < mrx.rows(); iRow++)
+		for (int iColumn = 0; iColumn < mrx.columns(); iColumn++)
+			realSum += mrx[iRow][iColumn];
+	return realSum;
+}
+bool execute()
+{
+	bool bPassed{ false };
+
+
+	matrix mrx{
+		{1.3, 2.5, 3.2},
+		{4.1, 5.2, 6.7},
+		{7,   8,   9},
+		{6,   5,   4},
+		{3,   2,   1}
+	};
+
+	real realSum = getSum(mrx);
+
+	bPassed =
+		(mrx.rows() == 5) &&
+		(mrx.columns() == 3) &&
+		(realSum == 68.0);
+
+	return bPassed;
+}
+END_UNIT_TEST
+
+///////////////////////////////////////////////////////////////////////////////
+BEGIN_UNIT_TEST
+void describe()
+{
+	group = 120;
+	test = 9;
+	description = "Uniform initialisation: matrix(size_t rows, const std::initializer_list<real>&)";
+}
+real getSum(const matrix& mrx)
+{
+	real realSum = 0.0;
+	for (int iRow = 0; iRow < mrx.rows(); iRow++)
+		for (int iColumn = 0; iColumn < mrx.columns(); iColumn++)
+			realSum += mrx[iRow][iColumn];
+	return realSum;
+}
+bool execute()
+{
+	bool bPassed{ false };
+
+	matrix mrx(5, {
+		1.3, 2.5, 3.2,
+		4.1, 5.2, 6.7,
+		7,   8,   9,
+		6,   5,   4,
+		3,   2,   1
+	});
+
+	real realSum = getSum(mrx);
+
+	bPassed =
+		(mrx.rows() == 5) &&
+		(mrx.columns() == 3) &&
+		(realSum == 68.0);
 
 	return bPassed;
 }
