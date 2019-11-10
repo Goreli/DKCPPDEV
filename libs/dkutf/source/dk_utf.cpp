@@ -45,14 +45,27 @@ void dk::verify(UTGListVerifier& utgVerifier, UTListVerifier& utVerifier) noexce
 
 void dk::run(const UTGList& utgList, const UTList& utList) noexcept
 {
+	unsigned int uiGroupCount{ 0 };
+	unsigned int uiPassedUTCount{ 0 };
+	unsigned int uiFailedUTCount{ 0 };
+
 	// Print unique linked groups and execute respective unique linked unit tests.
 	unsigned int uiLastGroupKey = 0;
 	for (auto& pUnitTest : utList) {
+		// Ignore zero group key unit tests.
 		unsigned int uiGroupKey = pUnitTest->getKey().groupKey();
+		if (uiGroupKey == 0)
+			continue;
+
+		// Ignore zero key unit tests.
+		unsigned int uiTestKey = pUnitTest->getKey().testKey();
+		if (uiTestKey == 0)
+			continue;
 
 		// Print the group if it's just changed.
 		if (uiLastGroupKey != uiGroupKey) {
 			uiLastGroupKey = uiGroupKey;
+			uiGroupCount++;
 			for (auto& pGroup : utgList)
 				if (pGroup->getKey() == uiGroupKey) {
 					std::cout << std::endl;
@@ -62,10 +75,25 @@ void dk::run(const UTGList& utgList, const UTList& utList) noexcept
 		}
 
 		// Print and execute the unit test.
-		std::cout << "\tUnit test " << pUnitTest->getKey().groupKey() << "." << pUnitTest->getKey().testKey() << ": " << pUnitTest->getDescription() << std::endl;
-		if (pUnitTest->execute())
+		std::cout << "\tUnit test " << uiGroupKey << "." << uiTestKey << ": " << pUnitTest->getDescription() << std::endl;
+		if (pUnitTest->execute()) {
+			uiPassedUTCount++;
+			// Print in green color.
 			std::cout << "\t\t" << "\033[3;42;30m" << "Passed" << "\033[0m" << std::endl;
-		else
+		} else {
+			uiFailedUTCount++;
+			// Print in red color.
 			std::cout << "\t\t" << "\033[3;41;37m" << "Failed" << "\033[0m" << std::endl;
+		}
 	}
+
+	unsigned int uiTotalUTCount = uiPassedUTCount + uiFailedUTCount;
+	std::cout << std::endl;
+	std::cout << "Unit tests: " << uiTotalUTCount << ". Groups: " << uiGroupCount << "." << std::endl;
+	if(uiFailedUTCount)
+		// Print in red color.
+		std::cout << "\033[3;41;37m" << "Failed: " << uiFailedUTCount << "." << "\033[0m" << " Passed: " << uiPassedUTCount << "." << std::endl;
+	else
+		// Print in green color.
+		std::cout << "\033[3;42;30m" << "Failed: " << uiFailedUTCount << ". Passed: " << uiPassedUTCount << "." << "\033[0m" << std::endl;
 }

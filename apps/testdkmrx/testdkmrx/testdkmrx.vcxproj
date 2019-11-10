@@ -33,8 +33,9 @@
     <ClCompile Include="..\source\groups.cpp" />
     <ClCompile Include="..\source\mrx_g0120.cpp" />
     <ClCompile Include="..\source\mrx_g0130.cpp" />
-    <ClCompile Include="..\source\mrx_g0190.cpp" />
+    <ClCompile Include="..\source\mrx_g0200.cpp" />
     <ClCompile Include="..\source\testdkmrx.cpp" />
+    <ClCompile Include="..\source\testdkmrx_util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\readme.md" />
@@ -43,6 +44,9 @@
     <ProjectReference Include="..\..\..\libs\dkutf\dkutf\dkutf.vcxproj">
       <Project>{9efbb70d-3149-4e25-8e2c-f44e0e6c72db}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\testdkmrx_util.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

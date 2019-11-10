@@ -27,21 +27,12 @@ Modification history:
 */
 
 #include <utility>
-#include "dkmrx_matrix.hpp"
 #include "dk_ut_macros.hpp"
+#include "testdkmrx_util.hpp"
+#include "dkmrx_matrix.hpp"
 
 using namespace dkmrx;
 using namespace dk;
-
-
-static real getSum(const matrix& mrx)
-{
-	real realSum = 0.0;
-	for (int iRow = 0; iRow < mrx.rows(); iRow++)
-		for (int iColumn = 0; iColumn < mrx.columns(); iColumn++)
-			realSum += mrx[iRow][iColumn];
-	return realSum;
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 BEGIN_UNIT_TEST

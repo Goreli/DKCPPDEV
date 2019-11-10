@@ -26,14 +26,20 @@ Modification history:
 
 */
 
-#include "dk_utg_macros.hpp"
+#ifndef apps_testdkmrx_util_hpp
+#define apps_testdkmrx_util_hpp 
 
-CREATE_GROUP(120, "Constructors");
-CREATE_GROUP(130, "Assignment operators");
-CREATE_GROUP(140, "Data access facilities");
-CREATE_GROUP(150, "Addition operators");
-CREATE_GROUP(160, "Subtraction operators");
-CREATE_GROUP(170, "Multiplication operators");
-CREATE_GROUP(180, "Division operators");
-CREATE_GROUP(190, "Expressions with various operators mixed");
-CREATE_GROUP(200, "Determinant related calculations");
+// Forward declaration.
+namespace dkmrx {
+	class matrix;
+};
+
+// This function calculates the product of matrix elements
+// located on the main diagonal.
+real calcProdOfMainDiag(const dkmrx::matrix&);
+
+bool isUpperTriangular(const dkmrx::matrix&);
+
+real getSum(const dkmrx::matrix&);
+
+#endif // apps_testdkmrx_util_hpp

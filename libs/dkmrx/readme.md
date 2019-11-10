@@ -9,6 +9,7 @@ ___
 3. [Sample Programs](#sample-programs)
 4. [Build Notes](#build-notes)
 5. [Roadmap](#roadmap)
+6. [Links](#links)
 
 ## Introduction
 
@@ -100,14 +101,24 @@ No optimisation has been used in the Debug configuration. Specifically in the Re
 4. Transition to a generic type based implementation. Should be able to choose the underlying data type using a template parameter.
 5. Use Uniform Initialisation to initialise matrix objects. **Done as of 4/Nov/2019.**
 6. Improve IO. Should be able to read/write delimited format files as well as *.mrx files. Add a parameter to specify the NaN->0.0 type conversion;
-7. Support for large matrices. Memory mapped binary files?
-8. Support for sparce matrices. Partition using vectors?
-9. Automatic testing;
-10. Replace the legacy error handling mechanism with C++ Structured Exception Handling. **Done as of 4/Nov/2019.**
-11. Performance optimisation: experiment with the L1 cache read ahead effect;
-12. Performance optimisation: experiment with multithreading;
-13. Performance optimisation: experiment with GPU;
-14. Performance optimisation: experiment with SSE3;
-15. Gather column stats e.g. NaN counts, mean and stddev values;
-16. Convenient Data Science specific interface. Shortcuts for data preprocessing/cleanup, dimensionality reduction etc;
-17. Remove standard C library include files (e.g. stdlib.h in dkmrx_add.cpp etc). **Done. 31/Oct/2019**
+7. Automatic testing. **In progress. See testdkutf.exe**
+8. Replace the legacy error handling mechanism with C++ Structured Exception Handling. **Done as of 4/Nov/2019.**
+9. The current implementation allocates a solid continuous block of memory to store matrix values. This approach is good enough for the purpose of creating relatively small matrices where likelyhood of running out of continuous blocks of memory is negligible. An example of such scenarios would be a use of small geometric transformer matrices. However, this approach will fail to create large matrices under the circumstance of significant memory fragmentation. Should use a more granular (row by row?) memory allocation strategy under this circumstance;
+10. Support for very large matrices. Memory mapped binary files?
+11. Support for sparce matrices. Partition using vectors?
+12. Performance optimisation: experiment with the L1 cache read ahead effect;
+13. Performance optimisation: experiment with multithreading;
+14. Performance optimisation: experiment with GPU;
+15. Performance optimisation: experiment with SSE3;
+16. Gather column stats e.g. NaN counts, mean and stddev values;
+17. Convenient Data Science specific interface. Shortcuts for data preprocessing/cleanup, dimensionality reduction etc;
+18. Remove standard C library include files (e.g. stdlib.h in dkmrx_add.cpp etc). **Done. 31/Oct/2019**
+
+## Links
+
+1. LU Decomposition wiki:
+	https://en.wikipedia.org/wiki/LU_decomposition
+2. Matrix theory and online calculator:
+	https://www.math10.com/en/algebra/matrices/introduction.html
+3. Online matrix calculator: 
+	https://matrix.reshish.com/

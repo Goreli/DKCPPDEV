@@ -28,8 +28,9 @@ Modification history:
 
 #include <iostream>
 #include <utility>
-#include "dkmrx_matrix.hpp"
 #include "dk_ut_macros.hpp"
+#include "testdkmrx_util.hpp"
+#include "dkmrx_matrix.hpp"
 
 using namespace dkmrx;
 using namespace dk;
@@ -176,7 +177,7 @@ bool execute()
 		(mrx2.rows() == 0) &&
 		(mrx2.columns() == 0) &&
 		(mrx3.rows() == iRows) &&
-		(mrx3.columns() == iColumns);
+		(mrx3.columns() == iColumns);	
 
 	return bPassed;
 }
@@ -190,14 +191,6 @@ void describe()
 	test = 7;
 	description = "Initialising constructor: test the rows, columns and initial value parameters.";
 }
-real getSum(const matrix& mrx)
-{
-	real realSum = 0.0;
-	for (int iRow = 0; iRow < mrx.rows(); iRow++)
-		for (int iColumn = 0; iColumn < mrx.columns(); iColumn++)
-			realSum += mrx[iRow][iColumn];
-	return realSum;
-}
 bool execute()
 {
 	bool bPassed{ false };
@@ -207,7 +200,6 @@ bool execute()
 	real realInitialValue = 3.0;
 
 	matrix mrx(iRows, iColumns, realInitialValue);
-
 	real realSum = getSum(mrx);
 
 	bPassed =
@@ -227,18 +219,9 @@ void describe()
 	test = 8;
 	description = "Uniform initialisation: matrix(const std::initializer_list<const std::initializer_list<real>>&)";
 }
-real getSum(const matrix& mrx)
-{
-	real realSum = 0.0;
-	for (int iRow = 0; iRow < mrx.rows(); iRow++)
-		for (int iColumn = 0; iColumn < mrx.columns(); iColumn++)
-			realSum += mrx[iRow][iColumn];
-	return realSum;
-}
 bool execute()
 {
 	bool bPassed{ false };
-
 
 	matrix mrx{
 		{1.3, 2.5, 3.2},
@@ -247,13 +230,13 @@ bool execute()
 		{6,   5,   4},
 		{3,   2,   1}
 	};
-
+	real expectedValue = real(68.0);
 	real realSum = getSum(mrx);
 
 	bPassed =
 		(mrx.rows() == 5) &&
 		(mrx.columns() == 3) &&
-		(realSum == 68.0);
+		(realSum == expectedValue);
 
 	return bPassed;
 }
@@ -267,14 +250,6 @@ void describe()
 	test = 9;
 	description = "Uniform initialisation: matrix(size_t rows, const std::initializer_list<real>&)";
 }
-real getSum(const matrix& mrx)
-{
-	real realSum = 0.0;
-	for (int iRow = 0; iRow < mrx.rows(); iRow++)
-		for (int iColumn = 0; iColumn < mrx.columns(); iColumn++)
-			realSum += mrx[iRow][iColumn];
-	return realSum;
-}
 bool execute()
 {
 	bool bPassed{ false };
@@ -286,13 +261,13 @@ bool execute()
 		6,   5,   4,
 		3,   2,   1
 	});
-
+	real expectedValue = real(68.0);
 	real realSum = getSum(mrx);
 
 	bPassed =
 		(mrx.rows() == 5) &&
 		(mrx.columns() == 3) &&
-		(realSum == 68.0);
+		(realSum == expectedValue);
 
 	return bPassed;
 }

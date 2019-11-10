@@ -26,14 +26,34 @@ Modification history:
 
 */
 
-#include "dk_utg_macros.hpp"
+#include "testdkmrx_util.hpp"
+#include "dkmrx_matrix.hpp"
 
-CREATE_GROUP(120, "Constructors");
-CREATE_GROUP(130, "Assignment operators");
-CREATE_GROUP(140, "Data access facilities");
-CREATE_GROUP(150, "Addition operators");
-CREATE_GROUP(160, "Subtraction operators");
-CREATE_GROUP(170, "Multiplication operators");
-CREATE_GROUP(180, "Division operators");
-CREATE_GROUP(190, "Expressions with various operators mixed");
-CREATE_GROUP(200, "Determinant related calculations");
+using namespace dkmrx;
+
+real calcProdOfMainDiag(const matrix& mrx)
+{
+	real prod = real(1.0);
+	for (size_t iRow = 0; iRow < mrx.rows(); iRow++)
+		prod *= mrx[iRow][iRow];
+	return prod;
+}
+
+bool isUpperTriangular(const matrix& mrx)
+{
+	for (size_t iRow = 1; iRow < mrx.rows(); iRow++)
+		for (size_t iCol = 0; iCol < iRow; iCol++)
+			if (mrx[iRow][iCol] != 0.0)
+				return false;
+	return true;
+}
+
+real getSum(const matrix& mrx)
+{
+	real realSum = 0.0;
+	for (int iRow = 0; iRow < mrx.rows(); iRow++)
+		for (int iColumn = 0; iColumn < mrx.columns(); iColumn++)
+			realSum += mrx[iRow][iColumn];
+	return realSum;
+}
+
