@@ -25,6 +25,8 @@ SOFTWARE.
 Modification history:
 
 */
+// Seen some interesting geometric calculations here:
+//	https://stackoverflow.com/questions/14066933/direct-way-of-computing-clockwise-angle-between-2-vectors
 
 // All coordinates are considered in the morld (right) coordinate system
 #include <cmath>
@@ -74,7 +76,7 @@ mLine::mLine(const mPoint& point1, const mPoint& point2, real par1, real par2)
 {
 	_validate(point1[0], point2[0], true, "mLine::mLine(const mPoint&, const mPoint&, real, real)");
 
-matrix pars{ 
+matrix pars{
 	{par1, 1},
 	{par2, 1}
 };

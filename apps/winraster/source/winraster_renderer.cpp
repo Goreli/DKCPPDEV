@@ -38,18 +38,25 @@ struct WinRasterRenderer::ProjectedPixel_
 };
 
 WinRasterRenderer::WinRasterRenderer(HWND hwnd, wchar_t* colorFileName, COLORREF crBgrnd)
-	: pBitmap_(nullptr), bitmapWidth_(0), bitmapHeight_(0), rectPrev_{ 0 }
+	: pBitmap_(nullptr), bitmapWidth_(0), bitmapHeight_(0), rectLast_{ 0 }
 {
 	hwnd_ = hwnd;
 	hdc_ = GetDC( hwnd );
 
 	pRasterGeom_ = std::make_unique<RasterGeometry>(colorFileName);
 	colorRefBackground_ = crBgrnd;
+   hBrushBG_ = CreateSolidBrush(colorRefBackground_);
 }
 
 WinRasterRenderer::~WinRasterRenderer(void)
 {
-	ReleaseDC(hwnd_, hdc_);
+   DeleteObject(hBrushBG_);
+   ReleaseDC(hwnd_, hdc_);
+}
+
+void WinRasterRenderer::eraseLastRect()
+{
+   FillRect(hdc_, &rectLast_, hBrushBG_);
 }
 
 void WinRasterRenderer::backgroundJob(void)
@@ -58,7 +65,26 @@ void WinRasterRenderer::backgroundJob(void)
 	initBitmapData_();
 	projectPixelsUpsideDown_();
 	projection2ActualBitmap_();
-	drawBitmap_();
+        
+   eraseLastRect();
+
+   rectLast_.left = pRasterGeom_->getMinTransformedX();
+   rectLast_.top = pRasterGeom_->getMinTransformedY();
+   rectLast_.right = pRasterGeom_->getMaxTransformedX() + 1;
+   rectLast_.bottom = pRasterGeom_->getMaxTransformedY() + 1;
+
+   // Draw the bitmap
+   SetDIBitsToDevice(
+      hdc_,
+      rectLast_.left,	// X destination
+      rectLast_.top,	   // Y destination
+      bitmapWidth_,
+      bitmapHeight_,
+      0, 0, 0, bitmapHeight_,
+      getImageData_(),
+      (BITMAPINFO*)(pBitmap_.get()),
+      DIB_RGB_COLORS
+   );
 }
 
 void WinRasterRenderer::initBitmapData_()
@@ -162,42 +188,9 @@ int	numOfBytesInRow = 3 * bitmapWidth_;
 	}
 }
 
-void WinRasterRenderer::erasePrevRect()
-{
-	HBRUSH hBrush = CreateSolidBrush(colorRefBackground_);
-	FillRect(hdc_, &rectPrev_, hBrush);
-	DeleteObject(hBrush);
-}
-
 void WinRasterRenderer::setSize(unsigned winWidth, unsigned winHeight)
 {
 	pRasterGeom_->setSize(winWidth, winHeight);
-}
-
-void WinRasterRenderer::drawBitmap_()
-{
-	erasePrevRect();
-
-	rectPrev_.left   = pRasterGeom_->getMinTransformedX();
-	rectPrev_.top    = pRasterGeom_->getMinTransformedY();
-	rectPrev_.right  = pRasterGeom_->getMaxTransformedX()+1;
-	rectPrev_.bottom = pRasterGeom_->getMaxTransformedY()+1;
-
-	// Draw the bitmap
-	SetDIBitsToDevice(
-		hdc_,
-		pRasterGeom_->getMinTransformedX(),	// X destination
-		pRasterGeom_->getMinTransformedY(),	// Y destination
-		bitmapWidth_,
-		bitmapHeight_,
-		0,
-		0,
-		0,
-		bitmapHeight_,
-		getImageData_(),
-		(BITMAPINFO*)(pBitmap_.get()),
-		DIB_RGB_COLORS
-	);
 }
 
 WinRasterRenderer::ProjectedPixel_* WinRasterRenderer::getImageData_()

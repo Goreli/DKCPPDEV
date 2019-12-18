@@ -42,13 +42,14 @@ public:
 	WinRasterRenderer(HWND hwnd, wchar_t* colorFileName, COLORREF crBgrnd);
 	~WinRasterRenderer();
 	void backgroundJob(void);
-	void erasePrevRect();
+	void eraseLastRect();
 	void setSize(unsigned winWidth, unsigned winHeight);
 
 private:
 	HWND hwnd_;
 	HDC  hdc_;
-	RECT rectPrev_;
+	RECT rectLast_;
+   HBRUSH hBrushBG_;
 
 	std::unique_ptr<RasterGeometry> pRasterGeom_;
 	std::unique_ptr<unsigned char[]> pBitmap_;
@@ -61,7 +62,7 @@ private:
 	void	initBitmapData_(void);
 	void 	projectPixelsUpsideDown_(void);
 	void 	projection2ActualBitmap_(void);
-	void 	drawBitmap_(void);
+	//void 	drawBitmap_(void);
 
 	struct ProjectedPixel_;
 	ProjectedPixel_* getImageData_();
