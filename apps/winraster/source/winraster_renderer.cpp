@@ -229,7 +229,7 @@ int	numOfBytesInRow = 3 * bitmapWidth_;
                 // Non-empty cell after an empty one even though there was
                 // already a non-empty cell before the last empty one...
                 // Let's fill the gap with interpolated color.
-                unsigned char* pEmptyCell = bColor-6;
+                unsigned char* pEmptyCell = bColor - 6;
 
                 // Interpolate blue.
                 *pEmptyCell = pEmptyCell[-3] / 2 + pEmptyCell[3] / 2;
