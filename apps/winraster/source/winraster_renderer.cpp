@@ -121,8 +121,6 @@ void WinRasterRenderer::initBitmapData_()
 
 void WinRasterRenderer::projectPixelsUpsideDown_()
 {
-int rasterRow;
-int rasterColumn;
 int projectionRow;
 int pry, prmy;
 int projectionColumn;
@@ -131,8 +129,8 @@ int rasterColumns = pRasterGeom_->rasterWidth();
 ProjectedPixel_*pPixel;
 ProjectedPixel_* pImageData = getImageData_();
 
-	for( rasterRow = 0; rasterRow < rasterRows; rasterRow++ )
-		for( rasterColumn = 0; rasterColumn < rasterColumns; rasterColumn++ )
+	for(int rasterRow = 0; rasterRow < rasterRows; rasterRow++ )
+		for(int rasterColumn = 0; rasterColumn < rasterColumns; rasterColumn++ )
 		{
 			// Get coordinates of the pixel relative to the projection
 			// Inverse the projectionRow to project everything upside down
@@ -160,23 +158,48 @@ int	numOfBytesInRow = 3 * bitmapWidth_;
 	if( numOfBytesInRow % 4  !=  0 )
 		numOfBytesInRow += 4 - numOfBytesInRow % 4;
 
+
 	for( int row = 0; row < bitmapHeight_; row++ )
 	{
+      // These two variables are meant to help getting rid of the ugly
+      // black mesh periodically occuring in the middle of the image and
+      // supposidly caused by the rounding error.
+      int iLastNonEmpty{ -1 };
+      bool bHereIsEmpty{ false };
+
 		bColor = (unsigned char *)pImageData + row * numOfBytesInRow;
 		for( int col = 0; col < bitmapWidth_; col++ )
 		{
-		    if( pPixel->counter != 0 )
+		    if( pPixel->counter == 0 )
 		    {
-			*bColor++ = static_cast<unsigned char>(pPixel->b / pPixel->counter);
-			*bColor++ = static_cast<unsigned char>(pPixel->g / pPixel->counter);
-			*bColor++ = static_cast<unsigned char>(pPixel->r / pPixel->counter);
+             if (iLastNonEmpty > -1)
+                bHereIsEmpty = true;
+
+             *bColor++ = GetBValue(colorRefBackground_);
+             *bColor++ = GetGValue(colorRefBackground_);
+             *bColor++ = GetRValue(colorRefBackground_);
 		    }
 		    else
 		    {
-			*bColor++ = GetBValue(colorRefBackground_);
-			*bColor++ = GetGValue(colorRefBackground_);
-			*bColor++ = GetRValue(colorRefBackground_);
-		    }
+             if (bHereIsEmpty)
+             {
+                // Non-empty cell after an empty one even though there was
+                // already a non-empty cell before the last empty one...
+                // Let's fill the gap with interpolated color.
+                unsigned char* pEmptyCell = (unsigned char*)pImageData + row * numOfBytesInRow;
+                pEmptyCell += (col - 1) * 3;
+                *pEmptyCell++ = '\255';
+                *pEmptyCell++ = '\255';
+                *pEmptyCell++ = '\255';
+
+                bHereIsEmpty = false;
+             }
+             iLastNonEmpty = col;
+
+             *bColor++ = static_cast<unsigned char>(pPixel->b / pPixel->counter);
+             *bColor++ = static_cast<unsigned char>(pPixel->g / pPixel->counter);
+             *bColor++ = static_cast<unsigned char>(pPixel->r / pPixel->counter);
+          }
 		    pPixel++;
 		}
 		// Possibly we have a padding at the end of each row.
