@@ -26,6 +26,8 @@ Modification history:
 
 */
 
+#include <fstream>
+
 #include "winraster_renderer.hpp"
 #include "raster_geometry.hpp"
 
@@ -52,6 +54,17 @@ WinRasterRenderer::~WinRasterRenderer(void)
 {
    DeleteObject(hBrushBG_);
    ReleaseDC(hwnd_, hdc_);
+
+   std::ofstream ofs;
+   ofs.open("winraster_timing.txt", std::ofstream::out | std::ofstream::app);
+
+   ofs << '\t' << "Duration 1: " << duration1_.count() << std::endl;
+   ofs << '\t' << "Duration 2: " << duration2_.count() << std::endl;
+   ofs << '\t' << "Duration 3: " << duration3_.count() << std::endl;
+   ofs << '\t' << "Duration 4: " << duration4_.count() << std::endl;
+   ofs << '\t' << "Duration 5: " << duration5_.count() << std::endl;
+   ofs << '\t' << "Duration 6: " << duration6_.count() << std::endl;
+   ofs << std::endl;
 }
 
 void WinRasterRenderer::eraseLastRect()
@@ -61,17 +74,33 @@ void WinRasterRenderer::eraseLastRect()
 
 void WinRasterRenderer::backgroundJob(void)
 {
+
+   auto timeStamp1 = std::chrono::high_resolution_clock::now();
+
 	pRasterGeom_->nextFrame();
+
+   auto timeStamp2 = std::chrono::high_resolution_clock::now();
+
    RECT rectBoundingBox{ 0 };
    rectBoundingBox.left = pRasterGeom_->getMinTransformedX();
    rectBoundingBox.top = pRasterGeom_->getMinTransformedY();
    rectBoundingBox.right = pRasterGeom_->getMaxTransformedX() + 1;
    rectBoundingBox.bottom = pRasterGeom_->getMaxTransformedY() + 1;
-   
+ 
+   auto timeStamp3 = std::chrono::high_resolution_clock::now();
+
    initBitmapData_();
+
+   auto timeStamp4 = std::chrono::high_resolution_clock::now();
+
 	projectPixelsUpsideDown_();
+
+   auto timeStamp5 = std::chrono::high_resolution_clock::now();
+
 	projection2ActualBitmap_();
-   
+
+   auto timeStamp6 = std::chrono::high_resolution_clock::now();
+
    eraseLastRect();
    // Draw the bitmap
    SetDIBitsToDevice(
@@ -86,7 +115,16 @@ void WinRasterRenderer::backgroundJob(void)
       DIB_RGB_COLORS
    );
 
+   auto timeStamp7 = std::chrono::high_resolution_clock::now();
+
    rectLast_ = rectBoundingBox;
+
+   duration1_ += timeStamp2 - timeStamp1;
+   duration2_ += timeStamp3 - timeStamp2;
+   duration3_ += timeStamp4 - timeStamp3;
+   duration4_ += timeStamp5 - timeStamp4;
+   duration5_ += timeStamp6 - timeStamp5;
+   duration6_ += timeStamp7 - timeStamp6;
 }
 
 void WinRasterRenderer::initBitmapData_()

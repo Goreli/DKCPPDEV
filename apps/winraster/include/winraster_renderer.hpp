@@ -33,6 +33,7 @@ Modification history:
 #define WIN64_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
 #include <memory>
+#include <chrono>
 
 class RasterGeometry;
 
@@ -66,6 +67,14 @@ private:
 
 	struct ProjectedPixel_;
 	ProjectedPixel_* getImageData_();
+
+
+   std::chrono::duration<double> duration1_{ 0.0 };
+   std::chrono::duration<double> duration2_{ 0.0 };
+   std::chrono::duration<double> duration3_{ 0.0 };
+   std::chrono::duration<double> duration4_{ 0.0 };
+   std::chrono::duration<double> duration5_{ 0.0 };
+   std::chrono::duration<double> duration6_{ 0.0 };
 };
 
 #endif // winraster_renderer_hpp
