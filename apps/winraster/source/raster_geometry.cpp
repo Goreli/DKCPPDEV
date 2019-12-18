@@ -81,7 +81,7 @@ void RasterGeometry::setSize(unsigned winWidth, unsigned winHeight)
 		0, pow(pow(winWidth / 2, 2) + pow(winHeight / 2, 2), 0.5));
 }
 
-int RasterGeometry::getMaxTransformedX( void )
+int RasterGeometry::getMaxTransformedX( void ) noexcept
 {
 real maxX = (*transformedCoords_)[0][0];
 real temp = (*transformedCoords_)[rasterWidth_ - 1][0];
@@ -102,7 +102,7 @@ real temp = (*transformedCoords_)[rasterWidth_ - 1][0];
 	return (int)retVal;
 }
 
-int RasterGeometry::getMaxTransformedY( void )
+int RasterGeometry::getMaxTransformedY( void ) noexcept
 {
 real maxY = (*transformedCoords_)[0][1];
 real temp = (*transformedCoords_)[rasterWidth_ - 1][1];
@@ -123,22 +123,22 @@ real temp = (*transformedCoords_)[rasterWidth_ - 1][1];
 	return (int)retVal;
 }
 
-uch	RasterGeometry::getRed(int x, int y)
+uch	RasterGeometry::getRed(int x, int y) noexcept
 {
 	return pixels_[y * rasterWidth_ + x].r;
 }
 
-uch	RasterGeometry::getGreen(int x, int y)
+uch	RasterGeometry::getGreen(int x, int y) noexcept
 {
 	return pixels_[y * rasterWidth_ + x].g;
 }
 
-uch	RasterGeometry::getBlue(int x, int y)
+uch	RasterGeometry::getBlue(int x, int y) noexcept
 {
 	return pixels_[y * rasterWidth_ + x].b;
 }
 
-int RasterGeometry::getMinTransformedX( void )
+int RasterGeometry::getMinTransformedX( void ) noexcept
 {
 real minX = (*transformedCoords_)[0][0];
 real temp = (*transformedCoords_)[rasterWidth_ - 1][0];
@@ -154,7 +154,7 @@ real temp = (*transformedCoords_)[rasterWidth_ - 1][0];
 	return static_cast<int>(std::round(minX));
 }
 
-int RasterGeometry::getMinTransformedY( void )
+int RasterGeometry::getMinTransformedY( void ) noexcept
 {
 real minY = (*transformedCoords_)[0][1];
 real temp = (*transformedCoords_)[rasterWidth_ - 1][1];
@@ -170,14 +170,14 @@ real temp = (*transformedCoords_)[rasterWidth_ - 1][1];
 	return static_cast<int>(std::round(minY));
 }
 
-int RasterGeometry::getTransformedX(int x, int y)
+int RasterGeometry::getTransformedX(int x, int y) noexcept
 {
 real temp = (*transformedCoords_)[y*rasterWidth_+x][0];
 
 	return static_cast<int>(std::round(temp));
 }
 
-int RasterGeometry::getTransformedY(int x, int y)
+int RasterGeometry::getTransformedY(int x, int y) noexcept
 {
 real temp = (*transformedCoords_)[y*rasterWidth_+x][1];
 

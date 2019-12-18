@@ -48,19 +48,19 @@ void setSize(unsigned winWidth, unsigned winHeight);
 void getSize(unsigned* pWinWidth, unsigned* pWinHeight);
 void nextFrame(void);
 
-int	getTransformedX(int x, int y);
-int	getTransformedY(int x, int y);
+int	getTransformedX(int x, int y) noexcept;
+int	getTransformedY(int x, int y) noexcept;
 
-uch getRed(int x, int y);
-uch getGreen(int x, int y);
-uch getBlue(int x, int y);
+uch getRed(int x, int y) noexcept;
+uch getGreen(int x, int y) noexcept;
+uch getBlue(int x, int y) noexcept;
 
 int	rasterWidth( void ){ return rasterWidth_; }
 int	rasterHeight( void ){ return rasterHeight_; }
-int	getMaxTransformedX( void );
-int	getMaxTransformedY( void );
-int	getMinTransformedX( void );
-int	getMinTransformedY( void );
+int	getMaxTransformedX( void ) noexcept;
+int	getMaxTransformedY( void ) noexcept;
+int	getMinTransformedX( void ) noexcept;
+int	getMinTransformedY( void ) noexcept;
 
 private:
 	void readColors_(wchar_t* colorFileName);

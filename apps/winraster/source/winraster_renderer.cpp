@@ -160,27 +160,27 @@ void WinRasterRenderer::initBitmapData_()
 
 void WinRasterRenderer::projectPixelsUpsideDown_()
 {
-int projectionRow;
-int pry, prmy;
-int projectionColumn;
+int prmy = pRasterGeom_->getMinTransformedY();
+int prmx = pRasterGeom_->getMinTransformedX();
 int rasterRows = pRasterGeom_->rasterHeight();
 int rasterColumns = pRasterGeom_->rasterWidth();
-ProjectedPixel_*pPixel;
-ProjectedPixel_* pImageData = getImageData_();
+int projectionRowPreCalc = bitmapHeight_ - 1 + prmy;
+ProjectedPixel_* pImageData = getImageData_() - prmx + projectionRowPreCalc * bitmapWidth_;
+
+int projectionRow;
+int projectionColumn;
+ProjectedPixel_* pPixel;
 
 	for(int rasterRow = 0; rasterRow < rasterRows; rasterRow++ )
 		for(int rasterColumn = 0; rasterColumn < rasterColumns; rasterColumn++ )
 		{
 			// Get coordinates of the pixel relative to the projection
 			// Inverse the projectionRow to project everything upside down
-			pry = pRasterGeom_->getTransformedY(rasterColumn, rasterRow);
-			prmy = pRasterGeom_->getMinTransformedY();
-			projectionRow = bitmapHeight_ - 1 - (pry - prmy);
-			projectionColumn = pRasterGeom_->getTransformedX( rasterColumn, rasterRow )
-					- pRasterGeom_->getMinTransformedX();
+         projectionRow = - pRasterGeom_->getTransformedY(rasterColumn, rasterRow);
+         projectionColumn = pRasterGeom_->getTransformedX(rasterColumn, rasterRow);
 			// Copy colors from the raster to the projection
-			pPixel = pImageData + projectionRow * bitmapWidth_ + projectionColumn;
-			pPixel->r += pRasterGeom_->getRed( rasterColumn, rasterRow );
+         pPixel = pImageData + projectionRow * bitmapWidth_ + projectionColumn;
+         pPixel->r += pRasterGeom_->getRed( rasterColumn, rasterRow );
 			pPixel->g += pRasterGeom_->getGreen( rasterColumn, rasterRow );
 			pPixel->b += pRasterGeom_->getBlue( rasterColumn, rasterRow );
 			pPixel->counter++;
@@ -196,7 +196,6 @@ int	numOfBytesInRow = 3 * bitmapWidth_;
 
 	if( numOfBytesInRow % 4  !=  0 )
 		numOfBytesInRow += 4 - numOfBytesInRow % 4;
-
 
 	for( int row = 0; row < bitmapHeight_; row++ )
 	{
@@ -230,8 +229,7 @@ int	numOfBytesInRow = 3 * bitmapWidth_;
                 // Non-empty cell after an empty one even though there was
                 // already a non-empty cell before the last empty one...
                 // Let's fill the gap with interpolated color.
-                unsigned char* pEmptyCell = (unsigned char*)pImageData + row * numOfBytesInRow;
-                pEmptyCell += (col - 1) * 3;
+                unsigned char* pEmptyCell = bColor-6;
 
                 // Interpolate blue.
                 *pEmptyCell = pEmptyCell[-3] / 2 + pEmptyCell[3] / 2;
