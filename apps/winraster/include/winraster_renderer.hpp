@@ -68,7 +68,7 @@ private:
 	struct ProjectedPixel_;
 	ProjectedPixel_* getImageData_();
 
-
+   size_t iFrameCounter_{ 0 };
    std::chrono::duration<double> duration1_{ 0.0 };
    std::chrono::duration<double> duration2_{ 0.0 };
    std::chrono::duration<double> duration3_{ 0.0 };

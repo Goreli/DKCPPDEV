@@ -58,12 +58,12 @@ WinRasterRenderer::~WinRasterRenderer(void)
    std::ofstream ofs;
    ofs.open("winraster_timing.txt", std::ofstream::out | std::ofstream::app);
 
-   ofs << '\t' << "Duration 1: " << duration1_.count() << std::endl;
-   ofs << '\t' << "Duration 2: " << duration2_.count() << std::endl;
-   ofs << '\t' << "Duration 3: " << duration3_.count() << std::endl;
-   ofs << '\t' << "Duration 4: " << duration4_.count() << std::endl;
-   ofs << '\t' << "Duration 5: " << duration5_.count() << std::endl;
-   ofs << '\t' << "Duration 6: " << duration6_.count() << std::endl;
+   ofs << '\t' << "Duration 1: " << duration1_.count() / iFrameCounter_ << std::endl;
+   ofs << '\t' << "Duration 2: " << duration2_.count() / iFrameCounter_ << std::endl;
+   ofs << '\t' << "Duration 3: " << duration3_.count() / iFrameCounter_ << std::endl;
+   ofs << '\t' << "Duration 4: " << duration4_.count() / iFrameCounter_ << std::endl;
+   ofs << '\t' << "Duration 5: " << duration5_.count() / iFrameCounter_ << std::endl;
+   ofs << '\t' << "Duration 6: " << duration6_.count() / iFrameCounter_ << std::endl;
    ofs << std::endl;
 }
 
@@ -125,6 +125,7 @@ void WinRasterRenderer::backgroundJob(void)
    duration4_ += timeStamp5 - timeStamp4;
    duration5_ += timeStamp6 - timeStamp5;
    duration6_ += timeStamp7 - timeStamp6;
+   iFrameCounter_++;
 }
 
 void WinRasterRenderer::initBitmapData_()
