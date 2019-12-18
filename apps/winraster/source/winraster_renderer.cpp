@@ -164,16 +164,16 @@ int	numOfBytesInRow = 3 * bitmapWidth_;
       // These two variables are meant to help getting rid of the ugly
       // black mesh periodically occuring in the middle of the image and
       // supposidly caused by the rounding error.
-      int iLastNonEmpty{ -1 };
-      bool bHereIsEmpty{ false };
+      bool bThereWasNonEmpty{ false };
+      bool bHereIsAnotherEmpty{ false };
 
 		bColor = (unsigned char *)pImageData + row * numOfBytesInRow;
 		for( int col = 0; col < bitmapWidth_; col++ )
 		{
 		    if( pPixel->counter == 0 )
 		    {
-             if (iLastNonEmpty > -1)
-                bHereIsEmpty = true;
+             if (bThereWasNonEmpty)
+                bHereIsAnotherEmpty = true;
 
              *bColor++ = GetBValue(colorRefBackground_);
              *bColor++ = GetGValue(colorRefBackground_);
@@ -181,24 +181,32 @@ int	numOfBytesInRow = 3 * bitmapWidth_;
 		    }
 		    else
 		    {
-             if (bHereIsEmpty)
+             *bColor++ = static_cast<unsigned char>(pPixel->b / pPixel->counter);
+             *bColor++ = static_cast<unsigned char>(pPixel->g / pPixel->counter);
+             *bColor++ = static_cast<unsigned char>(pPixel->r / pPixel->counter);
+
+             // Check if there was a rounding gap and interpolate its colors if there was one.
+             if (bHereIsAnotherEmpty)
              {
                 // Non-empty cell after an empty one even though there was
                 // already a non-empty cell before the last empty one...
                 // Let's fill the gap with interpolated color.
                 unsigned char* pEmptyCell = (unsigned char*)pImageData + row * numOfBytesInRow;
                 pEmptyCell += (col - 1) * 3;
-                *pEmptyCell++ = '\255';
-                *pEmptyCell++ = '\255';
-                *pEmptyCell++ = '\255';
 
-                bHereIsEmpty = false;
+                // Interpolate blue.
+                *pEmptyCell = pEmptyCell[-3] / 2 + pEmptyCell[3] / 2;
+                pEmptyCell++;
+                // Interpolate green.
+                *pEmptyCell = pEmptyCell[-3] / 2 + pEmptyCell[3] / 2;
+                pEmptyCell++;
+                // Interpolate red.
+                *pEmptyCell = pEmptyCell[-3] / 2 + pEmptyCell[3] / 2;
+                pEmptyCell++;
+
+                bHereIsAnotherEmpty = false;
              }
-             iLastNonEmpty = col;
-
-             *bColor++ = static_cast<unsigned char>(pPixel->b / pPixel->counter);
-             *bColor++ = static_cast<unsigned char>(pPixel->g / pPixel->counter);
-             *bColor++ = static_cast<unsigned char>(pPixel->r / pPixel->counter);
+             bThereWasNonEmpty = true;
           }
 		    pPixel++;
 		}
