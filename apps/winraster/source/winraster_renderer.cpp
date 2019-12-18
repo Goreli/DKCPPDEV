@@ -62,22 +62,22 @@ void WinRasterRenderer::eraseLastRect()
 void WinRasterRenderer::backgroundJob(void)
 {
 	pRasterGeom_->nextFrame();
-	initBitmapData_();
+   RECT rectBoundingBox{ 0 };
+   rectBoundingBox.left = pRasterGeom_->getMinTransformedX();
+   rectBoundingBox.top = pRasterGeom_->getMinTransformedY();
+   rectBoundingBox.right = pRasterGeom_->getMaxTransformedX() + 1;
+   rectBoundingBox.bottom = pRasterGeom_->getMaxTransformedY() + 1;
+   
+   initBitmapData_();
 	projectPixelsUpsideDown_();
 	projection2ActualBitmap_();
-        
+   
    eraseLastRect();
-
-   rectLast_.left = pRasterGeom_->getMinTransformedX();
-   rectLast_.top = pRasterGeom_->getMinTransformedY();
-   rectLast_.right = pRasterGeom_->getMaxTransformedX() + 1;
-   rectLast_.bottom = pRasterGeom_->getMaxTransformedY() + 1;
-
    // Draw the bitmap
    SetDIBitsToDevice(
       hdc_,
-      rectLast_.left,	// X destination
-      rectLast_.top,	   // Y destination
+      rectBoundingBox.left,	// X destination
+      rectBoundingBox.top,	   // Y destination
       bitmapWidth_,
       bitmapHeight_,
       0, 0, 0, bitmapHeight_,
@@ -85,6 +85,8 @@ void WinRasterRenderer::backgroundJob(void)
       (BITMAPINFO*)(pBitmap_.get()),
       DIB_RGB_COLORS
    );
+
+   rectLast_ = rectBoundingBox;
 }
 
 void WinRasterRenderer::initBitmapData_()
