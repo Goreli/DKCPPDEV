@@ -167,19 +167,15 @@ int rasterColumns = pRasterGeom_->rasterWidth();
 int projectionRowPreCalc = bitmapHeight_ - 1 + prmy;
 ProjectedPixel_* pImageData = getImageData_() - prmx + projectionRowPreCalc * bitmapWidth_;
 
-int projectionRow;
-int projectionColumn;
-ProjectedPixel_* pPixel;
-
 	for(int rasterRow = 0; rasterRow < rasterRows; rasterRow++ )
 		for(int rasterColumn = 0; rasterColumn < rasterColumns; rasterColumn++ )
 		{
 			// Get coordinates of the pixel relative to the projection
 			// Inverse the projectionRow to project everything upside down
-         projectionRow = - pRasterGeom_->getTransformedY(rasterColumn, rasterRow);
-         projectionColumn = pRasterGeom_->getTransformedX(rasterColumn, rasterRow);
+         int projectionRow = - pRasterGeom_->getTransformedY(rasterColumn, rasterRow);
+         int projectionColumn = pRasterGeom_->getTransformedX(rasterColumn, rasterRow);
 			// Copy colors from the raster to the projection
-         pPixel = pImageData + projectionRow * bitmapWidth_ + projectionColumn;
+         ProjectedPixel_* pPixel = pImageData + projectionRow * bitmapWidth_ + projectionColumn;
          pPixel->r += pRasterGeom_->getRed( rasterColumn, rasterRow );
 			pPixel->g += pRasterGeom_->getGreen( rasterColumn, rasterRow );
 			pPixel->b += pRasterGeom_->getBlue( rasterColumn, rasterRow );

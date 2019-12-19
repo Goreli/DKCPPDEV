@@ -243,7 +243,7 @@ double halfHeight = rasterHeight_/2;
 void RasterGeometry::nextFrame( void )
 {
 double w1,w2,w3;
-	w2 = 2 * myPi / 360; 
+	w2 = 0.25 * myPi / 360; 
 	w1 = 4 * w2; 
 	w3 = w1 * (windowRadius_/rasterRadius_ - 1);
 
