@@ -19,3 +19,20 @@ Same commit, but with the Mona_Lisa.mrx image loaded:
 	Duration 5: 0.00159496
 	Duration 6: 0.000408971
 
+Multithreaded implementation of WinRasterRenderer::projectPixelsUpsideDown_()
+Tri-color rectangle:
+	Duration 1: 0.00189451
+	Duration 2: 2.62132e-06
+	Duration 3: 0.000287739
+	Duration 4: 0.00119501
+	Duration 5: 0.000447162
+	Duration 6: 0.000203899
+
+Mona-Lisa.mrx:
+	Duration 1: 0.00892546
+	Duration 2: 2.63559e-06
+	Duration 3: 0.00181386
+	Duration 4: 0.00331571
+	Duration 5: 0.00162489
+	Duration 6: 0.000414589
+

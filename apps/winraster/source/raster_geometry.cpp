@@ -81,7 +81,7 @@ void RasterGeometry::setSize(unsigned winWidth, unsigned winHeight)
 		0, pow(pow(winWidth / 2, 2) + pow(winHeight / 2, 2), 0.5));
 }
 
-int RasterGeometry::getMaxTransformedX( void ) noexcept
+size_t RasterGeometry::getMaxTransformedX( void ) noexcept
 {
 real maxX = (*transformedCoords_)[0][0];
 real temp = (*transformedCoords_)[rasterWidth_ - 1][0];
@@ -99,10 +99,10 @@ real temp = (*transformedCoords_)[rasterWidth_ - 1][0];
 	real absdelta = abs(delta);
 	real retVal = (absdelta < 0.5) ? maxX : maxX + delta;
 
-	return (int)retVal;
+	return (size_t)retVal;
 }
 
-int RasterGeometry::getMaxTransformedY( void ) noexcept
+size_t RasterGeometry::getMaxTransformedY( void ) noexcept
 {
 real maxY = (*transformedCoords_)[0][1];
 real temp = (*transformedCoords_)[rasterWidth_ - 1][1];
@@ -120,25 +120,25 @@ real temp = (*transformedCoords_)[rasterWidth_ - 1][1];
 	real absdelta = abs(delta);
 	real retVal = (absdelta < 0.5) ? maxY : maxY + delta;
 
-	return (int)retVal;
+	return (size_t)retVal;
 }
 
-uch	RasterGeometry::getRed(int x, int y) noexcept
+uch	RasterGeometry::getRed(size_t x, size_t y) noexcept
 {
 	return pixels_[y * rasterWidth_ + x].r;
 }
 
-uch	RasterGeometry::getGreen(int x, int y) noexcept
+uch	RasterGeometry::getGreen(size_t x, size_t y) noexcept
 {
 	return pixels_[y * rasterWidth_ + x].g;
 }
 
-uch	RasterGeometry::getBlue(int x, int y) noexcept
+uch	RasterGeometry::getBlue(size_t x, size_t y) noexcept
 {
 	return pixels_[y * rasterWidth_ + x].b;
 }
 
-int RasterGeometry::getMinTransformedX( void ) noexcept
+size_t RasterGeometry::getMinTransformedX( void ) noexcept
 {
 real minX = (*transformedCoords_)[0][0];
 real temp = (*transformedCoords_)[rasterWidth_ - 1][0];
@@ -151,10 +151,10 @@ real temp = (*transformedCoords_)[rasterWidth_ - 1][0];
 	if( temp < minX )
 		minX = temp;
 
-	return static_cast<int>(std::round(minX));
+	return static_cast<size_t>(std::round(minX));
 }
 
-int RasterGeometry::getMinTransformedY( void ) noexcept
+size_t RasterGeometry::getMinTransformedY( void ) noexcept
 {
 real minY = (*transformedCoords_)[0][1];
 real temp = (*transformedCoords_)[rasterWidth_ - 1][1];
@@ -167,21 +167,21 @@ real temp = (*transformedCoords_)[rasterWidth_ - 1][1];
 	if( temp < minY )
 		minY = temp;
 
-	return static_cast<int>(std::round(minY));
+	return static_cast<size_t>(std::round(minY));
 }
 
-int RasterGeometry::getTransformedX(int x, int y) noexcept
+size_t RasterGeometry::getTransformedX(size_t x, size_t y) noexcept
 {
 real temp = (*transformedCoords_)[y*rasterWidth_+x][0];
 
-	return static_cast<int>(std::round(temp));
+	return static_cast<size_t>(std::round(temp));
 }
 
-int RasterGeometry::getTransformedY(int x, int y) noexcept
+size_t RasterGeometry::getTransformedY(size_t x, size_t y) noexcept
 {
 real temp = (*transformedCoords_)[y*rasterWidth_+x][1];
 
-	return static_cast<int>(std::round(temp));
+	return static_cast<size_t>(std::round(temp));
 }
 
 void RasterGeometry::readColors_(wchar_t* colorFileName)

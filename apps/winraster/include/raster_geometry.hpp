@@ -48,19 +48,19 @@ void setSize(unsigned winWidth, unsigned winHeight);
 void getSize(unsigned* pWinWidth, unsigned* pWinHeight);
 void nextFrame(void);
 
-int	getTransformedX(int x, int y) noexcept;
-int	getTransformedY(int x, int y) noexcept;
+size_t	getTransformedX(size_t x, size_t y) noexcept;
+size_t	getTransformedY(size_t x, size_t y) noexcept;
 
-uch getRed(int x, int y) noexcept;
-uch getGreen(int x, int y) noexcept;
-uch getBlue(int x, int y) noexcept;
+uch getRed(size_t x, size_t y) noexcept;
+uch getGreen(size_t x, size_t y) noexcept;
+uch getBlue(size_t x, size_t y) noexcept;
 
-int	rasterWidth( void ){ return rasterWidth_; }
-int	rasterHeight( void ){ return rasterHeight_; }
-int	getMaxTransformedX( void ) noexcept;
-int	getMaxTransformedY( void ) noexcept;
-int	getMinTransformedX( void ) noexcept;
-int	getMinTransformedY( void ) noexcept;
+size_t	rasterWidth( void ){ return rasterWidth_; }
+size_t	rasterHeight( void ){ return rasterHeight_; }
+size_t	getMaxTransformedX( void ) noexcept;
+size_t	getMaxTransformedY( void ) noexcept;
+size_t	getMinTransformedX( void ) noexcept;
+size_t	getMinTransformedY( void ) noexcept;
 
 private:
 	void readColors_(wchar_t* colorFileName);
@@ -72,12 +72,12 @@ private:
 	std::unique_ptr<dkmrx::mTransformable> initialCoords_;
 	std::unique_ptr<dkmrx::mTransformable> transformedCoords_;
 
-	int rasterWidth_;
-	int rasterHeight_;
+   size_t rasterWidth_;
+   size_t rasterHeight_;
 	double rasterRadius_;
 	std::unique_ptr<dkmrx::mPoint> rasterCentre_;
 
-	int frameCounter_;
+   size_t frameCounter_;
 
 // Size dependant items
 	double windowRadius_;

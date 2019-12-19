@@ -36,6 +36,7 @@ Modification history:
 #include <chrono>
 
 class RasterGeometry;
+struct ProjectedPixel;
 
 class WinRasterRenderer
 {
@@ -55,18 +56,16 @@ private:
 	std::unique_ptr<RasterGeometry> pRasterGeom_;
 	std::unique_ptr<unsigned char[]> pBitmap_;
 	   
-	int		bitmapWidth_;
-	int		bitmapHeight_;
+	size_t		bitmapWidth_;
+   size_t		bitmapHeight_;
 
 	COLORREF colorRefBackground_;
 
 	void	initBitmapData_(void);
 	void 	projectPixelsUpsideDown_(void);
 	void 	projection2ActualBitmap_(void);
-	//void 	drawBitmap_(void);
 
-	struct ProjectedPixel_;
-	ProjectedPixel_* getImageData_();
+	ProjectedPixel* getImageData_();
 
    size_t iFrameCounter_{ 0 };
    std::chrono::duration<double> duration1_{ 0.0 };
