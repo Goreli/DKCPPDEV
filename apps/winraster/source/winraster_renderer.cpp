@@ -163,7 +163,8 @@ void WinRasterRenderer::initBitmapData_()
 // Create a functor to use in a multithreading arrangement.
 class UpsideDownProjector {
 public:
-   UpsideDownProjector(size_t iCols, size_t bitmapWidth, RasterGeometry* pRasterGeom, ProjectedPixel* pImageData);
+   UpsideDownProjector();
+   void init(size_t iCols, size_t bitmapWidth, RasterGeometry* pRasterGeom, ProjectedPixel* pImageData);
    void operator()(size_t inxFirstRow, size_t iRows) noexcept;
 private:
    size_t iCols_;
@@ -171,15 +172,21 @@ private:
    RasterGeometry* pRasterGeom_;
    ProjectedPixel* pImageData_;
 };
-
-UpsideDownProjector::UpsideDownProjector(size_t iCols, size_t bitmapWidth, RasterGeometry* pRasterGeom, ProjectedPixel* pImageData)
-   : iCols_{ iCols }, bitmapWidth_{ bitmapWidth }, pRasterGeom_{ pRasterGeom }, pImageData_{pImageData}
+UpsideDownProjector::UpsideDownProjector()
+   : iCols_{ 0 }, bitmapWidth_{ 0 }, pRasterGeom_{ nullptr }, pImageData_{nullptr}
 {
 }
-void UpsideDownProjector::operator()(size_t inxFirstRow, size_t iRows) noexcept
+void UpsideDownProjector::init(size_t iCols, size_t bitmapWidth, RasterGeometry* pRasterGeom, ProjectedPixel* pImageData)
 {
-   size_t iEnd = inxFirstRow + iRows;
-   for (size_t inxRow = inxFirstRow; inxRow < iEnd; inxRow++)
+   iCols_ = iCols;
+   bitmapWidth_ = bitmapWidth;
+   pRasterGeom_ = pRasterGeom;
+   pImageData_ = pImageData;
+}
+
+void UpsideDownProjector::operator()(size_t inxFirstRow, size_t inxEndRow) noexcept
+{
+   for (size_t inxRow = inxFirstRow; inxRow < inxEndRow; inxRow++)
       for (size_t inxCol = 0; inxCol < iCols_; inxCol++)
       {
          // Get coordinates of the pixel relative to the projection
@@ -204,7 +211,8 @@ size_t rasterColumns = pRasterGeom_->rasterWidth();
 size_t projectionRowPreCalc = bitmapHeight_ - 1 + prmy;
 ProjectedPixel* pImageData = getImageData_() - prmx + projectionRowPreCalc * bitmapWidth_;
 
-   UpsideDownProjector udp(rasterColumns, bitmapWidth_, pRasterGeom_.get(), pImageData);
+   UpsideDownProjector udp;
+   udp.init(rasterColumns, bitmapWidth_, pRasterGeom_.get(), pImageData);
    size_t numThreads{ std::thread::hardware_concurrency() };
    // If there are no concurrent threads available or the size of the image
    // is relatively small then do the calculation in the main thread.
@@ -212,18 +220,19 @@ ProjectedPixel* pImageData = getImageData_() - prmx + projectionRowPreCalc * bit
       udp(0, rasterRows);
    else
    {
-      size_t heightStep = rasterRows / numThreads;
+      size_t chunkHeight = rasterRows / numThreads;
       std::vector<std::thread> threads;
       for (size_t inxThread = 0; inxThread < numThreads; inxThread++)
       {
-         size_t startRow = inxThread * heightStep;
+         size_t startRow = inxThread * chunkHeight;
+         size_t endRow = startRow + chunkHeight;
 
-         // If this is the last chunk then its height may need
+         // If this is the last chunk then its endRow value may need
          // to be adjusted.
          if (inxThread + 1 == numThreads)
-            heightStep = size_t(rasterRows) - startRow;
+            endRow = rasterRows;
 
-         threads.push_back(std::thread(std::ref(udp), startRow, heightStep));
+         threads.push_back(std::thread(std::ref(udp), startRow, endRow));
       }
       for (std::thread& t : threads)
          t.join();
