@@ -1,0 +1,21 @@
+commit 79240d8d8da2f1397031ec7351ff1c7ab5c0a703
+Multithreading not implementated yet.
+Some basic performance tuning has been done in WinRasterRenderer::projectPixelsUpsideDown_()
+This benchmark is for the default tri-color rectangle.
+
+	Duration 1: 0.0022122
+	Duration 2: 2.25661e-06
+	Duration 3: 0.000456989
+	Duration 4: 0.00203022
+	Duration 5: 0.000445327
+	Duration 6: 0.000207383
+
+Same commit, but with the Mona_Lisa.mrx image loaded:
+
+	Duration 1: 0.00856352
+	Duration 2: 2.46732e-06
+	Duration 3: 0.00182916
+	Duration 4: 0.0079882
+	Duration 5: 0.00159496
+	Duration 6: 0.000408971
+

@@ -261,7 +261,8 @@ mPoint putFrom( dest.x(), -dest.y() + rasterRadius_ );
 
 	trans.rotate(  -w3*frameCounter_/2, aboutZ, *windowCentre_ );
 	transformedCoords_ = std::make_unique<mTransformable>(*initialCoords_);
-	transformedCoords_->transform( trans );
+	//transformedCoords_->transform( trans );
+   (*transformedCoords_) *= trans;
 
 	frameCounter_++;
 }
