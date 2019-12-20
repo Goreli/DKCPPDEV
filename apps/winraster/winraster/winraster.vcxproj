@@ -167,6 +167,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\multitimer.hpp" />
     <ClInclude Include="..\include\raster_geometry.hpp" />
     <ClInclude Include="..\include\resource.h" />
     <ClInclude Include="..\include\targetver.h" />
@@ -181,6 +182,7 @@
     <ResourceCompile Include="..\resource\winraster.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\source\multitimer.cpp" />
     <ClCompile Include="..\source\raster_geometry.cpp" />
     <ClCompile Include="..\source\winraster_gui.cpp" />
     <ClCompile Include="..\source\winraster_renderer.cpp" />

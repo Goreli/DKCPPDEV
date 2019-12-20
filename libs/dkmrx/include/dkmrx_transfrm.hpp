@@ -55,8 +55,8 @@ namespace dkmrx {
 	class mTransformable : public matrix
 	{
 	public:
-		mTransformable(int dim);
-		mTransformable(int dim, real init_value);
+		mTransformable(size_t dim);
+		mTransformable(size_t dim, real init_value);
 		mTransformable(const mTransformable&);
 		mTransformable(void);
 

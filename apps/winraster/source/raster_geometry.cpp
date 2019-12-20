@@ -214,10 +214,10 @@ matrix mrxColorData;
 	rasterWidth_ = mrxColorData.columns();
 	rasterHeight_ = mrxColorData.rows();
 	pixels_ = std::make_unique<RGBPixel_[]>(rasterHeight_ * rasterWidth_);
-	for( int i=0; i < rasterHeight_; i++ )
-	 for( int j=0; j < rasterWidth_; j++ )
+	for( size_t i=0; i < rasterHeight_; i++ )
+	 for(size_t j=0; j < rasterWidth_; j++ )
 	 {
-	 int index = i*rasterWidth_ + j;
+       size_t index = i*rasterWidth_ + j;
 		 pixels_[index].r = (unsigned)(mrxColorData[i][j]) & 0xFF;
 		 pixels_[index].g = ((unsigned)(mrxColorData[i][j]) & 0xFF00) >> 8;
 		 pixels_[index].b = ((unsigned)(mrxColorData[i][j]) & 0xFF0000) >> 16;
@@ -226,14 +226,14 @@ matrix mrxColorData;
 
 void RasterGeometry::setInitialCoords_( void )
 {
-double halfWidth = rasterWidth_/2;
-double halfHeight = rasterHeight_/2;
+double halfWidth = rasterWidth_/2.0;
+double halfHeight = rasterHeight_/2.0;
 
 	initialCoords_ = std::make_unique<mTransformable>(rasterHeight_ * rasterWidth_);
-	for( int i=0; i < rasterHeight_; i++ )
-	 for( int j=0; j < rasterWidth_; j++ )
+	for( size_t i=0; i < rasterHeight_; i++ )
+	 for(size_t j=0; j < rasterWidth_; j++ )
 	 {
-	 int index = i*rasterWidth_ + j;
+      size_t index = i*rasterWidth_ + j;
 		initialCoords_->operator [](index)[0] = (unsigned __int64)1+j - halfWidth; // Set x coordinate
 		initialCoords_->operator [](index)[1] = (unsigned __int64)1+i - halfHeight; // Set y coordinate
 		initialCoords_->operator [](index)[2] = 0; // Set z coordinate

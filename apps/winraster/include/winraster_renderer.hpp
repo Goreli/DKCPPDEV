@@ -33,7 +33,8 @@ Modification history:
 #define WIN64_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
 #include <memory>
-#include <chrono>
+#include "multitimer.hpp"
+
 
 class RasterGeometry;
 struct ProjectedPixel;
@@ -67,13 +68,8 @@ private:
 
 	ProjectedPixel* getImageData_();
 
+   MultiTimer mt_;
    size_t iFrameCounter_{ 0 };
-   std::chrono::duration<double> duration1_{ 0.0 };
-   std::chrono::duration<double> duration2_{ 0.0 };
-   std::chrono::duration<double> duration3_{ 0.0 };
-   std::chrono::duration<double> duration4_{ 0.0 };
-   std::chrono::duration<double> duration5_{ 0.0 };
-   std::chrono::duration<double> duration6_{ 0.0 };
 };
 
 #endif // winraster_renderer_hpp

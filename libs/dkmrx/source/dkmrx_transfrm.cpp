@@ -219,27 +219,25 @@ void mTransformer::scale(real Kx, real Ky, real Kz, const matrix& mrxAbout)
 	(*this) *= transformer;
 }  
 
-mTransformable::mTransformable(int rows) : matrix(rows, 4)
+mTransformable::mTransformable(size_t rows) : matrix(rows, 4)
 {
 real* element = (*this)[0] + 3;
 real* top = element + rows*4;
-int step = 4;
 	while( element < top )
 	{
 		*element = 1;
-		element += step;
+		element += 4;
 	}
 }
 
-mTransformable::mTransformable(int rows, real init_value) : matrix(rows, 4, init_value)
+mTransformable::mTransformable(size_t rows, real init_value) : matrix(rows, 4, init_value)
 {
 real* element = (*this)[0] + 3;
 real* top = element + rows*4;
-int step = 4;
 	while( element < top )
 	{
 		*element = 1;
-		element += step;
+		element += 4;
 	}
 }
 

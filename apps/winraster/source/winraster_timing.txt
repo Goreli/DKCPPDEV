@@ -3,36 +3,35 @@ Multithreading not implementated yet.
 Some basic performance tuning has been done in WinRasterRenderer::projectPixelsUpsideDown_()
 This benchmark is for the default tri-color rectangle.
 
-	Duration 1: 0.0022122
-	Duration 2: 2.25661e-06
-	Duration 3: 0.000456989
-	Duration 4: 0.00203022
-	Duration 5: 0.000445327
-	Duration 6: 0.000207383
+	Duration 0: 0.0022122
+	Duration 1: 2.25661e-06
+	Duration 2: 0.000456989
+	Duration 3: 0.00203022
+	Duration 4: 0.000445327
+	Duration 5: 0.000207383
 
 Same commit, but with the Mona_Lisa.mrx image loaded:
 
-	Duration 1: 0.00856352
-	Duration 2: 2.46732e-06
-	Duration 3: 0.00182916
-	Duration 4: 0.0079882
-	Duration 5: 0.00159496
-	Duration 6: 0.000408971
+	Duration 0: 0.00856352
+	Duration 1: 2.46732e-06
+	Duration 2: 0.00182916
+	Duration 3: 0.0079882
+	Duration 4: 0.00159496
+	Duration 5: 0.000408971
 
 Multithreaded implementation of WinRasterRenderer::projectPixelsUpsideDown_()
 Tri-color rectangle:
-	Duration 1: 0.00189451
-	Duration 2: 2.62132e-06
-	Duration 3: 0.000287739
-	Duration 4: 0.00119501
-	Duration 5: 0.000447162
-	Duration 6: 0.000203899
+	Duration 0: 0.00189451
+	Duration 1: 2.62132e-06
+	Duration 2: 0.000287739
+	Duration 3: 0.00119501
+	Duration 4: 0.000447162
+	Duration 5: 0.000203899
 
 Mona-Lisa.mrx:
-	Duration 1: 0.00892546
-	Duration 2: 2.63559e-06
-	Duration 3: 0.00181386
-	Duration 4: 0.00331571
-	Duration 5: 0.00162489
-	Duration 6: 0.000414589
-
+	Duration 0: 0.00892546
+	Duration 1: 2.63559e-06
+	Duration 2: 0.00181386
+	Duration 3: 0.00331571
+	Duration 4: 0.00162489
+	Duration 5: 0.000414589

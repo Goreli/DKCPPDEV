@@ -42,7 +42,7 @@ struct ProjectedPixel
 };
 
 WinRasterRenderer::WinRasterRenderer(HWND hwnd, wchar_t* colorFileName, COLORREF crBgrnd)
-	: pBitmap_(nullptr), bitmapWidth_(0), bitmapHeight_(0), rectLast_{ 0 }
+	: pBitmap_(nullptr), bitmapWidth_(0), bitmapHeight_(0), rectLast_{ 0 }, mt_(6)
 {
 	hwnd_ = hwnd;
 	hdc_ = GetDC( hwnd );
@@ -57,16 +57,7 @@ WinRasterRenderer::~WinRasterRenderer(void)
    DeleteObject(hBrushBG_);
    ReleaseDC(hwnd_, hdc_);
 
-   std::ofstream ofs;
-   ofs.open("winraster_timing.txt", std::ofstream::out | std::ofstream::app);
-
-   ofs << '\t' << "Duration 1: " << duration1_.count() / iFrameCounter_ << std::endl;
-   ofs << '\t' << "Duration 2: " << duration2_.count() / iFrameCounter_ << std::endl;
-   ofs << '\t' << "Duration 3: " << duration3_.count() / iFrameCounter_ << std::endl;
-   ofs << '\t' << "Duration 4: " << duration4_.count() / iFrameCounter_ << std::endl;
-   ofs << '\t' << "Duration 5: " << duration5_.count() / iFrameCounter_ << std::endl;
-   ofs << '\t' << "Duration 6: " << duration6_.count() / iFrameCounter_ << std::endl;
-   ofs << std::endl;
+   mt_.save("winraster_timing.txt", static_cast<double>(iFrameCounter_));
 }
 
 void WinRasterRenderer::eraseLastRect()
@@ -77,31 +68,25 @@ void WinRasterRenderer::eraseLastRect()
 void WinRasterRenderer::backgroundJob(void)
 {
 
-   auto timeStamp1 = std::chrono::high_resolution_clock::now();
-
+   mt_.start();
 	pRasterGeom_->nextFrame();
-
-   auto timeStamp2 = std::chrono::high_resolution_clock::now();
+   mt_.check(0);
 
    RECT rectBoundingBox{ 0 };
    rectBoundingBox.left = static_cast<LONG>(pRasterGeom_->getMinTransformedX());
    rectBoundingBox.top = static_cast<LONG>(pRasterGeom_->getMinTransformedY());
    rectBoundingBox.right = static_cast<LONG>(pRasterGeom_->getMaxTransformedX() + 1);
    rectBoundingBox.bottom = static_cast<LONG>(pRasterGeom_->getMaxTransformedY() + 1);
- 
-   auto timeStamp3 = std::chrono::high_resolution_clock::now();
+   mt_.check(1);
 
    initBitmapData_();
-
-   auto timeStamp4 = std::chrono::high_resolution_clock::now();
+   mt_.check(2);
 
 	projectPixelsUpsideDown_();
-
-   auto timeStamp5 = std::chrono::high_resolution_clock::now();
+   mt_.check(3);
 
 	projection2ActualBitmap_();
-
-   auto timeStamp6 = std::chrono::high_resolution_clock::now();
+   mt_.check(4);
 
    eraseLastRect();
    // Draw the bitmap
@@ -116,17 +101,9 @@ void WinRasterRenderer::backgroundJob(void)
       (BITMAPINFO*)(pBitmap_.get()),
       DIB_RGB_COLORS
    );
-
-   auto timeStamp7 = std::chrono::high_resolution_clock::now();
+   mt_.check(5);
 
    rectLast_ = rectBoundingBox;
-
-   duration1_ += timeStamp2 - timeStamp1;
-   duration2_ += timeStamp3 - timeStamp2;
-   duration3_ += timeStamp4 - timeStamp3;
-   duration4_ += timeStamp5 - timeStamp4;
-   duration5_ += timeStamp6 - timeStamp5;
-   duration6_ += timeStamp7 - timeStamp6;
    iFrameCounter_++;
 }
 
@@ -163,30 +140,32 @@ void WinRasterRenderer::initBitmapData_()
 // Create a functor to use in a multithreading arrangement.
 class UpsideDownProjector {
 public:
-   UpsideDownProjector();
-   void init(size_t iCols, size_t bitmapWidth, RasterGeometry* pRasterGeom, ProjectedPixel* pImageData);
-   void operator()(size_t inxFirstRow, size_t iRows) noexcept;
+   UpsideDownProjector() noexcept;
+   void init(size_t iRows, size_t iCols, size_t bitmapWidth, RasterGeometry* pRasterGeom, ProjectedPixel* pImageData) noexcept;
+   void defaultFunction(size_t inxBeginRow, size_t inxEndRow) noexcept;
+   void operator()(size_t inxThread, size_t iNumThreads) noexcept;
 private:
+   size_t iRows_;
    size_t iCols_;
    size_t bitmapWidth_;
    RasterGeometry* pRasterGeom_;
    ProjectedPixel* pImageData_;
 };
-UpsideDownProjector::UpsideDownProjector()
-   : iCols_{ 0 }, bitmapWidth_{ 0 }, pRasterGeom_{ nullptr }, pImageData_{nullptr}
+UpsideDownProjector::UpsideDownProjector() noexcept
+   : iRows_{ 0 }, iCols_ { 0 }, bitmapWidth_{ 0 }, pRasterGeom_{ nullptr }, pImageData_{ nullptr }
 {
 }
-void UpsideDownProjector::init(size_t iCols, size_t bitmapWidth, RasterGeometry* pRasterGeom, ProjectedPixel* pImageData)
+void UpsideDownProjector::init(size_t iRows, size_t iCols, size_t bitmapWidth, RasterGeometry* pRasterGeom, ProjectedPixel* pImageData) noexcept
 {
+   iRows_ = iRows;
    iCols_ = iCols;
    bitmapWidth_ = bitmapWidth;
    pRasterGeom_ = pRasterGeom;
    pImageData_ = pImageData;
 }
-
-void UpsideDownProjector::operator()(size_t inxFirstRow, size_t inxEndRow) noexcept
+void UpsideDownProjector::defaultFunction(size_t inxBeginRow, size_t inxEndRow) noexcept
 {
-   for (size_t inxRow = inxFirstRow; inxRow < inxEndRow; inxRow++)
+   for (size_t inxRow = inxBeginRow; inxRow < inxEndRow; inxRow++)
       for (size_t inxCol = 0; inxCol < iCols_; inxCol++)
       {
          // Get coordinates of the pixel relative to the projection
@@ -201,6 +180,17 @@ void UpsideDownProjector::operator()(size_t inxFirstRow, size_t inxEndRow) noexc
          pPixel->counter++;
       }
 }
+void UpsideDownProjector::operator()(size_t inxThread, size_t iNumThreads) noexcept
+{
+   size_t iChunkHeight = iRows_ / iNumThreads;
+   size_t inxBeginRow = inxThread * iChunkHeight;
+   size_t inxEndRow = inxBeginRow + iChunkHeight;
+   // If this is the last chunk/thread then its endRow value may need to be adjusted.
+   if (inxThread + 1 == iNumThreads)
+      inxEndRow = iRows_;
+
+   defaultFunction(inxBeginRow, inxEndRow);
+}
 
 void WinRasterRenderer::projectPixelsUpsideDown_()
 {
@@ -212,28 +202,17 @@ size_t projectionRowPreCalc = bitmapHeight_ - 1 + prmy;
 ProjectedPixel* pImageData = getImageData_() - prmx + projectionRowPreCalc * bitmapWidth_;
 
    UpsideDownProjector udp;
-   udp.init(rasterColumns, bitmapWidth_, pRasterGeom_.get(), pImageData);
+   udp.init(rasterRows, rasterColumns, bitmapWidth_, pRasterGeom_.get(), pImageData);
    size_t numThreads{ std::thread::hardware_concurrency() };
    // If there are no concurrent threads available or the size of the image
    // is relatively small then do the calculation in the main thread.
    if (numThreads == 0 || numThreads > size_t(rasterRows))
-      udp(0, rasterRows);
+      udp.defaultFunction(0, rasterRows);
    else
    {
-      size_t chunkHeight = rasterRows / numThreads;
       std::vector<std::thread> threads;
       for (size_t inxThread = 0; inxThread < numThreads; inxThread++)
-      {
-         size_t startRow = inxThread * chunkHeight;
-         size_t endRow = startRow + chunkHeight;
-
-         // If this is the last chunk then its endRow value may need
-         // to be adjusted.
-         if (inxThread + 1 == numThreads)
-            endRow = rasterRows;
-
-         threads.push_back(std::thread(std::ref(udp), startRow, endRow));
-      }
+         threads.push_back(std::thread(std::ref(udp), inxThread, numThreads));
       for (std::thread& t : threads)
          t.join();
    }
