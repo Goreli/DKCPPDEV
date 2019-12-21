@@ -36,7 +36,6 @@ Modification history:
 #include "multitimer.hpp"
 #include "upside_down_projector.hpp"
 
-
 struct ProjectedPixel
 {
    unsigned long b;
@@ -63,18 +62,16 @@ private:
    HBRUSH hBrushBG_;
 
 	std::unique_ptr<RasterGeometry> pRasterGeom_;
-	std::unique_ptr<unsigned char[]> pBitmap_;
+	std::unique_ptr<ProjectedPixel[]> pProjectedData_;
 	   
-	size_t		bitmapWidth_;
-   size_t		bitmapHeight_;
+	size_t		iProjectionWidth_;
+   size_t		iProjectionHeight_;
 
 	COLORREF colorRefBackground_;
 
 	void	initBitmapData_(void);
 	void 	projectPixelsUpsideDown_(void);
 	void 	projection2ActualBitmap_(void);
-
-	ProjectedPixel* getImageData_();
 
 	void drawImage_(RECT& rectBoundingBox);
 

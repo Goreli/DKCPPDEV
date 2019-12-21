@@ -34,7 +34,7 @@ Modification history:
 #include "raster_geometry.hpp"
 
 WinRasterRenderer::WinRasterRenderer(HWND hwnd, wchar_t* colorFileName, COLORREF crBgrnd)
-	: pBitmap_(nullptr), bitmapWidth_(0), bitmapHeight_(0), rectLast_{ 0 }, mt_(6)
+	: pProjectedData_(nullptr), iProjectionWidth_(0), iProjectionHeight_(0), rectLast_{ 0 }, mt_(6)
 {
 	hwnd_ = hwnd;
 	hdc_ = GetDC( hwnd );
@@ -57,55 +57,34 @@ void WinRasterRenderer::eraseLastRect()
    FillRect(hdc_, &rectLast_, hBrushBG_);
 }
 
-/*
 void WinRasterRenderer::drawImage_(RECT& rectBoundingBox)
 {
-   FillRect(hdc_, &rectLast_, hBrushBG_);
-   // Draw the bitmap
+   eraseLastRect();
+
+   BITMAPINFOHEADER infoHeader{ 0 };
+   infoHeader.biSize = sizeof(BITMAPINFOHEADER);
+   infoHeader.biWidth = static_cast<LONG>(iProjectionWidth_);
+   infoHeader.biHeight = static_cast<LONG>(iProjectionHeight_);
+   infoHeader.biPlanes = 1;
+   infoHeader.biBitCount = 24;
+   infoHeader.biCompression = BI_RGB;
+   infoHeader.biSizeImage = 0;
+   infoHeader.biXPelsPerMeter = 1000;
+   infoHeader.biYPelsPerMeter = 1000;
+   infoHeader.biClrUsed = 0;
+   infoHeader.biClrImportant = 0;
+
    SetDIBitsToDevice(
       hdc_,
       rectBoundingBox.left,	// X destination
       rectBoundingBox.top,	   // Y destination
-      static_cast<DWORD>(bitmapWidth_),
-      static_cast<DWORD>(bitmapHeight_),
-      0, 0, 0, static_cast<UINT>(bitmapHeight_),
-      getImageData_(),
-      (BITMAPINFO*)(pBitmap_.get()),
+      static_cast<DWORD>(iProjectionWidth_),
+      static_cast<DWORD>(iProjectionHeight_),
+      0, 0, 0, static_cast<UINT>(iProjectionHeight_),
+      (unsigned char*)pProjectedData_.get(),
+      (BITMAPINFO*)(&infoHeader),
       DIB_RGB_COLORS
    );
-}
-*/
-void WinRasterRenderer::drawImage_(RECT& rectBoundingBox)
-{
-   HDC hdcMem = CreateCompatibleDC(hdc_);
-
-   FillRect(hdcMem, &rectLast_, hBrushBG_);
-   // Draw the bitmap
-   SetDIBitsToDevice(
-      hdcMem,
-      rectBoundingBox.left,	// X destination
-      rectBoundingBox.top,	   // Y destination
-      static_cast<DWORD>(bitmapWidth_),
-      static_cast<DWORD>(bitmapHeight_),
-      0, 0, 0, static_cast<UINT>(bitmapHeight_),
-      getImageData_(),
-      (BITMAPINFO*)(pBitmap_.get()),
-      DIB_RGB_COLORS
-   );
-
-   BitBlt(
-      hdc_, // handle to destination DC
-      0,  // x-coord of destination upper-left corner
-      0,  // y-coord of destination upper-left corner
-      bitmapWidth_,  // width of destination rectangle
-      bitmapHeight_, // height of destination rectangle
-      hdcMem,  // handle to source DC
-      0,   // x-coordinate of source upper-left corner
-      0,   // y-coordinate of source upper-left corner
-      SRCCOPY  // raster operation code
-   );
-
-   DeleteDC(hdcMem);
 }
 
 void WinRasterRenderer::backgroundJob(void)
@@ -140,64 +119,52 @@ void WinRasterRenderer::backgroundJob(void)
 
 void WinRasterRenderer::initBitmapData_()
 {
-	bitmapWidth_ = pRasterGeom_->getMaxTransformedX() -
+   iProjectionWidth_ = pRasterGeom_->getMaxTransformedX() -
 		pRasterGeom_->getMinTransformedX() + 1;
-	bitmapHeight_ = pRasterGeom_->getMaxTransformedY() -
+   iProjectionHeight_ = pRasterGeom_->getMaxTransformedY() -
 		pRasterGeom_->getMinTransformedY() + 1;
-	pBitmap_ = std::make_unique<unsigned char[]>(sizeof(BITMAPINFOHEADER) +
-		bitmapWidth_ * bitmapHeight_ * sizeof(ProjectedPixel));
-
-	BITMAPINFOHEADER* pInfoHeader = (BITMAPINFOHEADER*)(pBitmap_.get());
-	pInfoHeader->biSize = sizeof( BITMAPINFOHEADER );
-	pInfoHeader->biWidth = static_cast<LONG>(bitmapWidth_);
-	pInfoHeader->biHeight = static_cast<LONG>(bitmapHeight_);
-	pInfoHeader->biPlanes = 1;
-	pInfoHeader->biBitCount = 24;
-	pInfoHeader->biCompression = BI_RGB;
-	pInfoHeader->biSizeImage = 0;
-	pInfoHeader->biXPelsPerMeter = 1000;
-	pInfoHeader->biYPelsPerMeter = 1000;
-	pInfoHeader->biClrUsed = 0;
-	pInfoHeader->biClrImportant = 0;
+   pProjectedData_ = std::make_unique<ProjectedPixel[]>(
+      iProjectionWidth_ * iProjectionHeight_ 
+      );
 
 // Initialise the space for projecting the pixels
-	size_t	numberOfPixels = bitmapWidth_ * bitmapHeight_;
+	size_t	numberOfProjectedPixels = iProjectionWidth_ * iProjectionHeight_;
 	ProjectedPixel blackPixel{ 0 };
-	ProjectedPixel* pImageData = getImageData_();
-	for(size_t pixIndex = 0; pixIndex < numberOfPixels; pixIndex++ )
-		pImageData[ pixIndex ] = blackPixel;
+   ProjectedPixel* pProjData = pProjectedData_.get();
+	for(size_t pixIndex = 0; pixIndex < numberOfProjectedPixels; pixIndex++ )
+      pProjData[ pixIndex ] = blackPixel;
 }
 
 void WinRasterRenderer::projectPixelsUpsideDown_()
 {
 size_t projectionRowPreCalc = pRasterGeom_->getMinTransformedY()
-                            + bitmapHeight_ - 1;
-ProjectedPixel* pImageData = getImageData_()
-                           + projectionRowPreCalc * bitmapWidth_ 
+                            + iProjectionHeight_ - 1;
+ProjectedPixel* pImageData = pProjectedData_.get()
+                           + projectionRowPreCalc * iProjectionWidth_
                            - pRasterGeom_->getMinTransformedX();
 
-   udp_.init(pRasterGeom_->rasterWidth(), bitmapWidth_, pRasterGeom_.get(), pImageData);
+   udp_.init(pRasterGeom_->rasterWidth(), iProjectionWidth_, pRasterGeom_.get(), pImageData);
    size_t numThreads{ std::thread::hardware_concurrency() };
    // If there are no concurrent threads available or the size of the image
    // is relatively small then do the calculation in the main thread.
-   size_t rasterRows = pRasterGeom_->rasterHeight();
-   if (numThreads == 0 || numThreads > size_t(rasterRows))
-      udp_.defaultFunction(0, rasterRows);
+   size_t rasterHeight = pRasterGeom_->rasterHeight();
+   if (numThreads == 0 || numThreads > size_t(rasterHeight))
+      udp_.defaultFunction(0, rasterHeight);
    else
-      udp_.runThreads(numThreads, rasterRows);
+      udp_.runThreads(numThreads, rasterHeight);
 }
 
 void WinRasterRenderer::projection2ActualBitmap_()
 {
 unsigned char *bColor;
-ProjectedPixel* pImageData = getImageData_();
-ProjectedPixel* pPixel = pImageData;
-size_t	numOfBytesInRow = 3 * bitmapWidth_;
+ProjectedPixel* pProjData = pProjectedData_.get();
+ProjectedPixel* pProjPixel = pProjData;
+size_t	numOfBytesInRow = 3 * iProjectionWidth_;
 
 	if( numOfBytesInRow % 4  !=  0 )
 		numOfBytesInRow += 4 - numOfBytesInRow % 4;
 
-	for( size_t row = 0; row < bitmapHeight_; row++ )
+	for( size_t row = 0; row < iProjectionHeight_; row++ )
 	{
       // These two variables are meant to help getting rid of the ugly
       // black mesh periodically occuring in the middle of the image and
@@ -205,10 +172,10 @@ size_t	numOfBytesInRow = 3 * bitmapWidth_;
       bool bThereWasNonEmpty{ false };
       bool bHereIsAnotherEmpty{ false };
 
-		bColor = (unsigned char *)pImageData + row * numOfBytesInRow;
-		for( int col = 0; col < bitmapWidth_; col++ )
+		bColor = (unsigned char *)pProjData + row * numOfBytesInRow;
+		for( int col = 0; col < iProjectionWidth_; col++ )
 		{
-		    if( pPixel->counter == 0 )
+		    if(pProjPixel->counter == 0 )
 		    {
              if (bThereWasNonEmpty)
                 bHereIsAnotherEmpty = true;
@@ -219,9 +186,9 @@ size_t	numOfBytesInRow = 3 * bitmapWidth_;
 		    }
 		    else
 		    {
-             *bColor++ = static_cast<unsigned char>(pPixel->b / pPixel->counter);
-             *bColor++ = static_cast<unsigned char>(pPixel->g / pPixel->counter);
-             *bColor++ = static_cast<unsigned char>(pPixel->r / pPixel->counter);
+             *bColor++ = static_cast<unsigned char>(pProjPixel->b / pProjPixel->counter);
+             *bColor++ = static_cast<unsigned char>(pProjPixel->g / pProjPixel->counter);
+             *bColor++ = static_cast<unsigned char>(pProjPixel->r / pProjPixel->counter);
 
              // Check if there was a rounding gap and interpolate its colors if there was one.
              if (bHereIsAnotherEmpty)
@@ -245,7 +212,7 @@ size_t	numOfBytesInRow = 3 * bitmapWidth_;
              }
              bThereWasNonEmpty = true;
           }
-		    pPixel++;
+          pProjPixel++;
 		}
 		// Possibly we have a padding at the end of each row.
 		// Fill it with zeros. This is safe because elements
@@ -261,9 +228,4 @@ size_t	numOfBytesInRow = 3 * bitmapWidth_;
 void WinRasterRenderer::setSize(unsigned winWidth, unsigned winHeight)
 {
 	pRasterGeom_->setSize(winWidth, winHeight);
-}
-
-ProjectedPixel* WinRasterRenderer::getImageData_()
-{
-	return (ProjectedPixel*)(pBitmap_.get() + sizeof(BITMAPINFOHEADER));
 }

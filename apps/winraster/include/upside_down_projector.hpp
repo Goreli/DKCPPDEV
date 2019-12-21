@@ -37,11 +37,11 @@ public:
    UpsideDownProjector() noexcept;
    void init(size_t iCols, size_t bitmapWidth, RasterGeometry* pRasterGeom, ProjectedPixel* pImageData) noexcept;
    void defaultFunction(size_t inxBeginRow, size_t inxEndRow) noexcept;
-   void operator()(size_t inxThread, size_t iNumThreads, size_t iNumRows) noexcept;
-   void runThreads(size_t numThreads, size_t iNumRows);
+   void operator()(size_t inxThread, size_t iNumThreads, size_t iRasterHeight) noexcept;
+   void runThreads(size_t numThreads, size_t iRasterHeight);
 private:
-   size_t iCols_;
-   size_t bitmapWidth_;
+   size_t iRasterWidth_;
+   size_t iProjectionWidth_;
    RasterGeometry* pRasterGeom_;
    ProjectedPixel* pImageData_;
 };
