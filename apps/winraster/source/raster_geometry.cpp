@@ -243,7 +243,7 @@ double halfHeight = rasterHeight_/2.0;
 void RasterGeometry::nextFrame( void )
 {
 double w1,w2,w3;
-	w2 = 0.25 * myPi / 360; 
+	w2 = 0.5 * myPi / 360; 
 	w1 = 4 * w2; 
 	w3 = w1 * (windowRadius_/rasterRadius_ - 1);
 
@@ -261,8 +261,8 @@ mPoint putFrom( dest.x(), -dest.y() + rasterRadius_ );
 
 	trans.rotate(  -w3*frameCounter_/2, aboutZ, *windowCentre_ );
 	transformedCoords_ = std::make_unique<mTransformable>(*initialCoords_);
-	//transformedCoords_->transform( trans );
-   (*transformedCoords_) *= trans;
+	transformedCoords_->transform( trans );
+   //(*transformedCoords_) *= trans;
 
 	frameCounter_++;
 }

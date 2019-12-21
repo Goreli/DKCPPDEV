@@ -30,6 +30,7 @@ Modification history:
 #include "multitimer.hpp"
 
 MultiTimer::MultiTimer(size_t size)
+   : iCycleCounter_{ 0 }
 {
    durations_.resize(size);
 }
@@ -39,6 +40,7 @@ MultiTimer::~MultiTimer()
 void MultiTimer::start() noexcept
 {
    timeStamp_ = std::chrono::high_resolution_clock::now();
+   iCycleCounter_++;
 }
 void MultiTimer::check(size_t inx)
 {
@@ -46,16 +48,17 @@ void MultiTimer::check(size_t inx)
    durations_[inx] += tempTimeStamp - timeStamp_;
    timeStamp_ = tempTimeStamp;
 }
-void MultiTimer::save(const std::string strFile, double normCoeff)
+void MultiTimer::save(const std::string strFile)
 {
    std::ofstream ofs;
    // Throw an exception should anything go wrong.
    ofs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
    ofs.open(strFile, std::ofstream::out | std::ofstream::app);
 
+   ofs << "Cycles: " << iCycleCounter_ << std::endl;
    size_t inx{ 0 };
    for (auto& dur : durations_)
-      ofs << '\t' << "Duration " << inx++ << ": " << dur.count()/normCoeff << std::endl;
+      ofs << '\t' << "Average duration for checkpoint " << inx++ << ": " << static_cast<double>(iCycleCounter_?dur.count()/iCycleCounter_:0.0) << std::endl;
    ofs << std::endl;
 
    ofs.close();

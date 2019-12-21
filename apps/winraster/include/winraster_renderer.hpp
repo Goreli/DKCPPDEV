@@ -34,10 +34,18 @@ Modification history:
 #include <windows.h>
 #include <memory>
 #include "multitimer.hpp"
+#include "upside_down_projector.hpp"
 
+
+struct ProjectedPixel
+{
+   unsigned long b;
+   unsigned long g;
+   unsigned long r;
+   unsigned long counter;
+};
 
 class RasterGeometry;
-struct ProjectedPixel;
 
 class WinRasterRenderer
 {
@@ -68,8 +76,10 @@ private:
 
 	ProjectedPixel* getImageData_();
 
+	void drawImage_(RECT& rectBoundingBox);
+
    MultiTimer mt_;
-   size_t iFrameCounter_{ 0 };
+   UpsideDownProjector udp_;
 };
 
 #endif // winraster_renderer_hpp

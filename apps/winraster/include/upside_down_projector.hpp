@@ -26,26 +26,24 @@ Modification history:
 
 */
 
-#ifndef dk_multitimer_hpp
-#define dk_multitimer_hpp
+#ifndef upside_down_projector_hpp
+#define upside_down_projector_hpp
 
-#include <vector>
-#include <chrono>
-#include <string>
+class RasterGeometry;
+struct ProjectedPixel;
 
-class MultiTimer {
+class UpsideDownProjector {
 public:
-   MultiTimer(size_t size);
-   virtual ~MultiTimer();
-
-   void start() noexcept;
-   void check(size_t inx);
-   void save(const std::string strFile);
-
+   UpsideDownProjector() noexcept;
+   void init(size_t iCols, size_t bitmapWidth, RasterGeometry* pRasterGeom, ProjectedPixel* pImageData) noexcept;
+   void defaultFunction(size_t inxBeginRow, size_t inxEndRow) noexcept;
+   void operator()(size_t inxThread, size_t iNumThreads, size_t iNumRows) noexcept;
+   void runThreads(size_t numThreads, size_t iNumRows);
 private:
-   std::vector<std::chrono::duration<double>> durations_;
-   std::chrono::time_point<std::chrono::steady_clock> timeStamp_;
-   size_t iCycleCounter_;
+   size_t iCols_;
+   size_t bitmapWidth_;
+   RasterGeometry* pRasterGeom_;
+   ProjectedPixel* pImageData_;
 };
 
-#endif // dk_multitimer_hpp
+#endif // upside_down_projector_hpp

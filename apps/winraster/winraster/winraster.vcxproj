@@ -171,6 +171,7 @@
     <ClInclude Include="..\include\raster_geometry.hpp" />
     <ClInclude Include="..\include\resource.h" />
     <ClInclude Include="..\include\targetver.h" />
+    <ClInclude Include="..\include\upside_down_projector.hpp" />
     <ClInclude Include="..\include\winraster_gui.h" />
     <ClInclude Include="..\include\winraster_renderer.hpp" />
   </ItemGroup>
@@ -184,6 +185,7 @@
   <ItemGroup>
     <ClCompile Include="..\source\multitimer.cpp" />
     <ClCompile Include="..\source\raster_geometry.cpp" />
+    <ClCompile Include="..\source\upside_down_projector.cpp" />
     <ClCompile Include="..\source\winraster_gui.cpp" />
     <ClCompile Include="..\source\winraster_renderer.cpp" />
   </ItemGroup>

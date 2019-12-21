@@ -33,14 +33,6 @@ Modification history:
 #include "winraster_renderer.hpp"
 #include "raster_geometry.hpp"
 
-struct ProjectedPixel
-{
-	unsigned long b;
-	unsigned long g;
-	unsigned long r;
-	unsigned long counter;
-};
-
 WinRasterRenderer::WinRasterRenderer(HWND hwnd, wchar_t* colorFileName, COLORREF crBgrnd)
 	: pBitmap_(nullptr), bitmapWidth_(0), bitmapHeight_(0), rectLast_{ 0 }, mt_(6)
 {
@@ -57,7 +49,7 @@ WinRasterRenderer::~WinRasterRenderer(void)
    DeleteObject(hBrushBG_);
    ReleaseDC(hwnd_, hdc_);
 
-   mt_.save("winraster_timing.txt", static_cast<double>(iFrameCounter_));
+   mt_.save("winraster_timing.txt");
 }
 
 void WinRasterRenderer::eraseLastRect()
@@ -65,9 +57,59 @@ void WinRasterRenderer::eraseLastRect()
    FillRect(hdc_, &rectLast_, hBrushBG_);
 }
 
+/*
+void WinRasterRenderer::drawImage_(RECT& rectBoundingBox)
+{
+   FillRect(hdc_, &rectLast_, hBrushBG_);
+   // Draw the bitmap
+   SetDIBitsToDevice(
+      hdc_,
+      rectBoundingBox.left,	// X destination
+      rectBoundingBox.top,	   // Y destination
+      static_cast<DWORD>(bitmapWidth_),
+      static_cast<DWORD>(bitmapHeight_),
+      0, 0, 0, static_cast<UINT>(bitmapHeight_),
+      getImageData_(),
+      (BITMAPINFO*)(pBitmap_.get()),
+      DIB_RGB_COLORS
+   );
+}
+*/
+void WinRasterRenderer::drawImage_(RECT& rectBoundingBox)
+{
+   HDC hdcMem = CreateCompatibleDC(hdc_);
+
+   FillRect(hdcMem, &rectLast_, hBrushBG_);
+   // Draw the bitmap
+   SetDIBitsToDevice(
+      hdcMem,
+      rectBoundingBox.left,	// X destination
+      rectBoundingBox.top,	   // Y destination
+      static_cast<DWORD>(bitmapWidth_),
+      static_cast<DWORD>(bitmapHeight_),
+      0, 0, 0, static_cast<UINT>(bitmapHeight_),
+      getImageData_(),
+      (BITMAPINFO*)(pBitmap_.get()),
+      DIB_RGB_COLORS
+   );
+
+   BitBlt(
+      hdc_, // handle to destination DC
+      0,  // x-coord of destination upper-left corner
+      0,  // y-coord of destination upper-left corner
+      bitmapWidth_,  // width of destination rectangle
+      bitmapHeight_, // height of destination rectangle
+      hdcMem,  // handle to source DC
+      0,   // x-coordinate of source upper-left corner
+      0,   // y-coordinate of source upper-left corner
+      SRCCOPY  // raster operation code
+   );
+
+   DeleteDC(hdcMem);
+}
+
 void WinRasterRenderer::backgroundJob(void)
 {
-
    mt_.start();
 	pRasterGeom_->nextFrame();
    mt_.check(0);
@@ -87,24 +129,13 @@ void WinRasterRenderer::backgroundJob(void)
 
 	projection2ActualBitmap_();
    mt_.check(4);
-
-   eraseLastRect();
-   // Draw the bitmap
-   SetDIBitsToDevice(
-      hdc_,
-      rectBoundingBox.left,	// X destination
-      rectBoundingBox.top,	   // Y destination
-      static_cast<DWORD>(bitmapWidth_),
-      static_cast<DWORD>(bitmapHeight_),
-      0, 0, 0, static_cast<UINT>(bitmapHeight_),
-      getImageData_(),
-      (BITMAPINFO*)(pBitmap_.get()),
-      DIB_RGB_COLORS
-   );
+      
+   drawImage_(rectBoundingBox);
    mt_.check(5);
 
+   // Save the detail of the current bounding box.
+   // We'll use it to erase the content in the next cycle.
    rectLast_ = rectBoundingBox;
-   iFrameCounter_++;
 }
 
 void WinRasterRenderer::initBitmapData_()
@@ -137,85 +168,23 @@ void WinRasterRenderer::initBitmapData_()
 		pImageData[ pixIndex ] = blackPixel;
 }
 
-// Create a functor to use in a multithreading arrangement.
-class UpsideDownProjector {
-public:
-   UpsideDownProjector() noexcept;
-   void init(size_t iRows, size_t iCols, size_t bitmapWidth, RasterGeometry* pRasterGeom, ProjectedPixel* pImageData) noexcept;
-   void defaultFunction(size_t inxBeginRow, size_t inxEndRow) noexcept;
-   void operator()(size_t inxThread, size_t iNumThreads) noexcept;
-private:
-   size_t iRows_;
-   size_t iCols_;
-   size_t bitmapWidth_;
-   RasterGeometry* pRasterGeom_;
-   ProjectedPixel* pImageData_;
-};
-UpsideDownProjector::UpsideDownProjector() noexcept
-   : iRows_{ 0 }, iCols_ { 0 }, bitmapWidth_{ 0 }, pRasterGeom_{ nullptr }, pImageData_{ nullptr }
-{
-}
-void UpsideDownProjector::init(size_t iRows, size_t iCols, size_t bitmapWidth, RasterGeometry* pRasterGeom, ProjectedPixel* pImageData) noexcept
-{
-   iRows_ = iRows;
-   iCols_ = iCols;
-   bitmapWidth_ = bitmapWidth;
-   pRasterGeom_ = pRasterGeom;
-   pImageData_ = pImageData;
-}
-void UpsideDownProjector::defaultFunction(size_t inxBeginRow, size_t inxEndRow) noexcept
-{
-   for (size_t inxRow = inxBeginRow; inxRow < inxEndRow; inxRow++)
-      for (size_t inxCol = 0; inxCol < iCols_; inxCol++)
-      {
-         // Get coordinates of the pixel relative to the projection
-         // Inverse the projectionRow to project everything upside down
-         size_t projectionRow = pRasterGeom_->getTransformedY(inxCol, inxRow);
-         size_t projectionColumn = pRasterGeom_->getTransformedX(inxCol, inxRow);
-         // Copy colors from the raster to the projection
-         ProjectedPixel* pPixel = pImageData_ - projectionRow * bitmapWidth_ + projectionColumn;
-         pPixel->r += pRasterGeom_->getRed(inxCol, inxRow);
-         pPixel->g += pRasterGeom_->getGreen(inxCol, inxRow);
-         pPixel->b += pRasterGeom_->getBlue(inxCol, inxRow);
-         pPixel->counter++;
-      }
-}
-void UpsideDownProjector::operator()(size_t inxThread, size_t iNumThreads) noexcept
-{
-   size_t iChunkHeight = iRows_ / iNumThreads;
-   size_t inxBeginRow = inxThread * iChunkHeight;
-   size_t inxEndRow = inxBeginRow + iChunkHeight;
-   // If this is the last chunk/thread then its endRow value may need to be adjusted.
-   if (inxThread + 1 == iNumThreads)
-      inxEndRow = iRows_;
-
-   defaultFunction(inxBeginRow, inxEndRow);
-}
-
 void WinRasterRenderer::projectPixelsUpsideDown_()
 {
-size_t prmy = pRasterGeom_->getMinTransformedY();
-size_t prmx = pRasterGeom_->getMinTransformedX();
-size_t rasterRows = pRasterGeom_->rasterHeight();
-size_t rasterColumns = pRasterGeom_->rasterWidth();
-size_t projectionRowPreCalc = bitmapHeight_ - 1 + prmy;
-ProjectedPixel* pImageData = getImageData_() - prmx + projectionRowPreCalc * bitmapWidth_;
+size_t projectionRowPreCalc = pRasterGeom_->getMinTransformedY()
+                            + bitmapHeight_ - 1;
+ProjectedPixel* pImageData = getImageData_()
+                           + projectionRowPreCalc * bitmapWidth_ 
+                           - pRasterGeom_->getMinTransformedX();
 
-   UpsideDownProjector udp;
-   udp.init(rasterRows, rasterColumns, bitmapWidth_, pRasterGeom_.get(), pImageData);
+   udp_.init(pRasterGeom_->rasterWidth(), bitmapWidth_, pRasterGeom_.get(), pImageData);
    size_t numThreads{ std::thread::hardware_concurrency() };
    // If there are no concurrent threads available or the size of the image
    // is relatively small then do the calculation in the main thread.
+   size_t rasterRows = pRasterGeom_->rasterHeight();
    if (numThreads == 0 || numThreads > size_t(rasterRows))
-      udp.defaultFunction(0, rasterRows);
+      udp_.defaultFunction(0, rasterRows);
    else
-   {
-      std::vector<std::thread> threads;
-      for (size_t inxThread = 0; inxThread < numThreads; inxThread++)
-         threads.push_back(std::thread(std::ref(udp), inxThread, numThreads));
-      for (std::thread& t : threads)
-         t.join();
-   }
+      udp_.runThreads(numThreads, rasterRows);
 }
 
 void WinRasterRenderer::projection2ActualBitmap_()
@@ -271,7 +240,7 @@ size_t	numOfBytesInRow = 3 * bitmapWidth_;
                 // Interpolate red.
                 *pEmptyCell = pEmptyCell[-3] / 2 + pEmptyCell[3] / 2;
                 pEmptyCell++;
-
+                
                 bHereIsAnotherEmpty = false;
              }
              bThereWasNonEmpty = true;
