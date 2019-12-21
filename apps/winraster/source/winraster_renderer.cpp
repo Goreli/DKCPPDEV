@@ -34,7 +34,8 @@ Modification history:
 #include "raster_geometry.hpp"
 
 WinRasterRenderer::WinRasterRenderer(HWND hwnd, wchar_t* colorFileName, COLORREF crBgrnd)
-	: pProjectedData_(nullptr), iProjectionWidth_(0), iProjectionHeight_(0), rectLast_{ 0 }, mt_(6)
+	: iProjectionWidth_(0), iProjectionHeight_(0), pProjectionBuffer_(nullptr), 
+   numBytesInRow_{ 0 }, /*pBitmapBuffer_(nullptr),*/ rectLast_{ 0 }, mt_(6)
 {
 	hwnd_ = hwnd;
 	hdc_ = GetDC( hwnd );
@@ -57,7 +58,7 @@ void WinRasterRenderer::eraseLastRect()
    FillRect(hdc_, &rectLast_, hBrushBG_);
 }
 
-void WinRasterRenderer::drawImage_(RECT& rectBoundingBox)
+void WinRasterRenderer::drawBitmap_(RECT& rectBoundingBox)
 {
    eraseLastRect();
 
@@ -81,7 +82,8 @@ void WinRasterRenderer::drawImage_(RECT& rectBoundingBox)
       static_cast<DWORD>(iProjectionWidth_),
       static_cast<DWORD>(iProjectionHeight_),
       0, 0, 0, static_cast<UINT>(iProjectionHeight_),
-      (unsigned char*)pProjectedData_.get(),
+      (unsigned char*)pProjectionBuffer_.get(),
+      //pBitmapBuffer_.get(),
       (BITMAPINFO*)(&infoHeader),
       DIB_RGB_COLORS
    );
@@ -100,16 +102,17 @@ void WinRasterRenderer::backgroundJob(void)
    rectBoundingBox.bottom = static_cast<LONG>(pRasterGeom_->getMaxTransformedY() + 1);
    mt_.check(1);
 
-   initBitmapData_();
+   initProjectionBuffer_();
    mt_.check(2);
 
-	projectPixelsUpsideDown_();
+	projectPointsUpsideDown_();
    mt_.check(3);
 
+   initBitmapBuffer_(rectBoundingBox);
 	projection2ActualBitmap_();
    mt_.check(4);
       
-   drawImage_(rectBoundingBox);
+   drawBitmap_(rectBoundingBox);
    mt_.check(5);
 
    // Save the detail of the current bounding box.
@@ -117,29 +120,29 @@ void WinRasterRenderer::backgroundJob(void)
    rectLast_ = rectBoundingBox;
 }
 
-void WinRasterRenderer::initBitmapData_()
+void WinRasterRenderer::initProjectionBuffer_()
 {
    iProjectionWidth_ = pRasterGeom_->getMaxTransformedX() -
 		pRasterGeom_->getMinTransformedX() + 1;
    iProjectionHeight_ = pRasterGeom_->getMaxTransformedY() -
 		pRasterGeom_->getMinTransformedY() + 1;
-   pProjectedData_ = std::make_unique<ProjectedPixel[]>(
+   pProjectionBuffer_ = std::make_unique<ProjectedPoint[]>(
       iProjectionWidth_ * iProjectionHeight_ 
       );
 
 // Initialise the space for projecting the pixels
 	size_t	numberOfProjectedPixels = iProjectionWidth_ * iProjectionHeight_;
-	ProjectedPixel blackPixel{ 0 };
-   ProjectedPixel* pProjData = pProjectedData_.get();
+	ProjectedPoint blackPoint{ 0 };
+   ProjectedPoint* pProjData = pProjectionBuffer_.get();
 	for(size_t pixIndex = 0; pixIndex < numberOfProjectedPixels; pixIndex++ )
-      pProjData[ pixIndex ] = blackPixel;
+      pProjData[ pixIndex ] = blackPoint;
 }
 
-void WinRasterRenderer::projectPixelsUpsideDown_()
+void WinRasterRenderer::projectPointsUpsideDown_()
 {
 size_t projectionRowPreCalc = pRasterGeom_->getMinTransformedY()
                             + iProjectionHeight_ - 1;
-ProjectedPixel* pImageData = pProjectedData_.get()
+ProjectedPoint* pImageData = pProjectionBuffer_.get()
                            + projectionRowPreCalc * iProjectionWidth_
                            - pRasterGeom_->getMinTransformedX();
 
@@ -154,74 +157,84 @@ ProjectedPixel* pImageData = pProjectedData_.get()
       udp_.runThreads(numThreads, rasterHeight);
 }
 
+void WinRasterRenderer::initBitmapBuffer_(RECT& rectBoundingBox)
+{
+   numBytesInRow_ = 3 * iProjectionWidth_;
+   if (numBytesInRow_ % 4 != 0)
+      numBytesInRow_ += 4 - numBytesInRow_ % 4;
+
+   // Give it 4 more bytes to accomodate unconditional padding at the end
+   // of each row to keep the algorithm simple.
+   //pBitmapBuffer_ = std::make_unique<unsigned char[]>(
+   //   numBytesInRow_ * iProjectionHeight_ + 4
+   //);
+}
+
 void WinRasterRenderer::projection2ActualBitmap_()
 {
-unsigned char *bColor;
-ProjectedPixel* pProjData = pProjectedData_.get();
-ProjectedPixel* pProjPixel = pProjData;
-size_t	numOfBytesInRow = 3 * iProjectionWidth_;
-
-	if( numOfBytesInRow % 4  !=  0 )
-		numOfBytesInRow += 4 - numOfBytesInRow % 4;
+ProjectedPoint* pProjData = pProjectionBuffer_.get();
+ProjectedPoint* pProjPoint = pProjData;
 
 	for( size_t row = 0; row < iProjectionHeight_; row++ )
 	{
       // These two variables are meant to help getting rid of the ugly
       // black mesh periodically occuring in the middle of the image and
       // supposidly caused by the rounding error.
-      bool bThereWasNonEmpty{ false };
-      bool bHereIsAnotherEmpty{ false };
+      bool bThereWasNonBlank{ false };
+      bool bHereIsAnotherBlank{ false };
 
-		bColor = (unsigned char *)pProjData + row * numOfBytesInRow;
+		unsigned char* pPixel = (unsigned char *)pProjData + row * numBytesInRow_;
+      //unsigned char* pPixel = pBitmapBuffer_.get() + row * numBytesInRow_;
+
 		for( int col = 0; col < iProjectionWidth_; col++ )
 		{
-		    if(pProjPixel->counter == 0 )
+		    if(pProjPoint->counter == 0 )
 		    {
-             if (bThereWasNonEmpty)
-                bHereIsAnotherEmpty = true;
+             if (bThereWasNonBlank)
+                bHereIsAnotherBlank = true;
 
-             *bColor++ = GetBValue(colorRefBackground_);
-             *bColor++ = GetGValue(colorRefBackground_);
-             *bColor++ = GetRValue(colorRefBackground_);
+             *pPixel++ = GetBValue(colorRefBackground_);
+             *pPixel++ = GetGValue(colorRefBackground_);
+             *pPixel++ = GetRValue(colorRefBackground_);
 		    }
 		    else
 		    {
-             *bColor++ = static_cast<unsigned char>(pProjPixel->b / pProjPixel->counter);
-             *bColor++ = static_cast<unsigned char>(pProjPixel->g / pProjPixel->counter);
-             *bColor++ = static_cast<unsigned char>(pProjPixel->r / pProjPixel->counter);
+             *pPixel++ = static_cast<unsigned char>(pProjPoint->b / pProjPoint->counter);
+             *pPixel++ = static_cast<unsigned char>(pProjPoint->g / pProjPoint->counter);
+             *pPixel++ = static_cast<unsigned char>(pProjPoint->r / pProjPoint->counter);
 
              // Check if there was a rounding gap and interpolate its colors if there was one.
-             if (bHereIsAnotherEmpty)
+             if (bHereIsAnotherBlank)
              {
-                // Non-empty cell after an empty one even though there was
-                // already a non-empty cell before the last empty one...
+                // Non-blank pixel after a blank one even though there was
+                // already a non-blank pixel before the last blank one...
                 // Let's fill the gap with interpolated color.
-                unsigned char* pEmptyCell = bColor - 6;
+                unsigned char* pBlankPixel = pPixel - 6;
 
                 // Interpolate blue.
-                *pEmptyCell = pEmptyCell[-3] / 2 + pEmptyCell[3] / 2;
-                pEmptyCell++;
+                *pBlankPixel = pBlankPixel[-3] / 2 + pBlankPixel[3] / 2;
+                pBlankPixel++;
                 // Interpolate green.
-                *pEmptyCell = pEmptyCell[-3] / 2 + pEmptyCell[3] / 2;
-                pEmptyCell++;
+                *pBlankPixel = pBlankPixel[-3] / 2 + pBlankPixel[3] / 2;
+                pBlankPixel++;
                 // Interpolate red.
-                *pEmptyCell = pEmptyCell[-3] / 2 + pEmptyCell[3] / 2;
-                pEmptyCell++;
+                *pBlankPixel = pBlankPixel[-3] / 2 + pBlankPixel[3] / 2;
+                pBlankPixel++;
                 
-                bHereIsAnotherEmpty = false;
+                bHereIsAnotherBlank = false;
              }
-             bThereWasNonEmpty = true;
+             bThereWasNonBlank = true;
           }
-          pProjPixel++;
+          pProjPoint++;
 		}
 		// Possibly we have a padding at the end of each row.
 		// Fill it with zeros. This is safe because elements
-		// pointed to by bColor are smaller than those pointed
-		// to by pPixel. Therefore bColor has remained well
+		// pointed to by pPixel are smaller than those pointed
+		// to by pProjPoint. Therefore pPixel has remained well
 		// below the upper boundary of allocated space.
-		*bColor = '\0';
-		*(bColor+1) = '\0';
-		*(bColor+2) = '\0';
+		*pPixel = '\0';
+		*(pPixel +1) = '\0';
+		*(pPixel +2) = '\0';
 	}
 }
 

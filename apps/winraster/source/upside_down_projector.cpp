@@ -33,15 +33,15 @@ Modification history:
 #include "raster_geometry.hpp"
 
 UpsideDownProjector::UpsideDownProjector() noexcept
-   : iRasterWidth_{ 0 }, iProjectionWidth_{ 0 }, pRasterGeom_{ nullptr }, pImageData_{ nullptr }
+   : iRasterWidth_{ 0 }, iProjectionWidth_{ 0 }, pRasterGeom_{ nullptr }, pProjectedData_{ nullptr }
 {
 }
-void UpsideDownProjector::init(size_t rasterWidth, size_t projectionWidth, RasterGeometry* pRasterGeom, ProjectedPixel* pImageData) noexcept
+void UpsideDownProjector::init(size_t rasterWidth, size_t projectionWidth, RasterGeometry* pRasterGeom, ProjectedPoint* pProjectedData) noexcept
 {
    iRasterWidth_ = rasterWidth;
    iProjectionWidth_ = projectionWidth;
    pRasterGeom_ = pRasterGeom;
-   pImageData_ = pImageData;
+   pProjectedData_ = pProjectedData;
 }
 void UpsideDownProjector::defaultFunction(size_t inxBeginRow, size_t inxEndRow) noexcept
 {
@@ -53,11 +53,11 @@ void UpsideDownProjector::defaultFunction(size_t inxBeginRow, size_t inxEndRow) 
          size_t iProjectionRow = pRasterGeom_->getTransformedY(inxCol, inxRow);
          size_t iProjectionColumn = pRasterGeom_->getTransformedX(inxCol, inxRow);
          // Copy colors from raster to projection
-         ProjectedPixel* pPixel = pImageData_ - iProjectionRow * iProjectionWidth_ + iProjectionColumn;
-         pPixel->r += pRasterGeom_->getRed(inxCol, inxRow);
-         pPixel->g += pRasterGeom_->getGreen(inxCol, inxRow);
-         pPixel->b += pRasterGeom_->getBlue(inxCol, inxRow);
-         pPixel->counter++;
+         ProjectedPoint* pPoint = pProjectedData_ - iProjectionRow * iProjectionWidth_ + iProjectionColumn;
+         pPoint->r += pRasterGeom_->getRed(inxCol, inxRow);
+         pPoint->g += pRasterGeom_->getGreen(inxCol, inxRow);
+         pPoint->b += pRasterGeom_->getBlue(inxCol, inxRow);
+         pPoint->counter++;
       }
 }
 void UpsideDownProjector::operator()(size_t inxThread, size_t iNumThreads, size_t iRasterHeight) noexcept

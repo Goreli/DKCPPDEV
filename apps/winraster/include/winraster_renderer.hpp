@@ -36,7 +36,7 @@ Modification history:
 #include "multitimer.hpp"
 #include "upside_down_projector.hpp"
 
-struct ProjectedPixel
+struct ProjectedPoint
 {
    unsigned long b;
    unsigned long g;
@@ -56,27 +56,27 @@ public:
 	void setSize(unsigned winWidth, unsigned winHeight);
 
 private:
+	void initProjectionBuffer_(void);
+	void projectPointsUpsideDown_(void);
+	void initBitmapBuffer_(RECT& rectBoundingBox);
+	void projection2ActualBitmap_(void);
+	void drawBitmap_(RECT& rectBoundingBox);
+
+	size_t		iProjectionWidth_;
+	size_t		iProjectionHeight_;
+	std::unique_ptr<ProjectedPoint[]> pProjectionBuffer_;
+	size_t	numBytesInRow_;
+	//std::unique_ptr<unsigned char[]> pBitmapBuffer_;
+	RECT rectLast_;
+	MultiTimer mt_;
+
 	HWND hwnd_;
 	HDC  hdc_;
-	RECT rectLast_;
-   HBRUSH hBrushBG_;
-
 	std::unique_ptr<RasterGeometry> pRasterGeom_;
-	std::unique_ptr<ProjectedPixel[]> pProjectedData_;
-	   
-	size_t		iProjectionWidth_;
-   size_t		iProjectionHeight_;
-
 	COLORREF colorRefBackground_;
+	HBRUSH hBrushBG_;
 
-	void	initBitmapData_(void);
-	void 	projectPixelsUpsideDown_(void);
-	void 	projection2ActualBitmap_(void);
-
-	void drawImage_(RECT& rectBoundingBox);
-
-   MultiTimer mt_;
-   UpsideDownProjector udp_;
+	UpsideDownProjector udp_;
 };
 
 #endif // winraster_renderer_hpp

@@ -30,12 +30,12 @@ Modification history:
 #define upside_down_projector_hpp
 
 class RasterGeometry;
-struct ProjectedPixel;
+struct ProjectedPoint;
 
 class UpsideDownProjector {
 public:
    UpsideDownProjector() noexcept;
-   void init(size_t iCols, size_t bitmapWidth, RasterGeometry* pRasterGeom, ProjectedPixel* pImageData) noexcept;
+   void init(size_t iCols, size_t bitmapWidth, RasterGeometry* pRasterGeom, ProjectedPoint* pProjectedData) noexcept;
    void defaultFunction(size_t inxBeginRow, size_t inxEndRow) noexcept;
    void operator()(size_t inxThread, size_t iNumThreads, size_t iRasterHeight) noexcept;
    void runThreads(size_t numThreads, size_t iRasterHeight);
@@ -43,7 +43,7 @@ private:
    size_t iRasterWidth_;
    size_t iProjectionWidth_;
    RasterGeometry* pRasterGeom_;
-   ProjectedPixel* pImageData_;
+   ProjectedPoint* pProjectedData_;
 };
 
 #endif // upside_down_projector_hpp
