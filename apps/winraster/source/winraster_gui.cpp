@@ -233,8 +233,9 @@ void openDataFile(HWND hWnd)
 
 	if (GetOpenFileName(&ofn))
 	{
-		if(appGlobals.pRenderer)
-			appGlobals.pRenderer->eraseLastRect();
+		//if(appGlobals.pRenderer)
+			//appGlobals.pRenderer->eraseLastRect();
+		InvalidateRect(hWnd, NULL, TRUE);
 		appGlobals.pRenderer = std::make_unique<WinRasterRenderer>
 			(hWnd, ofn.lpstrFile, appGlobals.colorRefBackground);
 		appGlobals.pRenderer->setSize(appGlobals.winWidth, appGlobals.winHeight);

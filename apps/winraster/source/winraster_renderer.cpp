@@ -261,10 +261,10 @@ void WinRasterRenderer::drawBitmap_(RECT& rectBoundingBox)
    );
 }
 
-void WinRasterRenderer::eraseLastRect()
-{
-   FillRect(hdc_, &rectLast_, hBrushBG_);
-}
+//void WinRasterRenderer::eraseLastRect()
+//{
+//   FillRect(hdc_, &rectLast_, hBrushBG_);
+//}
 
 void WinRasterRenderer::setSize(unsigned winWidth, unsigned winHeight)
 {
