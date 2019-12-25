@@ -126,10 +126,21 @@ ProjectedPoint* pImageData = pProjectionBuffer_.get()
 
 void WinRasterRenderer::initBitmapBuffer_(RECT& rectBoundingBox)
 {
-   iLeftMargin_ = 15;
-   iRightMargin_ = 15;
-   iTopMargin_ = 15;
-   iBottomMargin_ = 15;
+   iLeftMargin_ = 0;
+   if (rectLast_.left < rectBoundingBox.left)
+      iLeftMargin_ = rectBoundingBox.left - rectLast_.left;
+
+   iRightMargin_ = 0;
+   if (rectLast_.right > rectBoundingBox.right)
+      iRightMargin_ = rectLast_.right - rectBoundingBox.right;
+
+   iTopMargin_ = 0;
+   if (rectLast_.top < rectBoundingBox.top)
+      iTopMargin_ = rectBoundingBox.top - rectLast_.top;
+
+   iBottomMargin_ = 0;
+   if (rectLast_.bottom > rectBoundingBox.bottom)
+      iBottomMargin_ = rectLast_.bottom - rectBoundingBox.bottom;
 
    iBitmapWidth_ = iProjectionWidth_ + iLeftMargin_ + iRightMargin_;
    iBitmapHeight_ = iProjectionHeight_ + iTopMargin_ + iBottomMargin_;
