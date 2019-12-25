@@ -112,12 +112,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     return (int) msg.wParam;
 }
 
-
-//
-//  FUNCTION: MyRegisterClass()
-//
-//  PURPOSE: Registers the window class.
-//
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
     WNDCLASSEXW wcex;
@@ -139,16 +133,6 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     return RegisterClassExW(&wcex);
 }
 
-//
-//  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
-//  PURPOSE: Processes messages for the main window.
-//
-//  WM_COMMAND  - process the application menu
-//  WM_PAINT    - Paint the main window
-//  WM_DESTROY  - post a quit message and return
-//
-//
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -229,13 +213,11 @@ void openDataFile(HWND hWnd)
 	ofn.lpstrInitialDir = NULL;
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
-	// Display the Open dialog box. 
-
 	if (GetOpenFileName(&ofn))
 	{
-		//if(appGlobals.pRenderer)
-			//appGlobals.pRenderer->eraseLastRect();
+		// Remove traces of the previous frames from the client area.
 		InvalidateRect(hWnd, NULL, TRUE);
+
 		appGlobals.pRenderer = std::make_unique<WinRasterRenderer>
 			(hWnd, ofn.lpstrFile, appGlobals.colorRefBackground);
 		appGlobals.pRenderer->setSize(appGlobals.winWidth, appGlobals.winHeight);

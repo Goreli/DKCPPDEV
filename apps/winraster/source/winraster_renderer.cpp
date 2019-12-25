@@ -128,26 +128,22 @@ void WinRasterRenderer::initBitmapBuffer_(RECT& rectBoundingBox)
 {
    iLeftMargin_ = 0;
    if (rectLast_.left < rectBoundingBox.left)
-      iLeftMargin_ = rectBoundingBox.left - rectLast_.left;
+      iLeftMargin_ = size_t(rectBoundingBox.left) - size_t(rectLast_.left);
 
    iRightMargin_ = 0;
    if (rectLast_.right > rectBoundingBox.right)
-      iRightMargin_ = rectLast_.right - rectBoundingBox.right;
+      iRightMargin_ = size_t(rectLast_.right) - size_t(rectBoundingBox.right);
 
    iTopMargin_ = 0;
    if (rectLast_.top < rectBoundingBox.top)
-      iTopMargin_ = rectBoundingBox.top - rectLast_.top;
+      iTopMargin_ = size_t(rectBoundingBox.top) - size_t(rectLast_.top);
 
    iBottomMargin_ = 0;
    if (rectLast_.bottom > rectBoundingBox.bottom)
-      iBottomMargin_ = rectLast_.bottom - rectBoundingBox.bottom;
+      iBottomMargin_ = size_t(rectLast_.bottom) - size_t(rectBoundingBox.bottom);
 
    iBitmapWidth_ = iProjectionWidth_ + iLeftMargin_ + iRightMargin_;
    iBitmapHeight_ = iProjectionHeight_ + iTopMargin_ + iBottomMargin_;
-
-//   numBytesInRow_ = 3 * iProjectionWidth_;
-//   if (numBytesInRow_ % 4 != 0)
-//      numBytesInRow_ += 4 - numBytesInRow_ % 4;
 
    numBytesInRow_ = 3 * iBitmapWidth_;
    if (numBytesInRow_ % 4 != 0)
@@ -157,8 +153,6 @@ void WinRasterRenderer::initBitmapBuffer_(RECT& rectBoundingBox)
    // of each row to keep the algorithm simple.
    size_t iBufferSize = numBytesInRow_ * (iBitmapHeight_) + 4;
    pBitmapBuffer_ = std::make_unique<unsigned char[]>(iBufferSize);
-
-   //std::memset(pBitmapBuffer_.get(), 255, iBufferSize);
 }
 
 void WinRasterRenderer::projection2ActualBitmap_()
@@ -232,8 +226,6 @@ ProjectedPoint* pProjPoint = pProjData;
 
 void WinRasterRenderer::drawBitmap_(RECT& rectBoundingBox)
 {
-   //eraseLastRect();
-
    BITMAPINFOHEADER infoHeader{ 0 };
    infoHeader.biSize = sizeof(BITMAPINFOHEADER);
    infoHeader.biWidth = static_cast<LONG>(iBitmapWidth_);
@@ -249,22 +241,16 @@ void WinRasterRenderer::drawBitmap_(RECT& rectBoundingBox)
 
    SetDIBitsToDevice(
       hdc_,
-      rectBoundingBox.left - iLeftMargin_,	// X destination
-      rectBoundingBox.top - iTopMargin_,	   // Y destination
+      int(rectBoundingBox.left) - int(iLeftMargin_),	// X destination
+      int(rectBoundingBox.top) - int(iTopMargin_),	   // Y destination
       static_cast<DWORD>(iBitmapWidth_),
       static_cast<DWORD>(iBitmapHeight_),
       0, 0, 0, static_cast<UINT>(iBitmapHeight_),
-      //(unsigned char*)pProjectionBuffer_.get(),
       pBitmapBuffer_.get(),
       (BITMAPINFO*)(&infoHeader),
       DIB_RGB_COLORS
    );
 }
-
-//void WinRasterRenderer::eraseLastRect()
-//{
-//   FillRect(hdc_, &rectLast_, hBrushBG_);
-//}
 
 void WinRasterRenderer::setSize(unsigned winWidth, unsigned winHeight)
 {

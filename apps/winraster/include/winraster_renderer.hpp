@@ -52,7 +52,6 @@ public:
 	WinRasterRenderer(HWND hwnd, wchar_t* colorFileName, COLORREF crBgrnd);
 	~WinRasterRenderer();
 	void backgroundJob(void);
-	//void eraseLastRect();
 	void setSize(unsigned winWidth, unsigned winHeight);
 
 private:
