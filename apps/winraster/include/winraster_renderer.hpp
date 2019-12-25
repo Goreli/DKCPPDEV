@@ -66,7 +66,7 @@ private:
 	size_t		iProjectionHeight_;
 	std::unique_ptr<ProjectedPoint[]> pProjectionBuffer_;
 	size_t	numBytesInRow_;
-	//std::unique_ptr<unsigned char[]> pBitmapBuffer_;
+	std::unique_ptr<unsigned char[]> pBitmapBuffer_;
 	RECT rectLast_;
 	MultiTimer mt_;
 
@@ -77,6 +77,13 @@ private:
 	HBRUSH hBrushBG_;
 
 	UpsideDownProjector udp_;
+
+	size_t iLeftMargin_;
+	size_t iTopMargin_;
+	size_t iRightMargin_;
+	size_t iBottomMargin_;
+	size_t iBitmapWidth_;
+	size_t iBitmapHeight_;
 };
 
 #endif // winraster_renderer_hpp

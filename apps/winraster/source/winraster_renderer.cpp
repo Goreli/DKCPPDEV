@@ -29,13 +29,16 @@ Modification history:
 #include <thread>
 #include <vector>
 #include <fstream>
+#include <string>
 
 #include "winraster_renderer.hpp"
 #include "raster_geometry.hpp"
 
 WinRasterRenderer::WinRasterRenderer(HWND hwnd, wchar_t* colorFileName, COLORREF crBgrnd)
 	: iProjectionWidth_(0), iProjectionHeight_(0), pProjectionBuffer_(nullptr), 
-   numBytesInRow_{ 0 }, /*pBitmapBuffer_(nullptr),*/ rectLast_{ 0 }, mt_(6)
+   numBytesInRow_{ 0 }, pBitmapBuffer_(nullptr), rectLast_{ 0 }, mt_(6),
+   iLeftMargin_{ 0 }, iTopMargin_{ 0 }, iRightMargin_{ 0 }, iBottomMargin_{ 0 },
+   iBitmapWidth_{ 0 }, iBitmapHeight_{ 0 }
 {
 	hwnd_ = hwnd;
 	hdc_ = GetDC( hwnd );
@@ -51,42 +54,6 @@ WinRasterRenderer::~WinRasterRenderer(void)
    ReleaseDC(hwnd_, hdc_);
 
    mt_.save("winraster_timing.txt");
-}
-
-void WinRasterRenderer::eraseLastRect()
-{
-   FillRect(hdc_, &rectLast_, hBrushBG_);
-}
-
-void WinRasterRenderer::drawBitmap_(RECT& rectBoundingBox)
-{
-   eraseLastRect();
-
-   BITMAPINFOHEADER infoHeader{ 0 };
-   infoHeader.biSize = sizeof(BITMAPINFOHEADER);
-   infoHeader.biWidth = static_cast<LONG>(iProjectionWidth_);
-   infoHeader.biHeight = static_cast<LONG>(iProjectionHeight_);
-   infoHeader.biPlanes = 1;
-   infoHeader.biBitCount = 24;
-   infoHeader.biCompression = BI_RGB;
-   infoHeader.biSizeImage = 0;
-   infoHeader.biXPelsPerMeter = 1000;
-   infoHeader.biYPelsPerMeter = 1000;
-   infoHeader.biClrUsed = 0;
-   infoHeader.biClrImportant = 0;
-
-   SetDIBitsToDevice(
-      hdc_,
-      rectBoundingBox.left,	// X destination
-      rectBoundingBox.top,	   // Y destination
-      static_cast<DWORD>(iProjectionWidth_),
-      static_cast<DWORD>(iProjectionHeight_),
-      0, 0, 0, static_cast<UINT>(iProjectionHeight_),
-      (unsigned char*)pProjectionBuffer_.get(),
-      //pBitmapBuffer_.get(),
-      (BITMAPINFO*)(&infoHeader),
-      DIB_RGB_COLORS
-   );
 }
 
 void WinRasterRenderer::backgroundJob(void)
@@ -159,15 +126,28 @@ ProjectedPoint* pImageData = pProjectionBuffer_.get()
 
 void WinRasterRenderer::initBitmapBuffer_(RECT& rectBoundingBox)
 {
-   numBytesInRow_ = 3 * iProjectionWidth_;
+   iLeftMargin_ = 15;
+   iRightMargin_ = 15;
+   iTopMargin_ = 15;
+   iBottomMargin_ = 15;
+
+   iBitmapWidth_ = iProjectionWidth_ + iLeftMargin_ + iRightMargin_;
+   iBitmapHeight_ = iProjectionHeight_ + iTopMargin_ + iBottomMargin_;
+
+//   numBytesInRow_ = 3 * iProjectionWidth_;
+//   if (numBytesInRow_ % 4 != 0)
+//      numBytesInRow_ += 4 - numBytesInRow_ % 4;
+
+   numBytesInRow_ = 3 * iBitmapWidth_;
    if (numBytesInRow_ % 4 != 0)
       numBytesInRow_ += 4 - numBytesInRow_ % 4;
 
    // Give it 4 more bytes to accomodate unconditional padding at the end
    // of each row to keep the algorithm simple.
-   //pBitmapBuffer_ = std::make_unique<unsigned char[]>(
-   //   numBytesInRow_ * iProjectionHeight_ + 4
-   //);
+   size_t iBufferSize = numBytesInRow_ * (iBitmapHeight_) + 4;
+   pBitmapBuffer_ = std::make_unique<unsigned char[]>(iBufferSize);
+
+   //std::memset(pBitmapBuffer_.get(), 255, iBufferSize);
 }
 
 void WinRasterRenderer::projection2ActualBitmap_()
@@ -183,8 +163,9 @@ ProjectedPoint* pProjPoint = pProjData;
       bool bThereWasNonBlank{ false };
       bool bHereIsAnotherBlank{ false };
 
-		unsigned char* pPixel = (unsigned char *)pProjData + row * numBytesInRow_;
+		//unsigned char* pPixel = (unsigned char *)pProjData + row * numBytesInRow_;
       //unsigned char* pPixel = pBitmapBuffer_.get() + row * numBytesInRow_;
+      unsigned char* pPixel = pBitmapBuffer_.get() + (row + iBottomMargin_) * numBytesInRow_ + iLeftMargin_*3;
 
 		for( int col = 0; col < iProjectionWidth_; col++ )
 		{
@@ -236,6 +217,42 @@ ProjectedPoint* pProjPoint = pProjData;
 		*(pPixel +1) = '\0';
 		*(pPixel +2) = '\0';
 	}
+}
+
+void WinRasterRenderer::drawBitmap_(RECT& rectBoundingBox)
+{
+   //eraseLastRect();
+
+   BITMAPINFOHEADER infoHeader{ 0 };
+   infoHeader.biSize = sizeof(BITMAPINFOHEADER);
+   infoHeader.biWidth = static_cast<LONG>(iBitmapWidth_);
+   infoHeader.biHeight = static_cast<LONG>(iBitmapHeight_);
+   infoHeader.biPlanes = 1;
+   infoHeader.biBitCount = 24;
+   infoHeader.biCompression = BI_RGB;
+   infoHeader.biSizeImage = 0;
+   infoHeader.biXPelsPerMeter = 1000;
+   infoHeader.biYPelsPerMeter = 1000;
+   infoHeader.biClrUsed = 0;
+   infoHeader.biClrImportant = 0;
+
+   SetDIBitsToDevice(
+      hdc_,
+      rectBoundingBox.left - iLeftMargin_,	// X destination
+      rectBoundingBox.top - iTopMargin_,	   // Y destination
+      static_cast<DWORD>(iBitmapWidth_),
+      static_cast<DWORD>(iBitmapHeight_),
+      0, 0, 0, static_cast<UINT>(iBitmapHeight_),
+      //(unsigned char*)pProjectionBuffer_.get(),
+      pBitmapBuffer_.get(),
+      (BITMAPINFO*)(&infoHeader),
+      DIB_RGB_COLORS
+   );
+}
+
+void WinRasterRenderer::eraseLastRect()
+{
+   FillRect(hdc_, &rectLast_, hBrushBG_);
 }
 
 void WinRasterRenderer::setSize(unsigned winWidth, unsigned winHeight)
