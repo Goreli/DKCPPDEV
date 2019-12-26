@@ -20,6 +20,6 @@ No optimisation has been used in the Debug configuration. Specifically in the Re
 
 ## Roadmap
 1. C++ 20 will introduce standard numeric constants. Replace myPi in raster_geometry.cpp with a standard one once it's become available.
-2. Can multithreading improve performance of the program?
+2. Can multithreading improve performance of the program? **In progress. Basic multithreading has improved performance of the UpsideDownProjector module. Need to see if it can be further improved by implementing a thread pool like solution. Also, there appears to be an opportunity in the matrix library code as well.**
 3. Consider an OS independent graphics toolkit. Qt?
-4. The projection of the transformed bitmap contains blank/black pixels that appears to be a result of rounding. See if it's possible to interpolate color between the nearest neighbours to fill the blank pixels with visually meaningful values.
+4. The projection of the transformed bitmap contains blank/black pixels that appears to be a result of rounding. See if it's possible to interpolate color between the nearest neighbours to fill the blank pixels with visually meaningful values. **Done as of 18/Dec/2019.**
