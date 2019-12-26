@@ -63,9 +63,22 @@ private:
 
 	size_t		iProjectionWidth_;
 	size_t		iProjectionHeight_;
+
 	std::unique_ptr<ProjectedPoint[]> pProjectionBuffer_;
+	// The max size of the buffer encountered so far.
+	// Don't reallocate the buffer if the max size is
+	// sufficient to accommodate the current data.
+	size_t iLastSizePB_;
+
 	size_t	numBytesInRow_;
+
 	std::unique_ptr<unsigned char[]> pBitmapBuffer_;
+	// The max size of the buffer encountered so far.
+	// Don't reallocate the buffer if the max size is
+	// sufficient to accommodate the current data.
+	size_t iLastSizeBB_;
+
+
 	RECT rectLast_;
 	MultiTimer mt_;
 

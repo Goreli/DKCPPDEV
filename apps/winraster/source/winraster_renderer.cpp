@@ -35,8 +35,8 @@ Modification history:
 #include "raster_geometry.hpp"
 
 WinRasterRenderer::WinRasterRenderer(HWND hwnd, wchar_t* colorFileName, COLORREF crBgrnd)
-	: iProjectionWidth_(0), iProjectionHeight_(0), pProjectionBuffer_(nullptr), 
-   numBytesInRow_{ 0 }, pBitmapBuffer_(nullptr), rectLast_{ 0 }, mt_(6),
+   : iProjectionWidth_(0), iProjectionHeight_(0), pProjectionBuffer_(nullptr), iLastSizePB_{ 0 },
+   numBytesInRow_{ 0 }, pBitmapBuffer_(nullptr), iLastSizeBB_{ 0 }, rectLast_{ 0 }, mt_(6),
    iLeftMargin_{ 0 }, iTopMargin_{ 0 }, iRightMargin_{ 0 }, iBottomMargin_{ 0 },
    iBitmapWidth_{ 0 }, iBitmapHeight_{ 0 }
 {
@@ -93,12 +93,15 @@ void WinRasterRenderer::initProjectionBuffer_()
 		pRasterGeom_->getMinTransformedX() + 1;
    iProjectionHeight_ = pRasterGeom_->getMaxTransformedY() -
 		pRasterGeom_->getMinTransformedY() + 1;
-   pProjectionBuffer_ = std::make_unique<ProjectedPoint[]>(
-      iProjectionWidth_ * iProjectionHeight_ 
-      );
+
+   size_t	numberOfProjectedPixels = iProjectionWidth_ * iProjectionHeight_;
+   if (numberOfProjectedPixels > iLastSizePB_)
+   {
+      iLastSizePB_ = numberOfProjectedPixels;
+      pProjectionBuffer_ = std::make_unique<ProjectedPoint[]>(iLastSizePB_);
+   }
 
 // Initialise the space for projecting the pixels
-	size_t	numberOfProjectedPixels = iProjectionWidth_ * iProjectionHeight_;
 	ProjectedPoint blackPoint{ 0 };
    ProjectedPoint* pProjData = pProjectionBuffer_.get();
 	for(size_t pixIndex = 0; pixIndex < numberOfProjectedPixels; pixIndex++ )
@@ -151,8 +154,14 @@ void WinRasterRenderer::initBitmapBuffer_(RECT& rectBoundingBox)
 
    // Give it 4 more bytes to accomodate unconditional padding at the end
    // of each row to keep the algorithm simple.
-   size_t iBufferSize = numBytesInRow_ * (iBitmapHeight_) + 4;
-   pBitmapBuffer_ = std::make_unique<unsigned char[]>(iBufferSize);
+   size_t iNewBufferSize = numBytesInRow_ * (iBitmapHeight_) + 4;
+   if (iNewBufferSize > iLastSizeBB_)
+   {
+      iLastSizeBB_ = iNewBufferSize;
+      pBitmapBuffer_ = std::make_unique<unsigned char[]>(iLastSizeBB_);
+   }
+   else
+      std::memset(pBitmapBuffer_.get(), 0, iLastSizeBB_);
 }
 
 void WinRasterRenderer::projection2ActualBitmap_()
