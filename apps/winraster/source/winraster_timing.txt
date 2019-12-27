@@ -35,3 +35,24 @@ Mona-Lisa.mrx:
 	Duration 3: 0.00331571
 	Duration 4: 0.00162489
 	Duration 5: 0.000414589
+
+Replaced mTransformable::transform based transformation with the ordinary matrix multiplication.
+Note performance improvement (see checkpoint 0).
+Tri-color rectangle:
+Cycles: 15603
+        Average duration for checkpoint 0: 0.00144063
+        Average duration for checkpoint 1: 2.33878e-06
+        Average duration for checkpoint 2: 0.000137233
+        Average duration for checkpoint 3: 0.00119593
+        Average duration for checkpoint 4: 0.000545665
+        Average duration for checkpoint 5: 0.000184184
+
+Mona-Lisa.mrx:
+Cycles: 7077
+        Average duration for checkpoint 0: 0.00603919
+        Average duration for checkpoint 1: 2.56007e-06
+        Average duration for checkpoint 2: 0.000536805
+        Average duration for checkpoint 3: 0.00328368
+        Average duration for checkpoint 4: 0.00183073
+        Average duration for checkpoint 5: 0.000373278
+
