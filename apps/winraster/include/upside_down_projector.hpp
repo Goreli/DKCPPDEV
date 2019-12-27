@@ -35,12 +35,13 @@ struct ProjectedPoint;
 class UpsideDownProjector {
 public:
    UpsideDownProjector() noexcept;
-   void init(size_t iCols, size_t bitmapWidth, RasterGeometry* pRasterGeom, ProjectedPoint* pProjectedData) noexcept;
-   void defaultFunction(size_t inxBeginRow, size_t inxEndRow) noexcept;
+   void init(RasterGeometry* pRasterGeom, size_t iProjectionHeight, size_t iProjectionWidth, ProjectedPoint* pProjectionBuffer) noexcept;
    void operator()(size_t inxThread, size_t iNumThreads, size_t iRasterHeight) noexcept;
-   void runThreads(size_t numThreads, size_t iRasterHeight);
+   void project();
+
 private:
-   size_t iRasterWidth_;
+   void project_(size_t inxBeginRow, size_t inxEndRow) noexcept;
+
    size_t iProjectionWidth_;
    RasterGeometry* pRasterGeom_;
    ProjectedPoint* pProjectedData_;

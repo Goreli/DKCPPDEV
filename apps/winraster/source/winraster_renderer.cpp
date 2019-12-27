@@ -72,7 +72,8 @@ void WinRasterRenderer::backgroundJob(void)
    initProjectionBuffer_();
    mt_.check(2);
 
-	projectPointsUpsideDown_();
+   udp_.init(pRasterGeom_.get(), iProjectionHeight_, iProjectionWidth_, pProjectionBuffer_.get());
+   udp_.project();
    mt_.check(3);
 
    initBitmapBuffer_(rectBoundingBox);
@@ -106,25 +107,6 @@ void WinRasterRenderer::initProjectionBuffer_()
    ProjectedPoint* pProjData = pProjectionBuffer_.get();
 	for(size_t pixIndex = 0; pixIndex < numberOfProjectedPixels; pixIndex++ )
       pProjData[ pixIndex ] = blackPoint;
-}
-
-void WinRasterRenderer::projectPointsUpsideDown_()
-{
-size_t projectionRowPreCalc = pRasterGeom_->getMinTransformedY()
-                            + iProjectionHeight_ - 1;
-ProjectedPoint* pImageData = pProjectionBuffer_.get()
-                           + projectionRowPreCalc * iProjectionWidth_
-                           - pRasterGeom_->getMinTransformedX();
-
-   udp_.init(pRasterGeom_->rasterWidth(), iProjectionWidth_, pRasterGeom_.get(), pImageData);
-   size_t numThreads{ std::thread::hardware_concurrency() };
-   // If there are no concurrent threads available or the size of the image
-   // is relatively small then do the calculation in the main thread.
-   size_t rasterHeight = pRasterGeom_->rasterHeight();
-   if (numThreads == 0 || numThreads > size_t(rasterHeight))
-      udp_.defaultFunction(0, rasterHeight);
-   else
-      udp_.runThreads(numThreads, rasterHeight);
 }
 
 void WinRasterRenderer::initBitmapBuffer_(RECT& rectBoundingBox)
@@ -177,8 +159,6 @@ ProjectedPoint* pProjPoint = pProjData;
       bool bThereWasNonBlank{ false };
       bool bHereIsAnotherBlank{ false };
 
-		//unsigned char* pPixel = (unsigned char *)pProjData + row * numBytesInRow_;
-      //unsigned char* pPixel = pBitmapBuffer_.get() + row * numBytesInRow_;
       unsigned char* pPixel = pBitmapBuffer_.get() + (row + iBottomMargin_) * numBytesInRow_ + iLeftMargin_*3;
 
 		for( int col = 0; col < iProjectionWidth_; col++ )
