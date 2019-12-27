@@ -33,7 +33,7 @@ Modification history:
 namespace dkmrx {
 	class mPoint;
 	class mLine;
-	class mTransformable;
+	class matrix;
 }
 
 typedef unsigned char uch;
@@ -69,8 +69,8 @@ private:
 	struct RGBPixel_;
 	std::unique_ptr<RGBPixel_[]> pixels_;
 
-	std::unique_ptr<dkmrx::mTransformable> initialCoords_;
-	std::unique_ptr<dkmrx::mTransformable> transformedCoords_;
+	std::unique_ptr<dkmrx::matrix> initialCoords_;
+	std::unique_ptr<dkmrx::matrix> transformedCoords_;
 
    size_t rasterWidth_;
    size_t rasterHeight_;

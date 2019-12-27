@@ -229,7 +229,7 @@ void RasterGeometry::setInitialCoords_( void )
 double halfWidth = rasterWidth_/2.0;
 double halfHeight = rasterHeight_/2.0;
 
-	initialCoords_ = std::make_unique<mTransformable>(rasterHeight_ * rasterWidth_);
+	initialCoords_ = std::make_unique<matrix>(rasterHeight_ * rasterWidth_, 4);
 	for( size_t i=0; i < rasterHeight_; i++ )
 	 for(size_t j=0; j < rasterWidth_; j++ )
 	 {
@@ -237,7 +237,12 @@ double halfHeight = rasterHeight_/2.0;
 		initialCoords_->operator [](index)[0] = (unsigned __int64)1+j - halfWidth; // Set x coordinate
 		initialCoords_->operator [](index)[1] = (unsigned __int64)1+i - halfHeight; // Set y coordinate
 		initialCoords_->operator [](index)[2] = 0; // Set z coordinate
+
+		initialCoords_->operator [](index)[3] = 1; // Homogenious dimension.
 	 }
+
+	// Allocate space for transformed coordinates.
+	transformedCoords_ = std::make_unique<matrix>(rasterHeight_ * rasterWidth_, 4);
 }
 
 void RasterGeometry::nextFrame( void )
@@ -250,19 +255,17 @@ double w1,w2,w3;
 matrix aboutZ { {0, 0, 1} };
 matrix aboutX { {1, 0, 0} };
 
-mTransformer trans;
-	trans.rotate( -w1*frameCounter_/2, aboutZ, *rasterCentre_);
+mTransformer transformer;
+transformer.rotate( -w1*frameCounter_/2, aboutZ, *rasterCentre_);
 
 mPoint dest( -windowCentre_->x(), -rasterRadius_ );
-	trans.translate( *rasterCentre_, dest);
+transformer.translate( *rasterCentre_, dest);
 
 mPoint putFrom( dest.x(), -dest.y() + rasterRadius_ );
-	trans.rotate( -w2*frameCounter_/2, aboutX, putFrom );
+	transformer.rotate( -w2*frameCounter_/2, aboutX, putFrom );
+	transformer.rotate(  -w3*frameCounter_/2, aboutZ, *windowCentre_ );
 
-	trans.rotate(  -w3*frameCounter_/2, aboutZ, *windowCentre_ );
-	transformedCoords_ = std::make_unique<mTransformable>(*initialCoords_);
-	transformedCoords_->transform( trans );
-   //(*transformedCoords_) *= trans;
+	*transformedCoords_ = *initialCoords_ * transformer;
 
 	frameCounter_++;
 }
