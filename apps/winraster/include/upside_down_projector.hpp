@@ -29,15 +29,48 @@ Modification history:
 #ifndef upside_down_projector_hpp
 #define upside_down_projector_hpp
 
+#include <thread>
+#include <atomic>
+
+
+#include <mutex>
+#include <condition_variable>
+
+
 class RasterGeometry;
 struct ProjectedPoint;
+
+template <typename T>
+struct atomwrapper
+{
+   std::atomic<T> _a;
+
+   atomwrapper()
+      :_a()
+   {}
+
+   atomwrapper(const std::atomic<T>& a)
+      :_a(a.load())
+   {}
+
+   atomwrapper(const atomwrapper& other)
+      :_a(other._a.load())
+   {}
+
+   atomwrapper& operator=(const atomwrapper& other)
+   {
+      _a.store(other._a.load());
+      return *this;
+   }
+};
 
 class UpsideDownProjector {
 public:
    UpsideDownProjector() noexcept;
-   void init(RasterGeometry* pRasterGeom, size_t iProjectionHeight, size_t iProjectionWidth, ProjectedPoint* pProjectionBuffer) noexcept;
+   void init(RasterGeometry* pRasterGeom);
    void operator()(size_t inxThread, size_t iNumThreads, size_t iRasterHeight) noexcept;
-   void project();
+   void project(size_t iProjectionHeight, size_t iProjectionWidth, ProjectedPoint* pProjectionBuffer);
+   void join();
 
 private:
    void project_(size_t inxBeginRow, size_t inxEndRow) noexcept;
@@ -45,6 +78,19 @@ private:
    size_t iProjectionWidth_;
    RasterGeometry* pRasterGeom_;
    ProjectedPoint* pProjectedData_;
+
+   std::vector<std::thread> helperThreads_;
+   std::vector<atomwrapper<size_t>> helperThreadControls_;
+
+   // Helper thread synchronisation tools.
+   std::mutex mutexHT_;
+   //std::unique_lock<std::mutex> ulockHT_;
+   std::condition_variable cvHT_;
+
+   // Main thread synchronisation tools.
+   std::mutex mutexMT_;
+   //std::unique_lock<std::mutex> ulockMT_;
+   std::condition_variable cvMT_;
 };
 
 #endif // upside_down_projector_hpp

@@ -56,3 +56,20 @@ Cycles: 7077
         Average duration for checkpoint 4: 0.00183073
         Average duration for checkpoint 5: 0.000373278
 
+Improved performance of the multithreading solution using the condition_variable approach:
+
+Cycles: 10272
+        Average duration for checkpoint 0: 0.00156483
+        Average duration for checkpoint 1: 2.50522e-06
+        Average duration for checkpoint 2: 0.000149501
+        Average duration for checkpoint 3: 0.000706287
+        Average duration for checkpoint 4: 0.000590707
+        Average duration for checkpoint 5: 0.000192899
+
+Cycles: 5930
+        Average duration for checkpoint 0: 0.00653603
+        Average duration for checkpoint 1: 2.60958e-06
+        Average duration for checkpoint 2: 0.000588796
+        Average duration for checkpoint 3: 0.00243549
+        Average duration for checkpoint 4: 0.00200758
+        Average duration for checkpoint 5: 0.000398427

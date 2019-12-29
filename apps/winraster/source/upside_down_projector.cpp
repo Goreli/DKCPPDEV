@@ -37,9 +37,50 @@ UpsideDownProjector::UpsideDownProjector() noexcept
 {
 }
 
-void UpsideDownProjector::init(RasterGeometry* pRasterGeom, size_t iProjectionHeight, size_t iProjectionWidth, ProjectedPoint* pProjectionBuffer) noexcept
+void UpsideDownProjector::init(RasterGeometry* pRasterGeom)
 {
    pRasterGeom_ = pRasterGeom;
+
+   size_t numThreads{ std::thread::hardware_concurrency() };
+   // If there are no concurrent threads available or the size of the image
+   // is relatively small then do the calculation in the main thread.
+   size_t iRasterHeight = pRasterGeom_->rasterHeight();
+   if (numThreads == 0 || numThreads > iRasterHeight)
+      return;
+   else
+   {
+      //threadControls_.resize(numThreads);
+      //for (auto& iTC : threadControls_)
+         //iTC = 0;
+
+      std::atomic<size_t> a_i(0);
+      for (size_t inxThread = 0; inxThread < numThreads; inxThread++)
+      {
+         helperThreadControls_.push_back(a_i);
+         helperThreads_.push_back(std::thread(std::ref(*this), inxThread, numThreads, iRasterHeight));
+      }
+   }
+}
+
+void UpsideDownProjector::join()
+{
+   {
+      std::unique_lock<std::mutex> ulockHT(mutexHT_);
+
+      std::atomic<size_t> a_i(1);
+      for (auto& iTC : helperThreadControls_)
+         iTC = a_i;
+
+      cvHT_.notify_all();
+   }
+
+   for (std::thread& t : helperThreads_)
+      t.join();
+}
+
+
+void UpsideDownProjector::project(size_t iProjectionHeight, size_t iProjectionWidth, ProjectedPoint* pProjectionBuffer)
+{
    iProjectionWidth_ = iProjectionWidth;
 
    size_t projectionRowPreCalc = pRasterGeom_->getMinTransformedY()
@@ -48,25 +89,37 @@ void UpsideDownProjector::init(RasterGeometry* pRasterGeom, size_t iProjectionHe
    pProjectedData_ = pProjectionBuffer
       + projectionRowPreCalc * iProjectionWidth_
       - pRasterGeom_->getMinTransformedX();
-}
-void UpsideDownProjector::project()
-{
-   size_t numThreads{ std::thread::hardware_concurrency() };
-   // If there are no concurrent threads available or the size of the image
-   // is relatively small then do the calculation in the main thread.
-   size_t iRasterHeight = pRasterGeom_->rasterHeight();
-   if (numThreads == 0 || numThreads > iRasterHeight)
-      project_(0, iRasterHeight);
+
+   if (helperThreads_.size() == 0)
+      project_(0, pRasterGeom_->rasterHeight());
    else
    {
-      std::vector<std::thread> threads;
-      size_t iRasterHeight = pRasterGeom_->rasterHeight();
-      for (size_t inxThread = 0; inxThread < numThreads; inxThread++)
-         threads.push_back(std::thread(std::ref(*this), inxThread, numThreads, iRasterHeight));
-      for (std::thread& t : threads)
-         t.join();
+      {
+         std::unique_lock<std::mutex> ulockHT(mutexHT_);
+
+         std::atomic<size_t> a_i(2);
+
+         for (auto& iTC : helperThreadControls_)
+            iTC = a_i;
+
+         //for (auto& iTC : helperThreadControls_)
+            //while(iTC._a);
+         cvHT_.notify_all();
+      }
+
+
+      // Check if the job has been done.
+      std::unique_lock<std::mutex> ulockMT(mutexMT_);
+      cvMT_.wait(ulockMT, 
+         [&] {
+            for (auto& tc : helperThreadControls_)
+               if (tc._a != 0)
+                  return false;
+            return true;
+         });
    }
 }
+
 void UpsideDownProjector::project_(size_t inxBeginRow, size_t inxEndRow) noexcept
 {
    size_t iRasterWidth = pRasterGeom_->rasterWidth();
@@ -94,6 +147,30 @@ void UpsideDownProjector::operator()(size_t inxThread, size_t iNumThreads, size_
    if (inxThread + 1 == iNumThreads)
       inxEndRow = iRasterHeight;
 
-   project_(inxBeginRow, inxEndRow);
+   std::atomic<size_t> a_i(0);
+   while (true) 
+   {
+      {
+         std::unique_lock<std::mutex> ulockHT(mutexHT_);
+         cvHT_.wait(ulockHT, [&] {return helperThreadControls_[inxThread]._a != 0; });
+      }
+
+      switch (helperThreadControls_[inxThread]._a)
+      {
+      //case 0:
+         //break;
+      case 1:
+         return;
+      case 2:
+         project_(inxBeginRow, inxEndRow);
+         //threadControls_[inxThread]._a.store(0);
+         // Let the main thread know that the job has been done.
+         std::unique_lock<std::mutex> ulockMT(mutexMT_);
+         helperThreadControls_[inxThread] = a_i;
+         cvMT_.notify_one();
+         break;
+      }
+      //std::this_thread::yield();  
+   }
 }
 

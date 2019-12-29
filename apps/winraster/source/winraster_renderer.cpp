@@ -44,6 +44,8 @@ WinRasterRenderer::WinRasterRenderer(HWND hwnd, wchar_t* colorFileName, COLORREF
 	hdc_ = GetDC( hwnd );
 
 	pRasterGeom_ = std::make_unique<RasterGeometry>(colorFileName);
+   udp_.init(pRasterGeom_.get());
+
 	colorRefBackground_ = crBgrnd;
    hBrushBG_ = CreateSolidBrush(colorRefBackground_);
 }
@@ -52,6 +54,8 @@ WinRasterRenderer::~WinRasterRenderer(void)
 {
    DeleteObject(hBrushBG_);
    ReleaseDC(hwnd_, hdc_);
+
+   udp_.join();
 
    mt_.save("winraster_timing.txt");
 }
@@ -72,8 +76,7 @@ void WinRasterRenderer::backgroundJob(void)
    initProjectionBuffer_();
    mt_.check(2);
 
-   udp_.init(pRasterGeom_.get(), iProjectionHeight_, iProjectionWidth_, pProjectionBuffer_.get());
-   udp_.project();
+   udp_.project(iProjectionHeight_, iProjectionWidth_, pProjectionBuffer_.get());
    mt_.check(3);
 
    initBitmapBuffer_(rectBoundingBox);
