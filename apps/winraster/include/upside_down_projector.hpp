@@ -32,14 +32,14 @@ Modification history:
 #include <thread>
 #include <atomic>
 
-
 #include <mutex>
 #include <condition_variable>
-
 
 class RasterGeometry;
 struct ProjectedPoint;
 
+// The following atomwrapper structure has been copy/pasted from:
+// https://stackoverflow.com/questions/13193484/how-to-declare-a-vector-of-atomic-in-c
 template <typename T>
 struct atomwrapper
 {
@@ -82,14 +82,12 @@ private:
    std::vector<std::thread> helperThreads_;
    std::vector<atomwrapper<size_t>> helperThreadControls_;
 
-   // Helper thread synchronisation tools.
+   // Helper thread synchronisation objects.
    std::mutex mutexHT_;
-   //std::unique_lock<std::mutex> ulockHT_;
    std::condition_variable cvHT_;
 
-   // Main thread synchronisation tools.
+   // Main thread synchronisation objects.
    std::mutex mutexMT_;
-   //std::unique_lock<std::mutex> ulockMT_;
    std::condition_variable cvMT_;
 };
 

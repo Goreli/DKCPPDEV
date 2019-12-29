@@ -49,10 +49,6 @@ void UpsideDownProjector::init(RasterGeometry* pRasterGeom)
       return;
    else
    {
-      //threadControls_.resize(numThreads);
-      //for (auto& iTC : threadControls_)
-         //iTC = 0;
-
       std::atomic<size_t> a_i(0);
       for (size_t inxThread = 0; inxThread < numThreads; inxThread++)
       {
@@ -66,13 +62,14 @@ void UpsideDownProjector::join()
 {
    {
       std::unique_lock<std::mutex> ulockHT(mutexHT_);
-
+      // Requst the thread functions to exit to make it possible
+      // for the threads to join the main thread.
       std::atomic<size_t> a_i(1);
       for (auto& iTC : helperThreadControls_)
          iTC = a_i;
-
-      cvHT_.notify_all();
    }
+
+   cvHT_.notify_all();
 
    for (std::thread& t : helperThreads_)
       t.join();
@@ -96,17 +93,12 @@ void UpsideDownProjector::project(size_t iProjectionHeight, size_t iProjectionWi
    {
       {
          std::unique_lock<std::mutex> ulockHT(mutexHT_);
-
          std::atomic<size_t> a_i(2);
-
          for (auto& iTC : helperThreadControls_)
             iTC = a_i;
-
-         //for (auto& iTC : helperThreadControls_)
-            //while(iTC._a);
-         cvHT_.notify_all();
       }
 
+      cvHT_.notify_all();
 
       // Check if the job has been done.
       std::unique_lock<std::mutex> ulockMT(mutexMT_);
@@ -147,7 +139,6 @@ void UpsideDownProjector::operator()(size_t inxThread, size_t iNumThreads, size_
    if (inxThread + 1 == iNumThreads)
       inxEndRow = iRasterHeight;
 
-   std::atomic<size_t> a_i(0);
    while (true) 
    {
       {
@@ -157,20 +148,20 @@ void UpsideDownProjector::operator()(size_t inxThread, size_t iNumThreads, size_
 
       switch (helperThreadControls_[inxThread]._a)
       {
-      //case 0:
-         //break;
       case 1:
          return;
       case 2:
          project_(inxBeginRow, inxEndRow);
-         //threadControls_[inxThread]._a.store(0);
          // Let the main thread know that the job has been done.
-         std::unique_lock<std::mutex> ulockMT(mutexMT_);
-         helperThreadControls_[inxThread] = a_i;
+         {
+            std::atomic<size_t> a_i(0);
+            std::unique_lock<std::mutex> ulockMT(mutexMT_);
+            helperThreadControls_[inxThread] = a_i;
+         }
          cvMT_.notify_one();
          break;
+      default:
+         break;
       }
-      //std::this_thread::yield();  
    }
 }
-
