@@ -29,6 +29,11 @@ Modification history:
 #ifndef upside_down_projector_hpp
 #define upside_down_projector_hpp
 
+#define STRICT
+#define WIN64_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+#include <windows.h>
+
+
 #include <thread>
 #include <atomic>
 
@@ -70,18 +75,27 @@ public:
    void init(RasterGeometry* pRasterGeom);
    void operator()(size_t inxThread, size_t iNumThreads) noexcept;
    void project(size_t iProjectionHeight, size_t iProjectionWidth, ProjectedPoint* pProjectionBuffer);
+   void populateBitmap(size_t iProjectionHeight, COLORREF colorRefBackground, size_t iBottomMargin, size_t numBytesInRow, size_t iLeftMargin, ProjectedPoint* pProjectionBuffer, unsigned char* pBitmapBuffer);
    void join();
 
 private:
    void project_(size_t inxBeginRow, size_t inxEndRow) noexcept;
+   void populateBitmap_(size_t inxBeginRow, size_t inxEndRow) noexcept;
    void NotifyMainThread_(size_t inxThread);
    void runThreads_(size_t iTask);
 
-   size_t iRowCount_;
+   size_t iNumRows_;
 
    size_t iProjectionWidth_;
    RasterGeometry* pRasterGeom_;
    ProjectedPoint* pProjectedData_;
+
+   COLORREF colorRefBackground_;
+   size_t iBottomMargin_;
+   size_t numBytesInRow_;
+   size_t iLeftMargin_;
+   ProjectedPoint* pProjectionBuffer_;
+   unsigned char* pBitmapBuffer_;
 
    std::vector<std::thread> helperThreads_;
    std::vector<atomwrapper<size_t>> helperThreadControls_;

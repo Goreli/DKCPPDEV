@@ -26,6 +26,7 @@ Modification history:
 
 */
 
+
 #include <thread>
 #include <vector>
 #include "upside_down_projector.hpp"
@@ -33,7 +34,7 @@ Modification history:
 #include "raster_geometry.hpp"
 
 UpsideDownProjector::UpsideDownProjector() noexcept
-   : iRowCount_{0}, iProjectionWidth_{ 0 }, pRasterGeom_{ nullptr }, pProjectedData_{ nullptr }
+   : iNumRows_{0}, iProjectionWidth_{ 0 }, pRasterGeom_{ nullptr }, pProjectedData_{ nullptr }
 {
 }
 
@@ -89,8 +90,27 @@ void UpsideDownProjector::project(size_t iProjectionHeight, size_t iProjectionWi
       project_(0, pRasterGeom_->rasterHeight());
    else
    {
-      iRowCount_ = pRasterGeom_->rasterHeight();
+      iNumRows_ = pRasterGeom_->rasterHeight();
       runThreads_(2);
+   }
+}
+
+void UpsideDownProjector::populateBitmap(size_t iProjectionHeight, COLORREF colorRefBackground, size_t iBottomMargin, size_t numBytesInRow, size_t iLeftMargin, ProjectedPoint* pProjectionBuffer, unsigned char* pBitmapBuffer)
+{
+   colorRefBackground_ = colorRefBackground;
+   iBottomMargin_ = iBottomMargin;
+   numBytesInRow_ = numBytesInRow;
+   iLeftMargin_ = iLeftMargin;
+
+   pProjectionBuffer_ = pProjectionBuffer;
+   pBitmapBuffer_ = pBitmapBuffer;
+
+   if (helperThreads_.size() == 0)
+      populateBitmap_(0, iProjectionHeight);
+   else
+   {
+      iNumRows_ = iProjectionHeight;
+      runThreads_(3);
    }
 }
 void UpsideDownProjector::runThreads_(size_t iTask)
@@ -132,6 +152,72 @@ void UpsideDownProjector::project_(size_t inxBeginRow, size_t inxEndRow) noexcep
          pPoint->counter++;
       }
 }
+
+void UpsideDownProjector::populateBitmap_(size_t inxBeginRow, size_t inxEndRow) noexcept
+{
+   for (size_t row = inxBeginRow; row < inxEndRow; row++)
+   {
+      ProjectedPoint* pProjPoint = pProjectionBuffer_ + row * iProjectionWidth_;
+      unsigned char* pPixel = pBitmapBuffer_ + (row + iBottomMargin_) * numBytesInRow_ + iLeftMargin_ * 3;
+
+      // These two variables are meant to help getting rid of the ugly
+      // black mesh periodically occuring in the middle of the image and
+      // supposidly caused by the rounding error.
+      bool bThereWasNonBlank{ false };
+      bool bHereIsAnotherBlank{ false };
+
+      for (int col = 0; col < iProjectionWidth_; col++)
+      {
+         if (pProjPoint->counter == 0)
+         {
+            if (bThereWasNonBlank)
+               bHereIsAnotherBlank = true;
+
+            *pPixel++ = GetBValue(colorRefBackground_);
+            *pPixel++ = GetGValue(colorRefBackground_);
+            *pPixel++ = GetRValue(colorRefBackground_);
+         }
+         else
+         {
+            *pPixel++ = static_cast<unsigned char>(pProjPoint->b / pProjPoint->counter);
+            *pPixel++ = static_cast<unsigned char>(pProjPoint->g / pProjPoint->counter);
+            *pPixel++ = static_cast<unsigned char>(pProjPoint->r / pProjPoint->counter);
+
+            // Check if there was a rounding gap and interpolate its colors if there was one.
+            if (bHereIsAnotherBlank)
+            {
+               // Non-blank pixel after a blank one even though there was
+               // already a non-blank pixel before the last blank one...
+               // Let's fill the gap with interpolated color.
+               unsigned char* pBlankPixel = pPixel - 6;
+
+               // Interpolate blue.
+               *pBlankPixel = pBlankPixel[-3] / 2 + pBlankPixel[3] / 2;
+               pBlankPixel++;
+               // Interpolate green.
+               *pBlankPixel = pBlankPixel[-3] / 2 + pBlankPixel[3] / 2;
+               pBlankPixel++;
+               // Interpolate red.
+               *pBlankPixel = pBlankPixel[-3] / 2 + pBlankPixel[3] / 2;
+               pBlankPixel++;
+
+               bHereIsAnotherBlank = false;
+            }
+            bThereWasNonBlank = true;
+         }
+         pProjPoint++;
+      }
+      // Possibly we have a padding at the end of each row.
+      // Fill it with zeros. This is safe because elements
+      // pointed to by pPixel are smaller than those pointed
+      // to by pProjPoint. Therefore pPixel has remained well
+      // below the upper boundary of allocated space.
+      *pPixel = '\0';
+      *(pPixel + 1) = '\0';
+      *(pPixel + 2) = '\0';
+   }
+}
+
 void UpsideDownProjector::operator()(size_t inxThread, size_t iNumThreads) noexcept
 {
    while (true) 
@@ -141,12 +227,12 @@ void UpsideDownProjector::operator()(size_t inxThread, size_t iNumThreads) noexc
          cvHT_.wait(ulockHT, [&] {return helperThreadControls_[inxThread]._a != 0; });
       }
 
-      size_t iChunkHeight = iRowCount_ / iNumThreads;
+      size_t iChunkHeight = iNumRows_ / iNumThreads;
       size_t inxBeginRow = inxThread * iChunkHeight;
       size_t inxEndRow = inxBeginRow + iChunkHeight;
       // If this is the last chunk/thread then its endRow value may need to be adjusted.
       if (inxThread + 1 == iNumThreads)
-         inxEndRow = iRowCount_;
+         inxEndRow = iNumRows_;
 
       switch (helperThreadControls_[inxThread]._a)
       {
@@ -154,6 +240,10 @@ void UpsideDownProjector::operator()(size_t inxThread, size_t iNumThreads) noexc
          return;
       case 2:
          project_(inxBeginRow, inxEndRow);
+         NotifyMainThread_(inxThread);
+         break;
+      case 3:
+         populateBitmap_(inxBeginRow, inxEndRow);
          NotifyMainThread_(inxThread);
          break;
       default:

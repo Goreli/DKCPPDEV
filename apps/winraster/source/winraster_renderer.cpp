@@ -80,7 +80,8 @@ void WinRasterRenderer::backgroundJob(void)
    mt_.check(3);
 
    initBitmapBuffer_(rectBoundingBox);
-	projection2ActualBitmap_();
+	//projection2ActualBitmap_();
+   udp_.populateBitmap(iProjectionHeight_, colorRefBackground_, iBottomMargin_, numBytesInRow_, iLeftMargin_, pProjectionBuffer_.get(), pBitmapBuffer_.get());
    mt_.check(4);
       
    drawBitmap_(rectBoundingBox);
