@@ -68,12 +68,16 @@ class UpsideDownProjector {
 public:
    UpsideDownProjector() noexcept;
    void init(RasterGeometry* pRasterGeom);
-   void operator()(size_t inxThread, size_t iNumThreads, size_t iRasterHeight) noexcept;
+   void operator()(size_t inxThread, size_t iNumThreads) noexcept;
    void project(size_t iProjectionHeight, size_t iProjectionWidth, ProjectedPoint* pProjectionBuffer);
    void join();
 
 private:
    void project_(size_t inxBeginRow, size_t inxEndRow) noexcept;
+   void NotifyMainThread_(size_t inxThread);
+   void runThreads_(size_t iTask);
+
+   size_t iRowCount_;
 
    size_t iProjectionWidth_;
    RasterGeometry* pRasterGeom_;
