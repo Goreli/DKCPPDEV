@@ -75,7 +75,8 @@ public:
    void init(RasterGeometry* pRasterGeom);
    void operator()(size_t inxThread, size_t iNumThreads) noexcept;
    void project(size_t iProjectionHeight, size_t iProjectionWidth, ProjectedPoint* pProjectionBuffer);
-   void populateBitmap(size_t iProjectionHeight, COLORREF colorRefBackground, size_t iBottomMargin, size_t numBytesInRow, size_t iLeftMargin, ProjectedPoint* pProjectionBuffer, unsigned char* pBitmapBuffer);
+   void populateBitmap(size_t iProjectionHeight, COLORREF colorRefBackground, size_t iBottomMargin, 
+      size_t numBytesInRow, size_t iLeftMargin, ProjectedPoint* pProjectionBuffer, unsigned char* pBitmapBuffer);
    void join();
 
 private:
@@ -86,10 +87,12 @@ private:
 
    size_t iNumRows_;
 
+   // Projection specific.
    size_t iProjectionWidth_;
    RasterGeometry* pRasterGeom_;
    ProjectedPoint* pProjectedData_;
 
+   // Bitmap specific.
    COLORREF colorRefBackground_;
    size_t iBottomMargin_;
    size_t numBytesInRow_;

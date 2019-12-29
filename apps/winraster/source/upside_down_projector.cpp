@@ -95,7 +95,8 @@ void UpsideDownProjector::project(size_t iProjectionHeight, size_t iProjectionWi
    }
 }
 
-void UpsideDownProjector::populateBitmap(size_t iProjectionHeight, COLORREF colorRefBackground, size_t iBottomMargin, size_t numBytesInRow, size_t iLeftMargin, ProjectedPoint* pProjectionBuffer, unsigned char* pBitmapBuffer)
+void UpsideDownProjector::populateBitmap(size_t iProjectionHeight, COLORREF colorRefBackground, size_t iBottomMargin,
+   size_t numBytesInRow, size_t iLeftMargin, ProjectedPoint* pProjectionBuffer, unsigned char* pBitmapBuffer)
 {
    colorRefBackground_ = colorRefBackground;
    iBottomMargin_ = iBottomMargin;

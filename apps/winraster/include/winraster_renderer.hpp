@@ -58,7 +58,6 @@ private:
 	void initProjectionBuffer_(void);
 	void projectPointsUpsideDown_(void);
 	void initBitmapBuffer_(RECT& rectBoundingBox);
-	void projection2ActualBitmap_(void);
 	void drawBitmap_(RECT& rectBoundingBox);
 
 	size_t		iProjectionWidth_;

@@ -73,3 +73,22 @@ Cycles: 5930
         Average duration for checkpoint 3: 0.00243549
         Average duration for checkpoint 4: 0.00200758
         Average duration for checkpoint 5: 0.000398427
+
+Multithreaded population of the bitmap buffer:
+
+Cycles: 12237
+        Average duration for checkpoint 0: 0.00156669
+        Average duration for checkpoint 1: 2.50817e-06
+        Average duration for checkpoint 2: 0.000146928
+        Average duration for checkpoint 3: 0.000695334
+        Average duration for checkpoint 4: 0.000328912
+        Average duration for checkpoint 5: 0.00020994
+
+Cycles: 4039
+        Average duration for checkpoint 0: 0.00624321
+        Average duration for checkpoint 1: 2.57869e-06
+        Average duration for checkpoint 2: 0.000556355
+        Average duration for checkpoint 3: 0.00244699
+        Average duration for checkpoint 4: 0.000897519
+        Average duration for checkpoint 5: 0.000412448
+
