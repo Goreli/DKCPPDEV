@@ -151,18 +151,16 @@ void WinRasterRenderer::initBitmapBuffer_(RECT& rectBoundingBox)
 
 void WinRasterRenderer::projection2ActualBitmap_()
 {
-ProjectedPoint* pProjData = pProjectionBuffer_.get();
-ProjectedPoint* pProjPoint = pProjData;
-
 	for( size_t row = 0; row < iProjectionHeight_; row++ )
 	{
+      ProjectedPoint* pProjPoint = pProjectionBuffer_.get() + row * iProjectionWidth_;
+      unsigned char* pPixel = pBitmapBuffer_.get() + (row + iBottomMargin_) * numBytesInRow_ + iLeftMargin_ * 3;
+
       // These two variables are meant to help getting rid of the ugly
       // black mesh periodically occuring in the middle of the image and
       // supposidly caused by the rounding error.
       bool bThereWasNonBlank{ false };
       bool bHereIsAnotherBlank{ false };
-
-      unsigned char* pPixel = pBitmapBuffer_.get() + (row + iBottomMargin_) * numBytesInRow_ + iLeftMargin_*3;
 
 		for( int col = 0; col < iProjectionWidth_; col++ )
 		{
