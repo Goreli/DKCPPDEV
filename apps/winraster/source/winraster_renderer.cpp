@@ -34,8 +34,6 @@ Modification history:
 #include "winraster_renderer.hpp"
 #include "raster_geometry.hpp"
 
-//#include "multi_threaded_driver.hpp"
-
 WinRasterRenderer::WinRasterRenderer(HWND hwnd, wchar_t* colorFileName, COLORREF crBgrnd)
    : iProjectionWidth_(0), iProjectionHeight_(0), pProjectionBuffer_(nullptr), iLastSizePB_{ 0 },
    numBytesInRow_{ 0 }, pBitmapBuffer_(nullptr), iLastSizeBB_{ 0 }, rectLast_{ 0 }, mt_(6),
