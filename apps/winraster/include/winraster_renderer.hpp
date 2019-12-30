@@ -32,9 +32,14 @@ Modification history:
 #define STRICT
 #define WIN64_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
+
 #include <memory>
 #include "multitimer.hpp"
+
 #include "upside_down_projector.hpp"
+#include "bitmap_composer.hpp"
+#include "multi_threaded_driver.hpp"
+
 
 struct ProjectedPoint
 {
@@ -56,7 +61,6 @@ public:
 
 private:
 	void initProjectionBuffer_(void);
-	void projectPointsUpsideDown_(void);
 	void initBitmapBuffer_(RECT& rectBoundingBox);
 	void drawBitmap_(RECT& rectBoundingBox);
 
@@ -77,7 +81,6 @@ private:
 	// sufficient to accommodate the current data.
 	size_t iLastSizeBB_;
 
-
 	RECT rectLast_;
 	MultiTimer mt_;
 
@@ -85,9 +88,6 @@ private:
 	HDC  hdc_;
 	std::unique_ptr<RasterGeometry> pRasterGeom_;
 	COLORREF colorRefBackground_;
-	HBRUSH hBrushBG_;
-
-	UpsideDownProjector udp_;
 
 	size_t iLeftMargin_;
 	size_t iTopMargin_;
@@ -95,6 +95,10 @@ private:
 	size_t iBottomMargin_;
 	size_t iBitmapWidth_;
 	size_t iBitmapHeight_;
+
+	UpsideDownProjector projector_;
+	BitmapComposer composer_;
+	MultiThreadedDriver driverMT_;
 };
 
 #endif // winraster_renderer_hpp

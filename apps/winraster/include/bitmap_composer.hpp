@@ -26,28 +26,38 @@ Modification history:
 
 */
 
-#ifndef upside_down_projector_hpp
-#define upside_down_projector_hpp
+#ifndef bitmap_composer_hpp
+#define bitmap_composer_hpp
 
 #include "multi_threaded_driver.hpp"
 
 class RasterGeometry;
 struct ProjectedPoint;
 
-class UpsideDownProjector : public ParallelProcessorBase {
+class BitmapComposer : public ParallelProcessorBase {
 public:
-   UpsideDownProjector();
-   virtual ~UpsideDownProjector() override;
-   void init(RasterGeometry* pRasterGeom);
+   BitmapComposer();
+   virtual ~BitmapComposer() override;
+   void init(unsigned char bgB, unsigned char bgG, unsigned char bgR);
 
    void setupProjection(size_t iProjectionHeight, size_t iProjectionWidth, ProjectedPoint* pProjectionBuffer);
+   void setupBitmap(size_t iLeftMargin, size_t iBottomMargin, size_t numBytesInRow, unsigned char* pBitmapBuffer);
    virtual void operator()(size_t inxBegin, size_t inxEnd) override;
    virtual size_t size() override;
 
 private:
-   RasterGeometry* pRasterGeom_;
+   unsigned char bgB_;
+   unsigned char bgG_;
+   unsigned char bgR_;
+
+   size_t iProjectionHeight_;
    size_t iProjectionWidth_;
-   ProjectedPoint* pProjectedData_;
+   ProjectedPoint* pProjectionBuffer_;
+
+   size_t iLeftMargin_;
+   size_t iBottomMargin_;
+   size_t numBytesInRow_;
+   unsigned char* pBitmapBuffer_;
 };
 
-#endif // upside_down_projector_hpp
+#endif // bitmap_composer_hpp

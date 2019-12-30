@@ -249,7 +249,7 @@ void RasterGeometry::nextFrame( void )
 {
 double w1,w2,w3;
 	w2 = 0.5 * myPi / 360; 
-	w1 = 4 * w2; 
+	w1 = 2 * w2; 
 	w3 = w1 * (windowRadius_/rasterRadius_ - 1);
 
 matrix aboutZ { {0, 0, 1} };

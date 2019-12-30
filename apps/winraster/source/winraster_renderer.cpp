@@ -34,6 +34,8 @@ Modification history:
 #include "winraster_renderer.hpp"
 #include "raster_geometry.hpp"
 
+//#include "multi_threaded_driver.hpp"
+
 WinRasterRenderer::WinRasterRenderer(HWND hwnd, wchar_t* colorFileName, COLORREF crBgrnd)
    : iProjectionWidth_(0), iProjectionHeight_(0), pProjectionBuffer_(nullptr), iLastSizePB_{ 0 },
    numBytesInRow_{ 0 }, pBitmapBuffer_(nullptr), iLastSizeBB_{ 0 }, rectLast_{ 0 }, mt_(6),
@@ -44,19 +46,17 @@ WinRasterRenderer::WinRasterRenderer(HWND hwnd, wchar_t* colorFileName, COLORREF
 	hdc_ = GetDC( hwnd );
 
 	pRasterGeom_ = std::make_unique<RasterGeometry>(colorFileName);
-   udp_.init(pRasterGeom_.get());
+   colorRefBackground_ = crBgrnd;
 
-	colorRefBackground_ = crBgrnd;
-   hBrushBG_ = CreateSolidBrush(colorRefBackground_);
+   projector_.init(pRasterGeom_.get());
+   composer_.init(GetBValue(colorRefBackground_), GetGValue(colorRefBackground_), GetRValue(colorRefBackground_));
+   driverMT_.init(std::thread::hardware_concurrency());
 }
 
 WinRasterRenderer::~WinRasterRenderer(void)
 {
-   DeleteObject(hBrushBG_);
    ReleaseDC(hwnd_, hdc_);
-
-   udp_.join();
-
+   driverMT_.join();
    mt_.save("winraster_timing.txt");
 }
 
@@ -76,12 +76,14 @@ void WinRasterRenderer::backgroundJob(void)
    initProjectionBuffer_();
    mt_.check(2);
 
-   udp_.project(iProjectionHeight_, iProjectionWidth_, pProjectionBuffer_.get());
+   projector_.setupProjection(iProjectionHeight_, iProjectionWidth_, pProjectionBuffer_.get());
+   driverMT_.drive(&projector_);
    mt_.check(3);
 
    initBitmapBuffer_(rectBoundingBox);
-	//projection2ActualBitmap_();
-   udp_.populateBitmap(iProjectionHeight_, colorRefBackground_, iBottomMargin_, numBytesInRow_, iLeftMargin_, pProjectionBuffer_.get(), pBitmapBuffer_.get());
+   composer_.setupProjection(iProjectionHeight_, iProjectionWidth_, pProjectionBuffer_.get());
+   composer_.setupBitmap(iLeftMargin_, iBottomMargin_, numBytesInRow_, pBitmapBuffer_.get());
+   driverMT_.drive(&composer_);
    mt_.check(4);
       
    drawBitmap_(rectBoundingBox);
