@@ -29,6 +29,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dkutf", "libs\dkutf\dkutf\d
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testdkutf", "apps\testdkutf\testdkutf\testdkutf.vcxproj", "{EAD4AE12-83F4-4A62-AC90-8473FDFE11F0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dkutil", "libs\dkutil\dkutil\dkutil.vcxproj", "{C0C61A06-F56A-410A-A0BD-E3F4FE342893}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "util", "util", "{AD1B64F6-D048-4DF0-B84D-FD2218F5B1BC}"
+	ProjectSection(SolutionItems) = preProject
+		util\cmake-build.sh = util\cmake-build.sh
+		util\CMakeClangOverrides.txt = util\CMakeClangOverrides.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -93,6 +101,14 @@ Global
 		{EAD4AE12-83F4-4A62-AC90-8473FDFE11F0}.Release|x64.Build.0 = Release|x64
 		{EAD4AE12-83F4-4A62-AC90-8473FDFE11F0}.Release|x86.ActiveCfg = Release|Win32
 		{EAD4AE12-83F4-4A62-AC90-8473FDFE11F0}.Release|x86.Build.0 = Release|Win32
+		{C0C61A06-F56A-410A-A0BD-E3F4FE342893}.Debug|x64.ActiveCfg = Debug|x64
+		{C0C61A06-F56A-410A-A0BD-E3F4FE342893}.Debug|x64.Build.0 = Debug|x64
+		{C0C61A06-F56A-410A-A0BD-E3F4FE342893}.Debug|x86.ActiveCfg = Debug|Win32
+		{C0C61A06-F56A-410A-A0BD-E3F4FE342893}.Debug|x86.Build.0 = Debug|Win32
+		{C0C61A06-F56A-410A-A0BD-E3F4FE342893}.Release|x64.ActiveCfg = Release|x64
+		{C0C61A06-F56A-410A-A0BD-E3F4FE342893}.Release|x64.Build.0 = Release|x64
+		{C0C61A06-F56A-410A-A0BD-E3F4FE342893}.Release|x86.ActiveCfg = Release|Win32
+		{C0C61A06-F56A-410A-A0BD-E3F4FE342893}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,6 +121,7 @@ Global
 		{D33B90C0-3860-465B-A6E4-DE2BADFBC793} = {08A2BCC5-C618-402E-911A-DA79A5CB1842}
 		{9EFBB70D-3149-4E25-8E2C-F44E0E6C72DB} = {CBAF35ED-CE22-4419-9FEB-62035E339EA2}
 		{EAD4AE12-83F4-4A62-AC90-8473FDFE11F0} = {08A2BCC5-C618-402E-911A-DA79A5CB1842}
+		{C0C61A06-F56A-410A-A0BD-E3F4FE342893} = {CBAF35ED-CE22-4419-9FEB-62035E339EA2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {852944EF-0C3C-4186-B81F-8D3FF903960B}

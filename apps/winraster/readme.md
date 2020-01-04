@@ -9,17 +9,18 @@ Once the program has started it will automatically launch itself into a demo mod
 Here is the MS Visual Studio configuration log used to build the target in both the Debug and Release configurations:
 1. Switch precompiled headers off;
 2. Set the language standard to the most recent version;
-3. Let the c++ compiler know locations of include areas: ../include;../../../libs/dkmrx/include
+3. Let the c++ compiler know locations of include areas: ../include;../../../libs/dkmrx/include;../../../libs/dkutil/include
 4. Let the resource compiler know the location of include area: ../include
 5. Define the real type the same as what has been used to build the dkmrx.lib library e.g. real=double.
-6. Let the linker know the location of the dkmrx.lib library (add a reference to the project on the Visual C++ platform).
-7. Define _CRT_SECURE_NO_WARNINGS to remove "This function or variable may be unsafe" errors triggered by some string and file functions.
-8. Define _CRT_NON_CONFORMING_WCSTOK to remove wcstok/strtok related errors.
+6. Let the linker know the location of the dkmrx.lib library (if on the Visual C++ platform - add a reference to the library project);
+7. Let the linker know the location of the dkutil.lib library (if on the Visual C++ platform - add a reference to the library project);
+8. Define _CRT_SECURE_NO_WARNINGS to remove "This function or variable may be unsafe" errors triggered by some string and file functions.
+9. Define _CRT_NON_CONFORMING_WCSTOK to remove wcstok/strtok related errors.
 
 No optimisation has been used in the Debug configuration. Specifically in the Release configuration the "Favour Speed over Size" optimisation option may be desired.
 
 ## Roadmap
 1. C++ 20 will introduce standard numeric constants. Replace myPi in raster_geometry.cpp with a standard one once it's become available.
-2. Can multithreading improve performance of the program? **In progress. Basic multithreading has improved performance of the UpsideDownProjector module. Need to see if it can be further improved by implementing a thread pool like solution. Also, there appears to be an opportunity in the matrix library code as well.**
+2. Can multithreading improve performance of the program? **In progress. Multithreading has significantly improved performance of the UpsideDownProjector and BitmapComposer modules at the application level (refer winraster_timing.txt for the timing information). Now need to see to what extent we can improve performance of the Matrix library.**
 3. Consider an OS independent graphics toolkit. Qt?
 4. The projection of the transformed bitmap contains blank/black pixels that appears to be a result of rounding. See if it's possible to interpolate color between the nearest neighbours to fill the blank pixels with visually meaningful values. **Done as of 18/Dec/2019.**

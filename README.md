@@ -1,5 +1,5 @@
 # DKCPPDEV - Collection of C++ Libs and Apps
-<p align="center">Seen The Matrix?</p><p align="center">Unit test the universe.</p>
+<p align="center">Seen The Matrix?</p><p align="center">Unit test the universe.</p><p align="center">To use, or to reuse, that is the question.</p>
 
 ___
 
@@ -10,9 +10,10 @@ ___
 
 ## Repo Directory Structure
 
-The root directory contains git specific configuration files e.g. .gitignore and .gitattributes. It also contains a Visual Studio solution file that builds all targets in this repo, a LICENSE file and this README.md file. There are two subdirectories under the root directory:
+The root directory contains git specific configuration files e.g. .gitignore and .gitattributes. It also contains a Visual Studio solution file that builds all targets in this repo, a LICENSE file and this README.md file. The root directory contains the following subdirectories:
  * [apps](apps) - for applications;
- * [libs](libs) - for libraries.
+ * [libs](libs) - for libraries;
+ * [util](util) - cmake automation utilities.
 
 Refer individual readme.md files located in subdirectories of the directories listed above for detailed description of the respective content. A high level overview of the content follows.
  
@@ -25,7 +26,11 @@ Refer individual readme.md files located in subdirectories of the directories li
 
 ### Content of the [libs](libs) directory 
  * [libs/dkmrx](libs/dkmrx) - A C++ library with a simple programming interface for coding matrix operations;
- * [libs/dkutf](libs/dkutf) - A C++ unit testing framework library that allows to keep large suites of unit tests organised and well managed. Offers a collaboration workflow that leads to a shorter time to market. Also, provides an instrumentation tool to monitor balance between the counts of object constructor execution and object destructor execution. Can detect certain cases of object corruption.
+ * [libs/dkutf](libs/dkutf) - A C++ unit testing framework library that allows to keep large suites of unit tests organised and well managed. Offers a collaboration workflow that leads to a shorter time to market. Also, provides an instrumentation tool to monitor balance between the counts of object constructor execution and object destructor execution. Can detect certain cases of object corruption;
+ * [libs/dkutil](libs/dkutil) - A library of reusable C++ utility classes and routines.
+
+### Content of the [util](util) directory 
+TBA
 
 ## Build Notes
 
