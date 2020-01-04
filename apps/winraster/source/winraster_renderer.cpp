@@ -31,8 +31,9 @@ Modification history:
 #include <fstream>
 #include <string>
 
-#include "winraster_renderer.hpp"
 #include "raster_geometry.hpp"
+#include "winraster_renderer.hpp"
+#include "projected_point.hpp"
 
 WinRasterRenderer::WinRasterRenderer(HWND hwnd, wchar_t* colorFileName, COLORREF crBgrnd)
    : iProjectionWidth_(0), iProjectionHeight_(0), pProjectionBuffer_(nullptr), iLastSizePB_{ 0 },

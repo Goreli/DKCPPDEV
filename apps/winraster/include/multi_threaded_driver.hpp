@@ -33,13 +33,9 @@ Modification history:
 #include <mutex>
 #include <vector>
 
-class ParallelProcessorBase
-{
-public:
-   virtual ~ParallelProcessorBase();
-   virtual void operator()(size_t inxBegin, size_t inxEnd) = 0;
-   virtual size_t size() = 0;
-};
+namespace dk {
+
+class ParallelProcessorBase;
 
 class MultiThreadedDriver
 {
@@ -66,5 +62,7 @@ private:
 
    ParallelProcessorBase* pParProc_;
 };
+
+}  // namespace dk {
 
 #endif // dk_multi_threaded_driver

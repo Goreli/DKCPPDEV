@@ -26,28 +26,19 @@ Modification history:
 
 */
 
-#ifndef upside_down_projector_hpp
-#define upside_down_projector_hpp
+#ifndef dk_parallel_processor_base
+#define dk_parallel_processor_base
 
-#include "parallel_processor_base.hpp"
+namespace dk {
 
-class RasterGeometry;
-struct ProjectedPoint;
+   class ParallelProcessorBase
+   {
+   public:
+      virtual ~ParallelProcessorBase();
+      virtual void operator()(size_t inxBegin, size_t inxEnd) = 0;
+      virtual size_t size() = 0;
+   };
 
-class UpsideDownProjector : public dk::ParallelProcessorBase {
-public:
-   UpsideDownProjector();
-   virtual ~UpsideDownProjector() override;
-   void init(RasterGeometry* pRasterGeom);
+} // namespace dk {
 
-   void setupProjection(size_t iProjectionHeight, size_t iProjectionWidth, ProjectedPoint* pProjectionBuffer);
-   virtual void operator()(size_t inxBegin, size_t inxEnd) override;
-   virtual size_t size() override;
-
-private:
-   RasterGeometry* pRasterGeom_;
-   size_t iProjectionWidth_;
-   ProjectedPoint* pProjectedData_;
-};
-
-#endif // upside_down_projector_hpp
+#endif // dk_parallel_processor_base

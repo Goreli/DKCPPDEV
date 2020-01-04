@@ -26,9 +26,9 @@ Modification history:
 
 */
 
-#include "upside_down_projector.hpp"
-#include "winraster_renderer.hpp"
 #include "raster_geometry.hpp"
+#include "upside_down_projector.hpp"
+#include "projected_point.hpp"
 
 UpsideDownProjector::UpsideDownProjector()
    : pRasterGeom_{ nullptr }, iProjectionWidth_{ 0 }, pProjectedData_{ nullptr }

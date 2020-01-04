@@ -29,6 +29,8 @@ Modification history:
 #include <fstream>
 #include "multitimer.hpp"
 
+using namespace dk;
+
 MultiTimer::MultiTimer(size_t size)
    : iCycleCounter_{ 0 }
 {

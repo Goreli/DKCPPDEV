@@ -170,6 +170,8 @@
     <ClInclude Include="..\include\bitmap_composer.hpp" />
     <ClInclude Include="..\include\multitimer.hpp" />
     <ClInclude Include="..\include\multi_threaded_driver.hpp" />
+    <ClInclude Include="..\include\parallel_processor_base.hpp" />
+    <ClInclude Include="..\include\projected_point.hpp" />
     <ClInclude Include="..\include\raster_geometry.hpp" />
     <ClInclude Include="..\include\resource.h" />
     <ClInclude Include="..\include\targetver.h" />

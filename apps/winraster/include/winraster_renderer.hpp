@@ -40,15 +40,7 @@ Modification history:
 #include "bitmap_composer.hpp"
 #include "multi_threaded_driver.hpp"
 
-
-struct ProjectedPoint
-{
-   unsigned long b;
-   unsigned long g;
-   unsigned long r;
-   unsigned long counter;
-};
-
+struct ProjectedPoint;
 class RasterGeometry;
 
 class WinRasterRenderer
@@ -82,7 +74,7 @@ private:
 	size_t iLastSizeBB_;
 
 	RECT rectLast_;
-	MultiTimer mt_;
+	dk::MultiTimer mt_;
 
 	HWND hwnd_;
 	HDC  hdc_;
@@ -98,7 +90,7 @@ private:
 
 	UpsideDownProjector projector_;
 	BitmapComposer composer_;
-	MultiThreadedDriver driverMT_;
+	dk::MultiThreadedDriver driverMT_;
 };
 
 #endif // winraster_renderer_hpp

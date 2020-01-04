@@ -27,7 +27,7 @@ Modification history:
 */
 
 #include "bitmap_composer.hpp"
-#include "winraster_renderer.hpp"
+#include "projected_point.hpp"
 
 BitmapComposer::BitmapComposer()
    : bgB_{ 0 }, bgG_{ 0 }, bgR_{ 0 }, 

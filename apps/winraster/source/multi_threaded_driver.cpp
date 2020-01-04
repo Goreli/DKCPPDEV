@@ -28,6 +28,9 @@ Modification history:
 
 #include <functional>
 #include "multi_threaded_driver.hpp"
+#include "parallel_processor_base.hpp"
+
+using namespace dk;
 
 ParallelProcessorBase::~ParallelProcessorBase()
 {

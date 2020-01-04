@@ -29,6 +29,8 @@ Modification history:
 #ifndef raster_geometry_hpp
 #define raster_geometry_hpp
 
+#include <memory>
+
 // Forward declarations:
 namespace dkmrx {
 	class mPoint;
