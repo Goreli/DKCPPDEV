@@ -111,6 +111,24 @@ Cycles: 3511
 	Average duration for checkpoint 4: 0.000908476
 	Average duration for checkpoint 5: 0.000422064
 
+Now using transposedOf during multiplication.
+
+Cycles: 9513
+	Average duration for checkpoint 0: 0.000950194
+	Average duration for checkpoint 1: 2.47394e-06
+	Average duration for checkpoint 2: 0.000151486
+	Average duration for checkpoint 3: 0.000704904
+	Average duration for checkpoint 4: 0.000327641
+	Average duration for checkpoint 5: 0.000208923
+
+Cycles: 5177
+	Average duration for checkpoint 0: 0.00436737
+	Average duration for checkpoint 1: 2.66645e-06
+	Average duration for checkpoint 2: 0.000586618
+	Average duration for checkpoint 3: 0.00243954
+	Average duration for checkpoint 4: 0.000881926
+	Average duration for checkpoint 5: 0.000409885
+
 
 
 

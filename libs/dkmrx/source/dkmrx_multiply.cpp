@@ -61,8 +61,11 @@ matrix matrix::operator * (const matrix& mrx) const
 
 	// We'll multiply this matrix by a transposed mrx matrix
 	// to get better performance out of the CPU cache.
-	matrix tempTransposed = mrx;
-	tempTransposed.transpose();
+	//matrix tempTransposed = mrx;
+	//tempTransposed.transpose();
+	matrix tempTransposed;
+	tempTransposed.transposedOf(mrx);
+
 	// ***************** Start of the actual multiplication
 	for(size_t iRowFirst = 0; iRowFirst < this->iRows_; iRowFirst++)
 		for (size_t iRowSecond = 0; iRowSecond < tempTransposed.iRows_; iRowSecond++)
