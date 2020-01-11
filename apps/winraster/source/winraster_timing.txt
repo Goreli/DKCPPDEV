@@ -92,3 +92,26 @@ Cycles: 4039
         Average duration for checkpoint 4: 0.000897519
         Average duration for checkpoint 5: 0.000412448
 
+Removed pointer arithmetic from matrix::operator *.
+Also, now using a transposed matrix during multiplication to optimise performance of the CPU cache.
+
+Cycles: 5822
+	Average duration for checkpoint 0: 0.00101295
+	Average duration for checkpoint 1: 2.43522e-06
+	Average duration for checkpoint 2: 0.00015834
+	Average duration for checkpoint 3: 0.000685821
+	Average duration for checkpoint 4: 0.000327524
+	Average duration for checkpoint 5: 0.000213181
+
+Cycles: 3511
+	Average duration for checkpoint 0: 0.00456033
+	Average duration for checkpoint 1: 2.6142e-06
+	Average duration for checkpoint 2: 0.000633467
+	Average duration for checkpoint 3: 0.00246389
+	Average duration for checkpoint 4: 0.000908476
+	Average duration for checkpoint 5: 0.000422064
+
+
+
+
+

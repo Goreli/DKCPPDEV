@@ -48,6 +48,9 @@
     <ClCompile Include="..\source\dkmrx_inverse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\dkmrx_transpose.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\dkmrx_gausseln.hpp">

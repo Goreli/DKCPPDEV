@@ -30,6 +30,27 @@ Modification history:
 
 using namespace dkmrx;
 
+/*
+matrix matrix::operator * (const matrix& mrx) const
+{
+	bool bCompatible = (iColumns_ == mrx.iRows_);
+	_validate(pValues_, mrx.pValues_, bCompatible, "matrix::operator * (const matrix&) const");
+
+	matrix mrxProduct(iRows_, mrx.iColumns_);
+	// ***************** Start of the actual multiplication
+	for(size_t iRowFirst = 0; iRowFirst < this->iRows_; iRowFirst++)
+		for (size_t iColSecond = 0; iColSecond < mrx.iColumns_; iColSecond++)
+		{
+			real sum = 0.0;
+			for (size_t inx = 0; inx < this->iColumns_; inx++)
+				sum += this->operator[](iRowFirst)[inx] * mrx[inx][iColSecond];
+			mrxProduct[iRowFirst][iColSecond] = sum;
+		}
+	// ***************** End of the actual multiplication
+
+	return mrxProduct;
+}
+*/
 
 matrix matrix::operator * (const matrix& mrx) const
 {
@@ -37,50 +58,25 @@ matrix matrix::operator * (const matrix& mrx) const
 	_validate(pValues_, mrx.pValues_, bCompatible, "matrix::operator * (const matrix&) const");
 
 	matrix mrxProduct(iRows_, mrx.iColumns_);
-// ***************** Start of the actual multiplication
-{
-real* s2;
-real  Sum;
-real* s1;
-real* d;
-size_t   columns;
-real* s2Top;
-real* firstS2;
-real *firstD, *mx1_values, *firstDTop, *dTop;
 
-columns    = mrx.iColumns_;
-firstD     = mrxProduct.pValues_;
-firstDTop  = mrxProduct.pValues_ + mrx.iColumns_;
-dTop       = mrxProduct.pValues_ + (mrx.iColumns_ * mrxProduct.iRows_ );
-firstS2    = mrx.pValues_;
-s2Top      = mrx.pValues_  + (mrx.iColumns_ * mrx.iRows_ );
-s1         = pValues_;
-mx1_values = pValues_;
-
-	while( firstD < firstDTop )
-	{
-		d = firstD;
-		while ( d < dTop )
+	// We'll multiply this matrix by a transposed mrx matrix
+	// to get better performance out of the CPU cache.
+	matrix tempTransposed = mrx;
+	tempTransposed.transpose();
+	// ***************** Start of the actual multiplication
+	for(size_t iRowFirst = 0; iRowFirst < this->iRows_; iRowFirst++)
+		for (size_t iRowSecond = 0; iRowSecond < tempTransposed.iRows_; iRowSecond++)
 		{
-			s2 = firstS2;  
-			Sum = (real) 0.0;
-			while ( s2 < s2Top )
-			{
-				Sum += *s1++ * *s2;
-				s2  += columns;
-			}
-			*d  = Sum;
-			 d += columns;
+			real sum = 0.0;
+			for (size_t inx = 0; inx < this->iColumns_; inx++)
+				sum += this->operator[](iRowFirst)[inx] * tempTransposed[iRowSecond][inx];
+			mrxProduct[iRowFirst][iRowSecond] = sum;
 		}
-		firstD++;
-		firstS2++;
-		s1 = mx1_values;
-	}
-}
-// ***************** End of the actual multiplication
+	// ***************** End of the actual multiplication
 
 	return mrxProduct;
 }
+
 
 matrix matrix::operator * (real k) const
 {

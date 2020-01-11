@@ -109,6 +109,9 @@ namespace dkmrx {
 
 		static  matrix identity(size_t);
 
+		void transpose();
+		void transposedOf(const matrix&);
+
 		// Homogeneous group
 		void	toHG(real = 1.0);
 		void	fromHG(void);

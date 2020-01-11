@@ -30,6 +30,7 @@
     <ClCompile Include="..\source\dkmrx_multiply.cpp" />
     <ClCompile Include="..\source\dkmrx_subtract.cpp" />
     <ClCompile Include="..\source\dkmrx_transfrm.cpp" />
+    <ClCompile Include="..\source\dkmrx_transpose.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\dkmrx_gausseln.hpp" />
