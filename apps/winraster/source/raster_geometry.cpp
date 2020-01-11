@@ -46,13 +46,15 @@ struct RasterGeometry::RGBPixel_
 };
 
 RasterGeometry::RasterGeometry(wchar_t* colorFileName)
-	: pixels_(nullptr), initialCoords_(nullptr), transformedCoords_(nullptr),
+	: pixels_(nullptr), 
+	initialCoords_(nullptr), transformer_(nullptr), transformedCoords_(nullptr),
 	rasterWidth_(0), rasterHeight_(0), rasterRadius_(0.0), rasterCentre_(nullptr),
 	frameCounter_(0), windowRadius_(0.0), windowCentre_(nullptr), 
 	windowDiag_(nullptr)
 {
 	readColors_(colorFileName);
 	setInitialCoords_();
+	transformer_ = std::make_unique<mTransformer>();
 
 	real	diagDeltaX = (*initialCoords_)[rasterWidth_ - 1][0] -
 		(*initialCoords_)[0][0];
@@ -245,27 +247,29 @@ double halfHeight = rasterHeight_/2.0;
 	transformedCoords_ = std::make_unique<matrix>(rasterHeight_ * rasterWidth_, 4);
 }
 
-void RasterGeometry::nextFrame( void )
+void RasterGeometry::setupTransformer(void)
 {
-double w1,w2,w3;
-	w2 = 0.5 * myPi / 360; 
-	w1 = 2 * w2; 
-	w3 = w1 * (windowRadius_/rasterRadius_ - 1);
+	double w1, w2, w3;
+	w2 = 0.5 * myPi / 360;
+	w1 = 2 * w2;
+	w3 = w1 * (windowRadius_ / rasterRadius_ - 1);
 
-matrix aboutZ { {0, 0, 1} };
-matrix aboutX { {1, 0, 0} };
+	matrix aboutZ{ {0, 0, 1} };
+	matrix aboutX{ {1, 0, 0} };
 
-mTransformer transformer;
-transformer.rotate( -w1*frameCounter_/2, aboutZ, *rasterCentre_);
+	transformer_->reset();	// Reset it from the previous frame.
+	transformer_->rotate(-w1 * frameCounter_ / 2, aboutZ, *rasterCentre_);
 
-mPoint dest( -windowCentre_->x(), -rasterRadius_ );
-transformer.translate( *rasterCentre_, dest);
+	mPoint dest(-windowCentre_->x(), -rasterRadius_);
+	transformer_->translate(*rasterCentre_, dest);
 
-mPoint putFrom( dest.x(), -dest.y() + rasterRadius_ );
-	transformer.rotate( -w2*frameCounter_/2, aboutX, putFrom );
-	transformer.rotate(  -w3*frameCounter_/2, aboutZ, *windowCentre_ );
+	mPoint putFrom(dest.x(), -dest.y() + rasterRadius_);
+	transformer_->rotate(-w2 * frameCounter_ / 2, aboutX, putFrom);
+	transformer_->rotate(-w3 * frameCounter_ / 2, aboutZ, *windowCentre_);
+}
 
-	*transformedCoords_ = *initialCoords_ * transformer;
-
+void RasterGeometry::transformInitialCoords( void )
+{
+	*transformedCoords_ = *initialCoords_ * (*transformer_);
 	frameCounter_++;
 }

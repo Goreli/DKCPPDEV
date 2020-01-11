@@ -35,6 +35,7 @@ Modification history:
 namespace dkmrx {
 	class mPoint;
 	class mLine;
+	class mTransformer;
 	class matrix;
 }
 
@@ -48,7 +49,9 @@ public:
 
 void setSize(unsigned winWidth, unsigned winHeight);
 void getSize(unsigned* pWinWidth, unsigned* pWinHeight);
-void nextFrame(void);
+//void nextFrame(void);
+void setupTransformer(void);
+void transformInitialCoords(void);
 
 size_t	getTransformedX(size_t x, size_t y) noexcept;
 size_t	getTransformedY(size_t x, size_t y) noexcept;
@@ -72,6 +75,7 @@ private:
 	std::unique_ptr<RGBPixel_[]> pixels_;
 
 	std::unique_ptr<dkmrx::matrix> initialCoords_;
+	std::unique_ptr<dkmrx::mTransformer> transformer_;
 	std::unique_ptr<dkmrx::matrix> transformedCoords_;
 
    size_t rasterWidth_;

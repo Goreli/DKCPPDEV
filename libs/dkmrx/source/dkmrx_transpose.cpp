@@ -27,23 +27,14 @@ Modification history:
 */
 
 #include "dkmrx_matrix.hpp"
+#include <utility>
 
 using namespace dkmrx;
 
-void matrix::transpose()
-{
-	_validate(pValues_, "matrix::transpose()");
-
-	for(size_t iRow = 0; iRow < iRows_-1; iRow++)
-		for (size_t iCol = iRow+1; iCol < iColumns_; iCol++)
-		{
-			real temp = (*this)[iRow][iCol];
-			(*this)[iRow][iCol] = (*this)[iCol][iRow];
-			(*this)[iCol][iRow] = temp;
-		}
-}
 void matrix::transposedOf(const matrix& mrx)
 {
+	_validate(mrx.pValues_, "matrix::transposedOf(const matrix&)");
+
 	if (iColumns_ * iRows_ != mrx.iColumns_ * mrx.iRows_) {
 		empty();
 		pValues_ = new real[mrx.iColumns_ * mrx.iRows_];
@@ -54,4 +45,13 @@ void matrix::transposedOf(const matrix& mrx)
 	for (size_t iRow = 0; iRow < iRows_; iRow++)
 		for (size_t iCol = 0; iCol < iColumns_; iCol++)
 			(*this)[iRow][iCol] = mrx[iCol][iRow];
+}
+void matrix::transpose()
+{
+	_validate(pValues_, "matrix::transpose()");
+
+	matrix tempTransposed;
+	tempTransposed.transposedOf(*this);
+
+	(*this) = std::move(tempTransposed);
 }

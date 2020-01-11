@@ -129,7 +129,24 @@ Cycles: 5177
 	Average duration for checkpoint 4: 0.000881926
 	Average duration for checkpoint 5: 0.000409885
 
+Split the initial checkpoint into two:
 
+Cycles: 7186
+	Average duration for checkpoint 0: 1.60822e-05
+	Average duration for checkpoint 1: 0.000812552
+	Average duration for checkpoint 2: 2.45677e-06
+	Average duration for checkpoint 3: 0.000139203
+	Average duration for checkpoint 4: 0.000675896
+	Average duration for checkpoint 5: 0.000321951
+	Average duration for checkpoint 6: 0.000203537
 
+Cycles: 4364
+	Average duration for checkpoint 0: 1.28219e-05
+	Average duration for checkpoint 1: 0.00428938
+	Average duration for checkpoint 2: 2.63905e-06
+	Average duration for checkpoint 3: 0.000599886
+	Average duration for checkpoint 4: 0.0023959
+	Average duration for checkpoint 5: 0.000887581
+	Average duration for checkpoint 6: 0.00041739
 
 

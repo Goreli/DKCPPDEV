@@ -61,8 +61,6 @@ matrix matrix::operator * (const matrix& mrx) const
 
 	// We'll multiply this matrix by a transposed mrx matrix
 	// to get better performance out of the CPU cache.
-	//matrix tempTransposed = mrx;
-	//tempTransposed.transpose();
 	matrix tempTransposed;
 	tempTransposed.transposedOf(mrx);
 

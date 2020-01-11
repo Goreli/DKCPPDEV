@@ -37,7 +37,7 @@ Modification history:
 
 WinRasterRenderer::WinRasterRenderer(HWND hwnd, wchar_t* colorFileName, COLORREF crBgrnd)
    : iProjectionWidth_(0), iProjectionHeight_(0), pProjectionBuffer_(nullptr), iLastSizePB_{ 0 },
-   numBytesInRow_{ 0 }, pBitmapBuffer_(nullptr), iLastSizeBB_{ 0 }, rectLast_{ 0 }, mt_(6),
+   numBytesInRow_{ 0 }, pBitmapBuffer_(nullptr), iLastSizeBB_{ 0 }, rectLast_{ 0 }, mt_(),
    iLeftMargin_{ 0 }, iTopMargin_{ 0 }, iRightMargin_{ 0 }, iBottomMargin_{ 0 },
    iBitmapWidth_{ 0 }, iBitmapHeight_{ 0 }
 {
@@ -62,31 +62,34 @@ WinRasterRenderer::~WinRasterRenderer(void)
 void WinRasterRenderer::backgroundJob(void)
 {
    mt_.start();
-	pRasterGeom_->nextFrame();
-   mt_.check(0);
+   pRasterGeom_->setupTransformer();
+   mt_.check();
+
+   pRasterGeom_->transformInitialCoords();
+   mt_.check();
 
    RECT rectBoundingBox{ 0 };
    rectBoundingBox.left = static_cast<LONG>(pRasterGeom_->getMinTransformedX());
    rectBoundingBox.top = static_cast<LONG>(pRasterGeom_->getMinTransformedY());
    rectBoundingBox.right = static_cast<LONG>(pRasterGeom_->getMaxTransformedX() + 1);
    rectBoundingBox.bottom = static_cast<LONG>(pRasterGeom_->getMaxTransformedY() + 1);
-   mt_.check(1);
+   mt_.check();
 
    initProjectionBuffer_();
-   mt_.check(2);
+   mt_.check();
 
    projector_.setupProjection(iProjectionHeight_, iProjectionWidth_, pProjectionBuffer_.get());
    driverMT_.drive(&projector_);
-   mt_.check(3);
+   mt_.check();
 
    initBitmapBuffer_(rectBoundingBox);
    composer_.setupProjection(iProjectionHeight_, iProjectionWidth_, pProjectionBuffer_.get());
    composer_.setupBitmap(iLeftMargin_, iBottomMargin_, numBytesInRow_, pBitmapBuffer_.get());
    driverMT_.drive(&composer_);
-   mt_.check(4);
+   mt_.check();
       
    drawBitmap_(rectBoundingBox);
-   mt_.check(5);
+   mt_.check();
 
    // Save the detail of the current bounding box.
    // We'll use it to erase the content in the next cycle.

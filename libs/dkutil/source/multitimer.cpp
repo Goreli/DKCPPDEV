@@ -31,10 +31,11 @@ Modification history:
 
 using namespace dk;
 
-MultiTimer::MultiTimer(size_t size)
-   : iCycleCounter_{ 0 }
+//MultiTimer::MultiTimer(size_t size)
+MultiTimer::MultiTimer()
+   : iCycleCounter_{ 0 }, inxCheckPoint_{ 0 }
 {
-   durations_.resize(size);
+   durations_.resize(1);
 }
 MultiTimer::~MultiTimer()
 {
@@ -43,11 +44,17 @@ void MultiTimer::start() noexcept
 {
    timeStamp_ = std::chrono::high_resolution_clock::now();
    iCycleCounter_++;
+   inxCheckPoint_ = 0;
 }
-void MultiTimer::check(size_t inx)
+void MultiTimer::check()
 {
    auto tempTimeStamp = std::chrono::high_resolution_clock::now();
-   durations_[inx] += tempTimeStamp - timeStamp_;
+
+   if(inxCheckPoint_+1 > durations_.size())
+      durations_.resize(durations_.size()+1);
+   durations_[inxCheckPoint_] += tempTimeStamp - timeStamp_;
+   inxCheckPoint_++;
+
    timeStamp_ = tempTimeStamp;
 }
 void MultiTimer::save(const std::string strFile)

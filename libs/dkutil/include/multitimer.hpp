@@ -37,17 +37,19 @@ namespace dk {
 
    class MultiTimer {
    public:
-      MultiTimer(size_t size);
+      MultiTimer();
+      //MultiTimer(size_t size);
       virtual ~MultiTimer();
 
       void start() noexcept;
-      void check(size_t inx);
+      void check();
       void save(const std::string strFile);
 
    private:
       std::vector<std::chrono::duration<double>> durations_;
       std::chrono::time_point<std::chrono::steady_clock> timeStamp_;
       size_t iCycleCounter_;
+      size_t inxCheckPoint_;
    };
 
 }  // namespace dk {
