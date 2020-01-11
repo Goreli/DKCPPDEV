@@ -31,7 +31,6 @@ Modification history:
 
 using namespace dk;
 
-//MultiTimer::MultiTimer(size_t size)
 MultiTimer::MultiTimer()
    : iCycleCounter_{ 0 }, inxCheckPoint_{ 0 }
 {

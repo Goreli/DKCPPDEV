@@ -38,7 +38,6 @@ namespace dk {
    class MultiTimer {
    public:
       MultiTimer();
-      //MultiTimer(size_t size);
       virtual ~MultiTimer();
 
       void start() noexcept;
