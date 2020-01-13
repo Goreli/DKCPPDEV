@@ -26,58 +26,90 @@ Modification history:
 
 */
 
+#include <utility>
 #include "dkmrx_matrix.hpp"
+#include "parallel_processor_base.hpp"
+#include "multi_threaded_driver.hpp"
 
 using namespace dkmrx;
 
-/*
+
+class ParallelTransposedMatrixMultiplier : public dk::ParallelProcessorBase {
+public:
+	ParallelTransposedMatrixMultiplier(const matrix& mrx, const matrix& mrxTransposed, matrix& mrxProduct);
+	virtual ~ParallelTransposedMatrixMultiplier() override;
+
+	virtual void operator()(size_t inxBegin, size_t inxEnd) override;
+	virtual size_t size() override;
+
+private:
+	const matrix& mrx_;
+	const matrix& mrxTransposed_;
+	matrix& mrxProduct_;
+};
+
+ParallelTransposedMatrixMultiplier::ParallelTransposedMatrixMultiplier(const matrix& mrx, const matrix& mrxTransposed, matrix& mrxProduct)
+	: mrx_{ mrx }, mrxTransposed_{ mrxTransposed }, mrxProduct_{ mrxProduct }
+{
+}
+ParallelTransposedMatrixMultiplier::~ParallelTransposedMatrixMultiplier()
+{
+}
+void ParallelTransposedMatrixMultiplier::operator()(size_t inxBegin, size_t inxEnd)
+{
+	size_t iMrxTransRows = mrxTransposed_.rows();
+	size_t iMrxCols = mrx_.columns();
+
+	for (size_t iRowFirst = inxBegin; iRowFirst < inxEnd; iRowFirst++)
+		for (size_t iRowSecond = 0; iRowSecond < iMrxTransRows; iRowSecond++)
+		{
+			real sum = 0.0;
+			for (size_t inx = 0; inx < iMrxCols; inx++)
+				sum += mrx_[iRowFirst][inx] * mrxTransposed_[iRowSecond][inx];
+			mrxProduct_[iRowFirst][iRowSecond] = sum;
+		}
+}
+size_t ParallelTransposedMatrixMultiplier::size()
+{
+	return mrx_.rows();
+}
+
+void matrix::multiply_MT(const matrix& mrx1, const matrix& mrx2, dk::MultiThreadedDriver* pDriverMT)
+{
+	bool bCompatible = (mrx1.iColumns_ == mrx2.iRows_);
+	_validate(mrx1.pValues_, mrx2.pValues_, bCompatible, "matrix::multiply_MT(const matrix&, const matrix&, dk::MultiThreadedDriver*)");
+
+	// We'll multiply mrx1 by a transposed matrix of mrx2
+	// to get better performance out of the CPU cache.
+	matrix tempTransposed;
+	tempTransposed.transposedOf(mrx2);
+
+	matrix mrxProduct(mrx1.iRows_, mrx2.iColumns_);
+
+	ParallelTransposedMatrixMultiplier mm(mrx1, tempTransposed, mrxProduct);
+	pDriverMT->drive(&mm);
+
+	(*this) = std::move(mrxProduct);
+}
+
 matrix matrix::operator * (const matrix& mrx) const
 {
 	bool bCompatible = (iColumns_ == mrx.iRows_);
 	_validate(pValues_, mrx.pValues_, bCompatible, "matrix::operator * (const matrix&) const");
-
+	
 	matrix mrxProduct(iRows_, mrx.iColumns_);
-	// ***************** Start of the actual multiplication
-	for(size_t iRowFirst = 0; iRowFirst < this->iRows_; iRowFirst++)
+
+	for (size_t iRowFirst = 0; iRowFirst < this->iRows_; iRowFirst++)
 		for (size_t iColSecond = 0; iColSecond < mrx.iColumns_; iColSecond++)
 		{
 			real sum = 0.0;
 			for (size_t inx = 0; inx < this->iColumns_; inx++)
-				sum += this->operator[](iRowFirst)[inx] * mrx[inx][iColSecond];
+				sum += (*this)[iRowFirst][inx] * mrx[inx][iColSecond];
 			mrxProduct[iRowFirst][iColSecond] = sum;
 		}
-	// ***************** End of the actual multiplication
 
 	return mrxProduct;
 }
-*/
-
-matrix matrix::operator * (const matrix& mrx) const
-{
-	bool bCompatible = (iColumns_ == mrx.iRows_);
-	_validate(pValues_, mrx.pValues_, bCompatible, "matrix::operator * (const matrix&) const");
-
-	matrix mrxProduct(iRows_, mrx.iColumns_);
-
-	// We'll multiply this matrix by a transposed mrx matrix
-	// to get better performance out of the CPU cache.
-	matrix tempTransposed;
-	tempTransposed.transposedOf(mrx);
-
-	// ***************** Start of the actual multiplication
-	for(size_t iRowFirst = 0; iRowFirst < this->iRows_; iRowFirst++)
-		for (size_t iRowSecond = 0; iRowSecond < tempTransposed.iRows_; iRowSecond++)
-		{
-			real sum = 0.0;
-			for (size_t inx = 0; inx < this->iColumns_; inx++)
-				sum += this->operator[](iRowFirst)[inx] * tempTransposed[iRowSecond][inx];
-			mrxProduct[iRowFirst][iRowSecond] = sum;
-		}
-	// ***************** End of the actual multiplication
-
-	return mrxProduct;
-}
-
 
 matrix matrix::operator * (real k) const
 {
@@ -100,78 +132,8 @@ matrix& matrix::operator *= (const matrix& mrx)
 	bool bCompatible = (this->iColumns_ == mrx.iRows_);
 	_validate(pValues_, mrx.pValues_, bCompatible, "matrix::operator *= (const matrix&)");
 
-	real *temp = new real[(this->iRows_)*(mrx.iColumns_)];
-
-// ***************** Start of the actual multiplication
-{
-real* s2;
-real  Sum;
-real* s1;
-real* d;
-real* firstS2;
-real* dTop;
-real *firstD, *mx1_values, *firstDTop;
-
-firstD     = temp;
-firstDTop  = temp + mrx.iColumns_;
-dTop       = temp + (mrx.iColumns_ * this->iRows_ );
-firstS2    = mrx.pValues_;
-s1         = this->pValues_;
-mx1_values = this->pValues_;
-
-  if( this->iColumns_==4 && mrx.iColumns_==4 )
-  // This case is to support a fast multiplication for the geometry.
-  {
-	while( firstD < firstDTop )
-	{
-		d = firstD;
-		while ( d < dTop )
-		{
-			Sum = *s1++ * *(s2 = firstS2);
-			Sum += *s1++ * *(s2  += 4);
-			Sum += *s1++ * *(s2  += 4);
-			*d  = Sum + *s1++ * *(s2  += 4);
-			 d += 4;
-		}
-		firstD++;
-		firstS2++;
-		s1 = mx1_values;
-	}
-  }
-  else
-  {
-	size_t columns;
-	real* s2Top;
-
-	columns    = mrx.iColumns_;
-	s2Top      = mrx.pValues_  + (mrx.iColumns_ * mrx.iRows_ );
-
-	while( firstD < firstDTop )
-	{
-		d = firstD;
-		while ( d < dTop )
-		{
-			s2 = firstS2;
-			Sum = (real) 0.0;
-			while ( s2 < s2Top )
-			{
-				Sum += *s1++ * *s2;
-				s2  += columns;
-			}
-			*d  = Sum;
-			 d += columns;
-		}
-		firstD++;
-		firstS2++;
-		s1 = mx1_values;
-	}
-  }
-}
-// ***************** End of the actual multiplication
-
-	this->iColumns_ = mrx.iColumns_;
-	delete [] this->pValues_;
-	this->pValues_ = temp;
+	matrix mrxResult = (*this) * mrx;
+	(*this) = std::move(mrxResult);
 	return *this;
 }
 

@@ -149,4 +149,23 @@ Cycles: 4364
 	Average duration for checkpoint 5: 0.000887581
 	Average duration for checkpoint 6: 0.00041739
 
+The matrix class now supports multithreaded multiplication:
+
+Cycles: 17226
+	Average duration for checkpoint 0: 1.40528e-05
+	Average duration for checkpoint 1: 0.000403403
+	Average duration for checkpoint 2: 2.39231e-06
+	Average duration for checkpoint 3: 0.000170823
+	Average duration for checkpoint 4: 0.000681043
+	Average duration for checkpoint 5: 0.00032177
+	Average duration for checkpoint 6: 0.000210577
+
+Cycles: 9985
+	Average duration for checkpoint 0: 1.5451e-05
+	Average duration for checkpoint 1: 0.00209406
+	Average duration for checkpoint 2: 2.71589e-06
+	Average duration for checkpoint 3: 0.000576606
+	Average duration for checkpoint 4: 0.00241479
+	Average duration for checkpoint 5: 0.000906849
+	Average duration for checkpoint 6: 0.000423849
 

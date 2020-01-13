@@ -35,6 +35,11 @@ Modification history:
 #include "dk_cdt.hpp"
 #endif
 
+namespace dk {
+	class MultiThreadedDriver;
+}
+
+
 namespace dkmrx {
 
 	class matrix
@@ -73,6 +78,7 @@ namespace dkmrx {
 		matrix operator *      (real) const;
 		matrix& operator *=    (const matrix&);
 		matrix& operator *=    (real);
+		void multiply_MT(const matrix&, const matrix&, dk::MultiThreadedDriver*);
 
 		// A matrix format of a system of simultaneious linear equations
 		// normally looks like: A*x=B. From here we will derive the following

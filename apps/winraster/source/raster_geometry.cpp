@@ -250,8 +250,8 @@ double halfHeight = rasterHeight_/2.0;
 void RasterGeometry::setupTransformer(void)
 {
 	double w1, w2, w3;
-	w2 = 0.5 * myPi / 360;
-	w1 = 2 * w2;
+	w2 = 0.25 * myPi / 360;
+	w1 = 3 * w2;
 	w3 = w1 * (windowRadius_ / rasterRadius_ - 1);
 
 	matrix aboutZ{ {0, 0, 1} };
@@ -268,8 +268,9 @@ void RasterGeometry::setupTransformer(void)
 	transformer_->rotate(-w3 * frameCounter_ / 2, aboutZ, *windowCentre_);
 }
 
-void RasterGeometry::transformInitialCoords( void )
+void RasterGeometry::transformInitialCoords(dk::MultiThreadedDriver* pDriverMT)
 {
-	*transformedCoords_ = *initialCoords_ * (*transformer_);
+	//*transformedCoords_ = *initialCoords_ * (*transformer_);
+	transformedCoords_->multiply_MT(*initialCoords_, *transformer_, pDriverMT);
 	frameCounter_++;
 }
