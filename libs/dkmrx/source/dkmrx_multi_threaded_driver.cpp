@@ -27,10 +27,10 @@ Modification history:
 */
 
 #include <functional>
-#include "multi_threaded_driver.hpp"
-#include "parallel_processor_base.hpp"
+#include "dkmrx_multi_threaded_driver.hpp"
+#include "dkmrx_parallel_processor_base.hpp"
 
-using namespace dk;
+using namespace dkmrx;
 
 ParallelProcessorBase::~ParallelProcessorBase()
 {

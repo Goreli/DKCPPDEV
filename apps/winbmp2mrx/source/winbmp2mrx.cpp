@@ -115,12 +115,12 @@ void printUsage(void)
 	cout << "    With no command line parameters the program prints this information." << endl;
 	cout << endl;
 	cout << "    winbmp2mrx <infile>" << endl;
-	cout << "    Reads the header of the Windows Bitmap file specified by the infile parameter" << endl;
-	cout << "    and prints the properties of the image." << endl;
+	cout << "    Reads the header of the Windows Bitmap file specified by the infile" << endl;
+	cout << "    parameter and prints the properties of the image." << endl;
 	cout << endl;
 	cout << "    winbmp2mrx <infile> <outfile>" << endl;
-	cout << "    Reads the header of the Windows Bitmap file specified by the infile parameter" << endl;
-	cout << "    and prints the properties of the image. Then reads on to get the image data" << endl;
-	cout << "    and writes it to the output file specified by the outfile parameter using the" << endl;
-	cout << "    dkmrx matrix data file format." << endl;
+	cout << "    Reads the header of the Windows Bitmap file specified by the infile" << endl;
+	cout << "    parameter and prints the properties of the image. Then reads on to get" << endl;
+	cout << "    the image data and writes it to the output file specified by the outfile" << endl;
+	cout << "    parameter using the dkmrx matrix data file format." << endl;
 }

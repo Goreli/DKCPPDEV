@@ -18,20 +18,11 @@
     <None Include="..\readme.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\multi_threaded_driver.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\multitimer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\parallel_processor_base.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\multi_threaded_driver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\multitimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

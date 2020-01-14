@@ -23,12 +23,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\multitimer.hpp" />
-    <ClInclude Include="..\include\multi_threaded_driver.hpp" />
-    <ClInclude Include="..\include\parallel_processor_base.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\multitimer.cpp" />
-    <ClCompile Include="..\source\multi_threaded_driver.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -28,8 +28,10 @@
     <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_io.cpp" />
     <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_matrix.cpp" />
     <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_multiply.cpp" />
+    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_multi_threaded_driver.cpp" />
     <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_subtract.cpp" />
     <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_transfrm.cpp" />
+    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_transpose.cpp" />
     <ClCompile Include="..\source\groups.cpp" />
     <ClCompile Include="..\source\mrx_g0120.cpp" />
     <ClCompile Include="..\source\mrx_g0130.cpp" />

@@ -56,11 +56,17 @@ RasterGeometry::RasterGeometry(wchar_t* colorFileName)
 	setInitialCoords_();
 	transformer_ = std::make_unique<mTransformer>();
 
+/*
 	real	diagDeltaX = (*initialCoords_)[rasterWidth_ - 1][0] -
 		(*initialCoords_)[0][0];
 	real	diagDeltaY = (*initialCoords_)[rasterWidth_ * rasterHeight_ - 1][1] -
 		(*initialCoords_)[0][1];
 	rasterRadius_ = pow(pow(diagDeltaX, 2) + pow(diagDeltaY, 2), 0.5) / 2;
+*/
+	double halfWidth = rasterWidth_ / 2.0;
+	double halfHeight = rasterHeight_ / 2.0;
+	rasterRadius_ = pow(pow(halfWidth, 2) + pow(halfHeight, 2), 0.5);
+
 	rasterCentre_ = std::make_unique<mPoint>(0, 0);
 }
 
@@ -250,8 +256,8 @@ double halfHeight = rasterHeight_/2.0;
 void RasterGeometry::setupTransformer(void)
 {
 	double w1, w2, w3;
-	w2 = 0.25 * myPi / 360;
-	w1 = 3 * w2;
+	w2 = 0.5 * myPi / 360;
+	w1 = 4 * w2;
 	w3 = w1 * (windowRadius_ / rasterRadius_ - 1);
 
 	matrix aboutZ{ {0, 0, 1} };
@@ -263,12 +269,12 @@ void RasterGeometry::setupTransformer(void)
 	mPoint dest(-windowCentre_->x(), -rasterRadius_);
 	transformer_->translate(*rasterCentre_, dest);
 
-	mPoint putFrom(dest.x(), -dest.y() + rasterRadius_);
+	mPoint putFrom(dest.x(), -dest.y() + rasterRadius_/2.0);
 	transformer_->rotate(-w2 * frameCounter_ / 2, aboutX, putFrom);
 	transformer_->rotate(-w3 * frameCounter_ / 2, aboutZ, *windowCentre_);
 }
 
-void RasterGeometry::transformInitialCoords(dk::MultiThreadedDriver* pDriverMT)
+void RasterGeometry::transformInitialCoords(MultiThreadedDriver* pDriverMT)
 {
 	//*transformedCoords_ = *initialCoords_ * (*transformer_);
 	transformedCoords_->multiply_MT(*initialCoords_, *transformer_, pDriverMT);

@@ -28,13 +28,13 @@ Modification history:
 
 #include <utility>
 #include "dkmrx_matrix.hpp"
-#include "parallel_processor_base.hpp"
-#include "multi_threaded_driver.hpp"
+#include "dkmrx_parallel_processor_base.hpp"
+#include "dkmrx_multi_threaded_driver.hpp"
 
 using namespace dkmrx;
 
 
-class ParallelTransposedMatrixMultiplier : public dk::ParallelProcessorBase {
+class ParallelTransposedMatrixMultiplier : public dkmrx::ParallelProcessorBase {
 public:
 	ParallelTransposedMatrixMultiplier(const matrix& mrx, const matrix& mrxTransposed, matrix& mrxProduct);
 	virtual ~ParallelTransposedMatrixMultiplier() override;
@@ -74,7 +74,7 @@ size_t ParallelTransposedMatrixMultiplier::size()
 	return mrx_.rows();
 }
 
-void matrix::multiply_MT(const matrix& mrx1, const matrix& mrx2, dk::MultiThreadedDriver* pDriverMT)
+void matrix::multiply_MT(const matrix& mrx1, const matrix& mrx2, MultiThreadedDriver* pDriverMT)
 {
 	bool bCompatible = (mrx1.iColumns_ == mrx2.iRows_);
 	_validate(mrx1.pValues_, mrx2.pValues_, bCompatible, "matrix::multiply_MT(const matrix&, const matrix&, dk::MultiThreadedDriver*)");

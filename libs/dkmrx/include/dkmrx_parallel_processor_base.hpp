@@ -26,43 +26,19 @@ Modification history:
 
 */
 
-#ifndef dk_multi_threaded_driver
-#define dk_multi_threaded_driver
+#ifndef dkmrx_parallel_processor_base
+#define dkmrx_parallel_processor_base
 
-#include <thread>
-#include <mutex>
-#include <vector>
+namespace dkmrx {
 
-namespace dk {
+   class ParallelProcessorBase
+   {
+   public:
+      virtual ~ParallelProcessorBase();
+      virtual void operator()(size_t inxBegin, size_t inxEnd) = 0;
+      virtual size_t size() = 0;
+   };
 
-class ParallelProcessorBase;
+} // namespace dkmrx {
 
-class MultiThreadedDriver
-{
-public:
-   MultiThreadedDriver();
-   virtual ~MultiThreadedDriver();
-
-   void init(size_t iNumThreads);
-   void join();
-   void drive(ParallelProcessorBase* pParProc);
-   void operator()(size_t inxThread);
-
-private:
-   std::vector<size_t> helperThreadControls_;
-   std::vector<std::thread> helperThreads_;
-
-   // Helper thread synchronisation objects.
-   std::mutex mutexHT_;
-   std::condition_variable cvHT_;
-
-   // Main thread synchronisation objects.
-   std::mutex mutexMT_;
-   std::condition_variable cvMT_;
-
-   ParallelProcessorBase* pParProc_;
-};
-
-}  // namespace dk {
-
-#endif // dk_multi_threaded_driver
+#endif // dkmrx_parallel_processor_base

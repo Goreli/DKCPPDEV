@@ -29,12 +29,12 @@ Modification history:
 #ifndef bitmap_composer_hpp
 #define bitmap_composer_hpp
 
-#include "parallel_processor_base.hpp"
+#include "dkmrx_parallel_processor_base.hpp"
 
 class RasterGeometry;
 struct ProjectedPoint;
 
-class BitmapComposer : public dk::ParallelProcessorBase {
+class BitmapComposer : public dkmrx::ParallelProcessorBase {
 public:
    BitmapComposer();
    virtual ~BitmapComposer() override;
