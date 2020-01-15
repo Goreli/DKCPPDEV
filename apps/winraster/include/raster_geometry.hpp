@@ -52,7 +52,7 @@ void setSize(unsigned winWidth, unsigned winHeight);
 void getSize(unsigned* pWinWidth, unsigned* pWinHeight);
 //void nextFrame(void);
 void setupTransformer(void);
-void transformInitialCoords(dkmrx::MultiThreadedDriver*);
+void transformInitialCoords(dkmrx::MultiThreadedDriver&);
 
 size_t	getTransformedX(size_t x, size_t y) noexcept;
 size_t	getTransformedY(size_t x, size_t y) noexcept;

@@ -65,7 +65,7 @@ void WinRasterRenderer::backgroundJob(void)
    pRasterGeom_->setupTransformer();
    mt_.check();
 
-   pRasterGeom_->transformInitialCoords(&driverMT_);
+   pRasterGeom_->transformInitialCoords(driverMT_);
    mt_.check();
 
    RECT rectBoundingBox{ 0 };

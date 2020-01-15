@@ -74,7 +74,7 @@ size_t ParallelTransposedMatrixMultiplier::size()
 	return mrx_.rows();
 }
 
-void matrix::multiply_MT(const matrix& mrx1, const matrix& mrx2, MultiThreadedDriver* pDriverMT)
+void matrix::multiply_MT(const matrix& mrx1, const matrix& mrx2, MultiThreadedDriver& driverMT)
 {
 	bool bCompatible = (mrx1.iColumns_ == mrx2.iRows_);
 	_validate(mrx1.pValues_, mrx2.pValues_, bCompatible, "matrix::multiply_MT(const matrix&, const matrix&, dk::MultiThreadedDriver*)");
@@ -87,7 +87,7 @@ void matrix::multiply_MT(const matrix& mrx1, const matrix& mrx2, MultiThreadedDr
 	matrix mrxProduct(mrx1.iRows_, mrx2.iColumns_);
 
 	ParallelTransposedMatrixMultiplier mm(mrx1, tempTransposed, mrxProduct);
-	pDriverMT->drive(&mm);
+	driverMT.drive(&mm);
 
 	(*this) = std::move(mrxProduct);
 }

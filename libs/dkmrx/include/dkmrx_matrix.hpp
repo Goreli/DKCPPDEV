@@ -75,7 +75,7 @@ namespace dkmrx {
 		matrix operator *      (real) const;
 		matrix& operator *=    (const matrix&);
 		matrix& operator *=    (real);
-		void multiply_MT(const matrix&, const matrix&, MultiThreadedDriver*);
+		void multiply_MT(const matrix&, const matrix&, MultiThreadedDriver&);
 
 		// A matrix format of a system of simultaneious linear equations
 		// normally looks like: A*x=B. From here we will derive the following
