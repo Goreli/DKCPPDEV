@@ -15,54 +15,54 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\dk_cdt.hpp">
+    <ClInclude Include="..\include\dkutf_cdt.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\dk_utg.hpp">
+    <ClInclude Include="..\include\dkutf_ut.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\dk_ut.hpp">
+    <ClInclude Include="..\include\dkutf_ut_macros.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\dk_utk.hpp">
+    <ClInclude Include="..\include\dkutf_utf.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\dk_ut_macros.hpp">
+    <ClInclude Include="..\include\dkutf_utg.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\dk_utg_macros.hpp">
+    <ClInclude Include="..\include\dkutf_utg_macros.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\dk_utgv.hpp">
+    <ClInclude Include="..\include\dkutf_utgv.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\dk_utv.hpp">
+    <ClInclude Include="..\include\dkutf_utk.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\dk_utf.hpp">
+    <ClInclude Include="..\include\dkutf_utv.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\dk_cdt.cpp">
+    <ClCompile Include="..\source\dkutf_cdt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\dk_utg.cpp">
+    <ClCompile Include="..\source\dkutf_ut.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\dk_ut.cpp">
+    <ClCompile Include="..\source\dkutf_utf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\dk_utk.cpp">
+    <ClCompile Include="..\source\dkutf_utg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\dk_utgv.cpp">
+    <ClCompile Include="..\source\dkutf_utgv.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\dk_utv.cpp">
+    <ClCompile Include="..\source\dkutf_utk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\dk_utf.cpp">
+    <ClCompile Include="..\source\dkutf_utv.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

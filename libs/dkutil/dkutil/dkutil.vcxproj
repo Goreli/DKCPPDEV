@@ -22,10 +22,10 @@
     <None Include="..\readme.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\multitimer.hpp" />
+    <ClInclude Include="..\include\dkutil_multitimer.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\multitimer.cpp" />
+    <ClCompile Include="..\source\dkutil_multitimer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -26,7 +26,7 @@ Modification history:
 
 */
 
-#include "dk_utg_macros.hpp"
+#include "dkutf_utg_macros.hpp"
 
 /*
 Use the following macro to create a group of unit tests:

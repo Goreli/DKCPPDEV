@@ -30,8 +30,8 @@ Modification history:
 #define libs_dk_utgv_hpp
 
 #include <map>
-#include "dk_utg.hpp"
-#include "dk_ut.hpp"
+#include "dkutf_utg.hpp"
+#include "dkutf_ut.hpp"
 
 namespace dk {
 	typedef std::map<unsigned int, unsigned int> UTGInstanceCounter;

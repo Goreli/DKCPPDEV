@@ -30,7 +30,7 @@ Modification history:
 #define libs_dk_utv_hpp
 
 #include <map>
-#include "dk_utgv.hpp"
+#include "dkutf_utgv.hpp"
 
 namespace dk {
 	typedef std::map<UTKey, unsigned int> UTInstanceCounter;

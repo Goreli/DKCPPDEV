@@ -34,7 +34,7 @@ Modification history:
 #include <windows.h>
 
 #include <memory>
-#include "multitimer.hpp"
+#include "dkutil_multitimer.hpp"
 
 #include "upside_down_projector.hpp"
 #include "bitmap_composer.hpp"

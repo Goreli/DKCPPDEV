@@ -26,16 +26,45 @@ Modification history:
 
 */
 
-#ifndef libs_dk_utf_hpp
-#define libs_dk_utf_hpp
+#include <algorithm>
+#include "dkutf_utg.hpp"
 
-#include "dk_utv.hpp"
+using namespace dk;
 
-namespace dk {
+// UnitTestGroup objects are meant to be defined in the global scope.
+// Use the singleton pattern to initialise the list in a controlled
+// manner during the first invocation of the constructor.
+static UTGList& singleton() {
+	static UTGList list_;
+	return list_;
+}
 
-	void verify(UTGListVerifier&, UTListVerifier&) noexcept;
-	void run(const UTGList&, const UTList&) noexcept;
-
-};	// namespace dk;
-
-#endif	// #ifndef libs_dk_utf_hpp
+UnitTestGroup::UnitTestGroup(unsigned uKey, const std::string& sDescription)
+	: uKey_{ uKey }, sDescription_{ sDescription }
+{
+	auto& list = singleton();
+	list.push_back(this);
+}
+UnitTestGroup::~UnitTestGroup()
+{}
+static bool comparisonFunction(UnitTestGroup* p1, UnitTestGroup* p2)
+{
+	return p1->getKey() < p2->getKey();
+}
+void UnitTestGroup::sort() noexcept
+{
+	auto& list = singleton();
+	std::sort(list.begin(), list.end(), comparisonFunction);
+}
+const UTGList& UnitTestGroup::list() noexcept
+{
+	return singleton();
+}
+unsigned UnitTestGroup::getKey() const noexcept
+{
+	return uKey_;
+}
+const std::string& UnitTestGroup::getDescription() const noexcept
+{
+	return sDescription_;
+}

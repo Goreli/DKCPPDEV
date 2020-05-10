@@ -26,8 +26,8 @@ Modification history:
 
 */
 
-#include "dk_cdt.hpp"
-#include "dk_ut_macros.hpp"
+#include "dkutf_cdt.hpp"
+#include "dkutf_ut_macros.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
 BEGIN_UNIT_TEST

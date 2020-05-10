@@ -26,7 +26,7 @@ Modification history:
 
 */
 
-#include "dk_utf.hpp"
+#include "dkutf_utf.hpp"
 using namespace dk;
 
 /*

@@ -27,7 +27,7 @@ Modification history:
 */
 
 #include <fstream>
-#include "multitimer.hpp"
+#include "dkutil_multitimer.hpp"
 
 using namespace dk;
 

@@ -32,7 +32,7 @@ Modification history:
 #include <iosfwd>
 
 #if defined(DKUTF_CONST_DEST_TRACKER)
-#include "dk_cdt.hpp"
+#include "dkutf_cdt.hpp"
 #endif
 
 namespace dkmrx {

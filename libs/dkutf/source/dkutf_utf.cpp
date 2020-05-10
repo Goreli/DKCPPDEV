@@ -27,7 +27,7 @@ Modification history:
 */
 
 #include <iostream>
-#include "dk_utf.hpp"
+#include "dkutf_utf.hpp"
 
 void dk::verify(UTGListVerifier& utgVerifier, UTListVerifier& utVerifier) noexcept
 {

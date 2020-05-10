@@ -26,18 +26,49 @@ Modification history:
 
 */
 
-#ifndef libs_dk_utg_macros_hpp
-#define libs_dk_utg_macros_hpp
+#include <algorithm>
+#include "dkutf_ut.hpp"
 
-#include "dk_utg.hpp"
+using namespace dk;
 
-// Helper macros.
-#define _UTG_CONCATENATE_THEM_AGAIN_(X,Y) static dk::UnitTestGroup X##Y
-#define _UTG_CONCATENATE_THEM_(X,Y) _UTG_CONCATENATE_THEM_AGAIN_(X,Y)
+// UnitTest objects are meant to be defined in the global scope.
+// Use the singleton pattern to initialise the list in a controlled
+// manner during the first invocation of the constructor.
+static UTList& singleton() {
+	static UTList list_;
+	return list_;
+}
 
-// Main macros to:
-//  - Minimise the typing effort;
-//	- Remove the burden of declaring unique global objects.
-#define CREATE_GROUP _UTG_CONCATENATE_THEM_(g_,__LINE__)
-
-#endif	// libs_dk_utg_macros_hpp
+UnitTest::UnitTest()
+	: group{ 0 }, test{ 0 }, description{ "" }, utkCompositeKey_{0, 0}
+{
+	auto& list = singleton();
+	list.push_back(this);
+}
+UnitTest::~UnitTest()
+{}
+static bool comparisonFunction(UnitTest* p1, UnitTest* p2)
+{
+	return p1->getKey() < p2->getKey();
+}
+void UnitTest::sort() noexcept
+{
+	auto& list = singleton();
+	std::sort(list.begin(), list.end(), comparisonFunction);
+}
+const UTList& UnitTest::list() noexcept
+{
+	return singleton();
+}
+void UnitTest::initCompositeKey() noexcept
+{
+	utkCompositeKey_ = UTKey(group, test);
+}
+const UTKey& UnitTest::getKey() const noexcept
+{
+	return utkCompositeKey_;
+}
+const std::string& UnitTest::getDescription() const noexcept
+{
+	return description;
+}

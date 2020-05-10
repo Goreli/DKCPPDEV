@@ -18,12 +18,12 @@
     <None Include="..\readme.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\multitimer.hpp">
+    <ClInclude Include="..\include\dkutil_multitimer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\multitimer.cpp">
+    <ClCompile Include="..\source\dkutil_multitimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

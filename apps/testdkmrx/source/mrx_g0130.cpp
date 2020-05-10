@@ -27,7 +27,7 @@ Modification history:
 */
 
 #include <utility>
-#include "dk_ut_macros.hpp"
+#include "dkutf_ut_macros.hpp"
 #include "testdkmrx_util.hpp"
 #include "dkmrx_matrix.hpp"
 

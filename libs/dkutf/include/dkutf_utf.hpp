@@ -26,34 +26,16 @@ Modification history:
 
 */
 
-#include "dk_utk.hpp"
+#ifndef libs_dk_utf_hpp
+#define libs_dk_utf_hpp
 
-using namespace dk;
+#include "dkutf_utv.hpp"
 
-UTKey::UTKey(unsigned uGroupKey, unsigned uTestKey)
-	: uGroupKey_{ uGroupKey }, uTestKey_{ uTestKey }
-{}
-UTKey::~UTKey()
-{}
-bool UTKey::operator < (const UTKey& key) const
-{
-	if (uGroupKey_ < key.uGroupKey_)
-		return true;
-	if (uGroupKey_ > key.uGroupKey_)
-		return false;
-	if (uTestKey_ < key.uTestKey_)
-		return true;
-	return false;
-}
-bool UTKey::operator == (const UTKey& key) const
-{
-	return (uGroupKey_ == key.uGroupKey_) && (uTestKey_ == key.uTestKey_);
-}
-unsigned UTKey::groupKey() const noexcept
-{
-	return uGroupKey_;
-}
-unsigned UTKey::testKey() const noexcept
-{
-	return uTestKey_;
-}
+namespace dk {
+
+	void verify(UTGListVerifier&, UTListVerifier&) noexcept;
+	void run(const UTGList&, const UTList&) noexcept;
+
+};	// namespace dk;
+
+#endif	// #ifndef libs_dk_utf_hpp

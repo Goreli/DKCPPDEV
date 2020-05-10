@@ -31,7 +31,7 @@ Modification history:
 
 #include <string>
 #include <vector>
-#include "dk_utk.hpp"
+#include "dkutf_utk.hpp"
 
 namespace dk {
 	class UnitTest;

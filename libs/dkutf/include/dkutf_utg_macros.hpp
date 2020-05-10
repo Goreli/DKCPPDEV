@@ -26,19 +26,18 @@ Modification history:
 
 */
 
-#ifndef libs_dk_ut_macros_hpp
-#define libs_dk_ut_macros_hpp
+#ifndef libs_dk_utg_macros_hpp
+#define libs_dk_utg_macros_hpp
 
-#include "dk_ut.hpp"
+#include "dkutf_utg.hpp"
 
 // Helper macros.
-#define _UT_CONCATENATE_THEM_AGAIN_(X,Y) }X##Y;
-#define _UT_CONCATENATE_THEM_(X,Y) _UT_CONCATENATE_THEM_AGAIN_(X,Y)
+#define _UTG_CONCATENATE_THEM_AGAIN_(X,Y) static dk::UnitTestGroup X##Y
+#define _UTG_CONCATENATE_THEM_(X,Y) _UTG_CONCATENATE_THEM_AGAIN_(X,Y)
 
 // Main macros to:
 //  - Minimise the typing effort;
 //	- Remove the burden of declaring unique global objects.
-#define BEGIN_UNIT_TEST static class : dk::UnitTest { 
-#define END_UNIT_TEST _UT_CONCATENATE_THEM_(ut_,__LINE__)
+#define CREATE_GROUP _UTG_CONCATENATE_THEM_(g_,__LINE__)
 
-#endif	// libs_dk_ut_macros_hpp
+#endif	// libs_dk_utg_macros_hpp
