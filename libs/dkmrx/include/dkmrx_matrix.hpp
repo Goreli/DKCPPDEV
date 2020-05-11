@@ -31,10 +31,6 @@ Modification history:
 
 #include <iosfwd>
 
-#if defined(DKUTF_CONST_DEST_TRACKER)
-#include "dkutf_cdt.hpp"
-#endif
-
 namespace dkmrx {
 
 	class MultiThreadedDriver;
@@ -128,10 +124,6 @@ namespace dkmrx {
 		real* pValues_;
 		size_t iRows_;
 		size_t iColumns_;
-
-#if defined(DKUTF_CONST_DEST_TRACKER)
-		dk::ConstDestTracker tracker_;
-#endif
 
 	protected:
 		// Validate function args and throw exceptions if necessary.

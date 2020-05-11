@@ -22,9 +22,13 @@
     <None Include="..\readme.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\dkutil_cli_misc.hpp" />
+    <ClInclude Include="..\include\dkutil_cli_parser_base.hpp" />
     <ClInclude Include="..\include\dkutil_multitimer.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\source\dkutil_cli_misc.cpp" />
+    <ClCompile Include="..\source\dkutil_cli_parser_base.cpp" />
     <ClCompile Include="..\source\dkutil_multitimer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -98,7 +102,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -130,7 +134,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_LIB;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>

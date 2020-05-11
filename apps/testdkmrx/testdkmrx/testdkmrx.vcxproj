@@ -19,19 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_add.cpp" />
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_assign.cpp" />
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_divide.cpp" />
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_geometry.cpp" />
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_homogen.cpp" />
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_inverse.cpp" />
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_io.cpp" />
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_matrix.cpp" />
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_multiply.cpp" />
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_multi_threaded_driver.cpp" />
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_subtract.cpp" />
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_transfrm.cpp" />
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_transpose.cpp" />
     <ClCompile Include="..\source\groups.cpp" />
     <ClCompile Include="..\source\mrx_g0120.cpp" />
     <ClCompile Include="..\source\mrx_g0130.cpp" />
@@ -43,8 +30,14 @@
     <None Include="..\readme.md" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\libs\dkmrx\dkmrx\dkmrx.vcxproj">
+      <Project>{0473ebfa-50b3-4d48-9e19-5986a91f17d9}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\libs\dkutf\dkutf\dkutf.vcxproj">
       <Project>{9efbb70d-3149-4e25-8e2c-f44e0e6c72db}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\libs\dkutil\dkutil\dkutil.vcxproj">
+      <Project>{c0c61a06-f56a-410a-a0bd-e3f4fe342893}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -120,10 +113,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);DKUTF_CONST_DEST_TRACKER;real=double;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);real=double;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>../include;../../../libs/dkmrx/include;../../../libs/dkutf/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;../../../libs/dkmrx/include;../../../libs/dkutf/include;../../../libs/dkutil/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -172,10 +165,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);DKUTF_CONST_DEST_TRACKER;real=double;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);real=double;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>../include;../../../libs/dkmrx/include;../../../libs/dkutf/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;../../../libs/dkmrx/include;../../../libs/dkutf/include;../../../libs/dkutil/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

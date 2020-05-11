@@ -33,6 +33,8 @@ Here is the MS Visual Studio configuration log used to build the target in both 
 1. Switch precompiled headers off;
 2. Set the language standard to the most recent version;
 3. Let the c++ compiler know the location of include area: ../include
+4. Provide the _CONSOLE preprocessor definition to enable color output in Windows CLI;
+
 
 No optimisation has been used in the Debug configuration. Specifically in the Release configuration the "Favour Speed over Size" optimisation option may be desired.
 

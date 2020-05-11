@@ -29,9 +29,12 @@ Modification history:
 #include <iostream>
 #include <ctime>
 #include "dkutf_utf.hpp"
+#include "dkutil_cli_misc.hpp"
 using namespace dk;
 
 int main() {
+	enableEscapeSequences();
+
 	std::time_t timeT = std::time(nullptr);
 	std::cout << "Started: " << std::asctime(std::localtime(&timeT));
 
@@ -45,6 +48,7 @@ int main() {
 
 	timeT = std::time(nullptr);
 	std::cout << "Completed: " << std::asctime(std::localtime(&timeT));
+
 
 	return 0;
 }

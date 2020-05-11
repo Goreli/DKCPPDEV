@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\dkutf_cdt.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\dkutf_ut.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -44,9 +41,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\dkutf_cdt.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\dkutf_ut.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

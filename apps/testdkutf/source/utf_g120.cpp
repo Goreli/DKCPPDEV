@@ -27,7 +27,6 @@ Modification history:
 */
 
 
-#include "dkutf_cdt.hpp"
 #include "dkutf_ut_macros.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -43,8 +42,8 @@ bool execute()
 {
 	bool bPassed{ false };
 
-	dk::ConstDestTracker obj2;
-	dk::ConstDestTracker obj1(obj2);
+	//dk::ConstDestTracker obj2;
+	//dk::ConstDestTracker obj1(obj2);
 
 	// For the purpose of this group of tests integrity of the ConstDestTracker
 	// object is automatically tested outside this routine. So there is no need
@@ -68,8 +67,8 @@ bool execute()
 {
 	bool bPassed{ false };
 
-	dk::ConstDestTracker obj2;
-	dk::ConstDestTracker obj1 = obj2;
+	//dk::ConstDestTracker obj2;
+	//dk::ConstDestTracker obj1 = obj2;
 
 	// For the purpose of this group of tests integrity of the ConstDestTracker
 	// object is automatically tested outside this routine. So there is no need

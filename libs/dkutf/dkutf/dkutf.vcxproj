@@ -155,7 +155,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\dkutf_cdt.hpp" />
     <ClInclude Include="..\include\dkutf_ut.hpp" />
     <ClInclude Include="..\include\dkutf_utf.hpp" />
     <ClInclude Include="..\include\dkutf_utg.hpp" />
@@ -166,7 +165,6 @@
     <ClInclude Include="..\include\dkutf_ut_macros.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\dkutf_cdt.cpp" />
     <ClCompile Include="..\source\dkutf_ut.cpp" />
     <ClCompile Include="..\source\dkutf_utf.cpp" />
     <ClCompile Include="..\source\dkutf_utg.cpp" />

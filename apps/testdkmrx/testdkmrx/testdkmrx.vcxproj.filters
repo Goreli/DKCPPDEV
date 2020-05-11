@@ -13,46 +13,10 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\dkmrx sources">
-      <UniqueIdentifier>{eea33b9b-f262-46e1-bff8-c1454ef836d8}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\testdkmrx.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_add.cpp">
-      <Filter>Source Files\dkmrx sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_assign.cpp">
-      <Filter>Source Files\dkmrx sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_divide.cpp">
-      <Filter>Source Files\dkmrx sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_geometry.cpp">
-      <Filter>Source Files\dkmrx sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_homogen.cpp">
-      <Filter>Source Files\dkmrx sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_inverse.cpp">
-      <Filter>Source Files\dkmrx sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_io.cpp">
-      <Filter>Source Files\dkmrx sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_matrix.cpp">
-      <Filter>Source Files\dkmrx sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_multiply.cpp">
-      <Filter>Source Files\dkmrx sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_subtract.cpp">
-      <Filter>Source Files\dkmrx sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_transfrm.cpp">
-      <Filter>Source Files\dkmrx sources</Filter>
     </ClCompile>
     <ClCompile Include="..\source\groups.cpp">
       <Filter>Source Files</Filter>
@@ -68,12 +32,6 @@
     </ClCompile>
     <ClCompile Include="..\source\mrx_g0200.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_multi_threaded_driver.cpp">
-      <Filter>Source Files\dkmrx sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libs\dkmrx\source\dkmrx_transpose.cpp">
-      <Filter>Source Files\dkmrx sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
