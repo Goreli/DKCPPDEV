@@ -47,7 +47,7 @@ Parameters:
 	description - the description of the group of unit tests. 
 */
 
-CREATE_GROUP(110, "ConstDestTracker default constructor");
-CREATE_GROUP(120, "ConstDestTracker copy constructor");
-CREATE_GROUP(130, "ConstDestTracker move constructor");
-CREATE_GROUP(140, "ConstDestTracker overloaded assignment operators");
+UNIT_TEST_GROUP(110, "ConstDestTracker default constructor");
+UNIT_TEST_GROUP(120, "ConstDestTracker copy constructor");
+UNIT_TEST_GROUP(130, "ConstDestTracker move constructor");
+UNIT_TEST_GROUP(140, "ConstDestTracker overloaded assignment operators");

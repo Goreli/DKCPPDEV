@@ -35,9 +35,13 @@ Modification history:
 #define _UTG_CONCATENATE_THEM_AGAIN_(X,Y) static dk::UnitTestGroup X##Y
 #define _UTG_CONCATENATE_THEM_(X,Y) _UTG_CONCATENATE_THEM_AGAIN_(X,Y)
 
-// Main macros to:
-//  - Minimise the typing effort;
-//	- Remove the burden of declaring unique global objects.
-#define CREATE_GROUP _UTG_CONCATENATE_THEM_(g_,__LINE__)
+/*
+Main macro to:
+ - Minimise the typing effort;
+ - Remove the burden of declaring unique global objects.
+Keep all UNIT_TEST_GROUP statements in a single module to guarantee
+unique names of c++ objects that represent the unit test groups.
+*/
+#define UNIT_TEST_GROUP _UTG_CONCATENATE_THEM_(g_,__LINE__)
 
 #endif	// libs_dk_utg_macros_hpp

@@ -26,7 +26,6 @@ Modification history:
 
 */
 
-#include <iostream>
 #include "dkutf_ut_macros.hpp"
 #include "testdkmrx_util.hpp"
 #include "dkmrx_matrix.hpp"
