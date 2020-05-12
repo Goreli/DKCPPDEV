@@ -33,10 +33,10 @@ Modification history:
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 120;
-	test = 1;
-	description = "Explicit copy constructor invocation:"
+	description =	"Explicit copy constructor invocation:"
 					" ConstDestTracker obj1(obj2);";
+	test = 1;
+	group = 120;
 }
 bool execute()
 {
@@ -58,10 +58,10 @@ END_UNIT_TEST
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 120;
-	test = 2;
 	description = "Assignment operator assisted copy constructor invocation:"
 					" ConstDestTracker obj1 = obj2;";
+	test = 2;
+	group = 120;
 }
 bool execute()
 {

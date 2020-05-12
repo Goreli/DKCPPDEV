@@ -32,9 +32,9 @@ Modification history:
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 140;
-	test = 1;
 	description = "Copy assignment operator: obj1 = obj2;";
+	test = 1;
+	group = 140;
 }
 bool execute()
 {
@@ -57,9 +57,9 @@ END_UNIT_TEST
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 140;
-	test = 2;
 	description = "Move assignment operator: obj1 = std::move(obj2);";
+	test = 2;
+	group = 140;
 }
 bool execute()
 {

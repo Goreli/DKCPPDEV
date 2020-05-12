@@ -39,9 +39,9 @@ using namespace dk;
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 120;
-	test = 1;
 	description = "One default constructor to test the ConstDestTracker instrumentation.";
+	test = 1;
+	group = 120;
 }
 bool execute()
 {
@@ -62,9 +62,9 @@ END_UNIT_TEST
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 120;
-	test = 2;
 	description = "Two default constructors to test the ConstDestTracker instrumentation.";
+	test = 2;
+	group = 120;
 }
 bool execute()
 {
@@ -83,9 +83,9 @@ END_UNIT_TEST
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 120;
-	test = 3;
 	description = "Three default constructors to test the ConstDestTracker instrumentation.";
+	test = 3;
+	group = 120;
 }
 bool execute()
 {
@@ -105,9 +105,9 @@ END_UNIT_TEST
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 120;
-	test = 4;
 	description = "Parameterised constructor: test the rows and columns parameters.";
+	test = 4;
+	group = 120;
 }
 bool execute()
 {
@@ -128,9 +128,9 @@ END_UNIT_TEST
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 120;
-	test = 5;
 	description = "Parameterised and copy constructors: test the rows and columns parameters.";
+	test = 5;
+	group = 120;
 }
 bool execute()
 {
@@ -156,9 +156,9 @@ END_UNIT_TEST
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 120;
-	test = 6;
 	description = "Parameterised, copy and move constructors: test the rows and columns parameters.";
+	test = 6;
+	group = 120;
 }
 bool execute()
 {
@@ -187,9 +187,9 @@ END_UNIT_TEST
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 120;
-	test = 7;
 	description = "Initialising constructor: test the rows, columns and initial value parameters.";
+	test = 7;
+	group = 120;
 }
 bool execute()
 {
@@ -215,9 +215,9 @@ END_UNIT_TEST
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 120;
-	test = 8;
 	description = "Uniform initialisation: matrix(const std::initializer_list<const std::initializer_list<real>>&)";
+	test = 8;
+	group = 120;
 }
 bool execute()
 {
@@ -246,9 +246,9 @@ END_UNIT_TEST
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 120;
-	test = 9;
 	description = "Uniform initialisation: matrix(size_t rows, const std::initializer_list<real>&)";
+	test = 9;
+	group = 120;
 }
 bool execute()
 {

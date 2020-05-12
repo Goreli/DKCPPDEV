@@ -38,9 +38,9 @@ using namespace dk;
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 130;
-	test = 1;
 	description = "Copy constructor assisted by assignment.";
+	test = 1;
+	group = 130;
 }
 bool execute()
 {
@@ -71,9 +71,9 @@ END_UNIT_TEST
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 130;
-	test = 2;
 	description = "Straight copy assignment.";
+	test = 2;
+	group = 130;
 }
 bool execute()
 {
@@ -105,9 +105,9 @@ END_UNIT_TEST
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 130;
-	test = 3;
 	description = "Move constructor assisted by assignment.";
+	test = 3;
+	group = 130;
 }
 bool execute()
 {
@@ -138,9 +138,9 @@ END_UNIT_TEST
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 130;
-	test = 4;
 	description = "Straight move assignment.";
+	test = 4;
+	group = 130;
 }
 bool execute()
 {

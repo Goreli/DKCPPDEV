@@ -33,9 +33,9 @@ Modification history:
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 110;
-	test = 1;
 	description = "Default constructor.";
+	test = 1;
+	group = 110;
 }
 bool execute()
 {
@@ -56,9 +56,9 @@ END_UNIT_TEST
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 110;
-	test = 2;
 	description = "Two default constructors.";
+	test = 2;
+	group = 110;
 }
 bool execute()
 {
@@ -80,9 +80,9 @@ END_UNIT_TEST
 BEGIN_UNIT_TEST
 void describe()
 {
-	group = 110;
-	test = 3;
 	description = "Three default constructors.";
+	test = 3;
+	group = 110;
 }
 bool execute()
 {

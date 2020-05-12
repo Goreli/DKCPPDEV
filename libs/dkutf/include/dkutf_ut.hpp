@@ -71,9 +71,9 @@ namespace dk {
 		// the application level user interface. These names have been
 		// chosen to provide a "clean" well understood interface to the
 		// human user.
-		unsigned group;
-		unsigned test;
 		std::string description;
+		unsigned test;
+		unsigned group;
 
 	private:
 		UTKey utkCompositeKey_;
