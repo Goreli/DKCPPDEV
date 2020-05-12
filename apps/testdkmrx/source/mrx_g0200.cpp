@@ -33,34 +33,9 @@ Modification history:
 using namespace dkmrx;
 using namespace dk;
 
-/* Check if this structure is achievable.
-
-UNIT_TEST "Some description here", 1, 200
-BEGIN
-	bool bPassed{ false };
-
-	// The determinant of this matrix should equal 7.0.
-	real expectedValue = real(7.0);
-	matrix mrx(1, 1);
-	mrx[0][0] = 7;
-	mrx.makeUpperTriangular();
-
-	// Check the determinant - it should equal 7.0.
-	bPassed = (mrx[0][0] == expectedValue);
-
-	return bPassed;
-END
-*/
-
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "makeUpperTriangular() with a 1x1 matrix. Assess the single element.";
-	test = 1;
-	group = 200;
-}
-bool execute()
+BEGIN_UNIT_TEST("makeUpperTriangular() with a 1x1 matrix. "
+				"Assess the single element.", 1, 200)
 {
 	bool bPassed{ false };
 
@@ -78,14 +53,8 @@ bool execute()
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "makeUpperTriangular() with a 2x2 matrix. Multiply the main diagonal elements.";
-	test = 2;
-	group = 200;
-}
-bool execute()
+BEGIN_UNIT_TEST("makeUpperTriangular() with a 2x2 matrix. "
+				"Multiply the main diagonal elements.", 2, 200)
 {
 	bool bPassed{ false };
 
@@ -103,14 +72,8 @@ bool execute()
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "makeUpperTriangular() with a 3x3 matrix. Multiply the main diagonal elements.";
-	test = 3;
-	group = 200;
-}
-bool execute()
+BEGIN_UNIT_TEST("makeUpperTriangular() with a 3x3 matrix. "
+				"Multiply the main diagonal elements.", 3, 200)
 {
 	bool bPassed{ false };
 
@@ -130,14 +93,8 @@ bool execute()
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "makeUpperTriangular() with a 4x4 matrix. Multiply the main diagonal elements.";
-	test = 4;
-	group = 200;
-}
-bool execute()
+BEGIN_UNIT_TEST("makeUpperTriangular() with a 4x4 matrix. "
+				"Multiply the main diagonal elements.", 4, 200)
 {
 	bool bPassed{ false };
 

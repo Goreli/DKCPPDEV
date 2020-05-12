@@ -38,7 +38,8 @@ Modification history:
 // Main macros to:
 //  - Minimise the typing effort;
 //	- Remove the burden of declaring unique global objects.
-#define BEGIN_UNIT_TEST static class : dk::UnitTest { 
+//#define BEGIN_UNIT_TEST static class : dk::UnitTest { 
+#define BEGIN_UNIT_TEST(...) static class : dk::UnitTest { void describe() { _describe(__VA_ARGS__); } bool run() 
 #define END_UNIT_TEST _UT_CONCATENATE_THEM_(ut_,__LINE__)
 
 #endif	// libs_dk_ut_macros_hpp

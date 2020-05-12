@@ -29,7 +29,7 @@ Modification history:
 #include <iostream>
 #include "dkutf_utf.hpp"
 
-void dk::verify(UTGListVerifier& utgVerifier, UTListVerifier& utVerifier) noexcept
+void dk::sortUT() noexcept
 {
 	// Prepare the global lists.
 	UnitTestGroup::sort();
@@ -38,7 +38,10 @@ void dk::verify(UTGListVerifier& utgVerifier, UTListVerifier& utVerifier) noexce
 		pTst->initCompositeKey();
 	}
 	UnitTest::sort();
+}
 
+void dk::verifyUT(UTGListVerifier& utgVerifier, UTListVerifier& utVerifier) noexcept
+{
 	utgVerifier.verify(UnitTestGroup::list(), UnitTest::list());
 	utVerifier.verify(UnitTest::list(), utgVerifier.instanceCounter());
 }
@@ -72,14 +75,14 @@ static void printSummaryOfFailedTests(const dk::UTList& utFailedUTList)
 	}
 }
 
-static void printAndExecuteUT(dk::UnitTest* pUnitTest, dk::UTList& utFailedUTList)
+static void printAndRunUT(dk::UnitTest* pUnitTest, dk::UTList& utFailedUTList)
 {
 	size_t uiGroupKey = pUnitTest->getKey().groupKey();
 	size_t uiTestKey = pUnitTest->getKey().testKey();
 
 	// Print and execute the unit test.
 	std::cout << "\tUnit test " << uiGroupKey << "." << uiTestKey << ": " << pUnitTest->getDescription() << std::endl;
-	if (pUnitTest->execute()) {
+	if (pUnitTest->run()) {
 		// Print in green color.
 		std::cout << "\t\t" << "\033[3;42;30m" << "Passed" << "\033[0m" << std::endl;
 	}
@@ -90,7 +93,7 @@ static void printAndExecuteUT(dk::UnitTest* pUnitTest, dk::UTList& utFailedUTLis
 	}
 }
 
-void dk::run(const UTGList& utgList, const UTList& utList) noexcept
+void dk::runUT(const UTGList& utgList, const UTList& utList) noexcept
 {
 	UTList utFailedUTList;
 	size_t uiGroupCount{ 0 };
@@ -123,7 +126,7 @@ void dk::run(const UTGList& utgList, const UTList& utList) noexcept
 			uiGroupCount++;
 		}
 
-		printAndExecuteUT(pUnitTest, utFailedUTList);
+		printAndRunUT(pUnitTest, utFailedUTList);
 		uiUnitTestCount++;
 	}
 	std::cout << std::endl;

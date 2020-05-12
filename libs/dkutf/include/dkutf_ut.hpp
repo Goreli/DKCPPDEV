@@ -60,24 +60,20 @@ namespace dk {
 
 		// Expect a nonabstract override to be defined in the application module
 		// in order to execute the actual unit test.
-		virtual bool execute() = 0;
+		virtual bool run() = 0;
 
 		const UTKey& getKey() const noexcept;
 		const std::string& getDescription() const noexcept;
 
 	protected:
-		// The following three data members have been made noncompliant
-		// with the standard naming convention because they are part of
-		// the application level user interface. These names have been
-		// chosen to provide a "clean" well understood interface to the
-		// human user.
-		std::string description;
-		unsigned test;
-		unsigned group;
+		void _describe(const std::string& = {}, unsigned = 0, unsigned = 0) noexcept;
 
 	private:
-		UTKey utkCompositeKey_;
+		std::string description_;
+		unsigned test_;
+		unsigned group_;
 
+		UTKey utkCompositeKey_;
 	};
 }	// namespace dk
 

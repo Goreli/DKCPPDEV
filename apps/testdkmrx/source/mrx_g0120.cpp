@@ -36,14 +36,9 @@ using namespace dkmrx;
 using namespace dk;
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "One default constructor to test the ConstDestTracker instrumentation.";
-	test = 1;
-	group = 120;
-}
-bool execute()
+BEGIN_UNIT_TEST(
+	"One default constructor to test the ConstDestTracker instrumentation.",
+	1, 120)
 {
 	bool bPassed{ false };
 
@@ -59,14 +54,9 @@ bool execute()
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "Two default constructors to test the ConstDestTracker instrumentation.";
-	test = 2;
-	group = 120;
-}
-bool execute()
+BEGIN_UNIT_TEST(
+	"Two default constructors to test the ConstDestTracker instrumentation.",
+	2, 120)
 {
 	bool bPassed{ false };
 
@@ -80,14 +70,9 @@ bool execute()
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "Three default constructors to test the ConstDestTracker instrumentation.";
-	test = 3;
-	group = 120;
-}
-bool execute()
+BEGIN_UNIT_TEST(
+	"Three default constructors to test the ConstDestTracker instrumentation.",
+	3, 120)
 {
 	bool bPassed{ false };
 
@@ -102,14 +87,9 @@ bool execute()
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "Parameterised constructor: test the rows and columns parameters.";
-	test = 4;
-	group = 120;
-}
-bool execute()
+BEGIN_UNIT_TEST(
+	"Parameterised constructor: test the rows and columns parameters.",
+	4, 120)
 {
 	bool bPassed{ false };
 
@@ -125,14 +105,8 @@ bool execute()
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "Parameterised and copy constructors: test the rows and columns parameters.";
-	test = 5;
-	group = 120;
-}
-bool execute()
+BEGIN_UNIT_TEST("Parameterised and copy constructors : "
+				"test the rows and columns parameters.", 5, 120)
 {
 	bool bPassed{ false };
 
@@ -153,14 +127,8 @@ bool execute()
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "Parameterised, copy and move constructors: test the rows and columns parameters.";
-	test = 6;
-	group = 120;
-}
-bool execute()
+BEGIN_UNIT_TEST("Parameterised, copy and move constructors: "
+				"test the rows and columns parameters.", 6, 120)
 {
 	bool bPassed{ false };
 
@@ -184,14 +152,8 @@ bool execute()
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "Initialising constructor: test the rows, columns and initial value parameters.";
-	test = 7;
-	group = 120;
-}
-bool execute()
+BEGIN_UNIT_TEST("Initialising constructor: "
+				"test the rows, columns and initial value parameters.", 7, 120)
 {
 	bool bPassed{ false };
 
@@ -205,21 +167,16 @@ bool execute()
 	bPassed =
 		(mrx.rows() == iRows) &&
 		(mrx.columns() == iColumns) &&
-		(realSum == iRows * iColumns * realInitialValue);
+		(realSum == realInitialValue * iRows * iColumns);
 
 	return bPassed;
 }
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "Uniform initialisation: matrix(const std::initializer_list<const std::initializer_list<real>>&)";
-	test = 8;
-	group = 120;
-}
-bool execute()
+BEGIN_UNIT_TEST("Uniform initialisation: "
+	"matrix(const std::initializer_list<const std::initializer_list<real>>&)",
+	8, 120)
 {
 	bool bPassed{ false };
 
@@ -243,14 +200,8 @@ bool execute()
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "Uniform initialisation: matrix(size_t rows, const std::initializer_list<real>&)";
-	test = 9;
-	group = 120;
-}
-bool execute()
+BEGIN_UNIT_TEST("Uniform initialisation: "
+			"matrix(size_t rows, const std::initializer_list<real>&)", 9, 120)
 {
 	bool bPassed{ false };
 

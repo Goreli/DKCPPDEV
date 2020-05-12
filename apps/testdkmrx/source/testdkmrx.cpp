@@ -38,11 +38,13 @@ int main() {
 	std::time_t timeT = std::time(nullptr);
 	std::cout << "Started: " << std::asctime(std::localtime(&timeT));
 
+	sortUT();
+
 	UTGListVerifier utgVerifier;
 	UTListVerifier utVerifier;
+	verifyUT(utgVerifier, utVerifier);
 
-	verify(utgVerifier, utVerifier);
-	run(utgVerifier.uniqueLinkedGroupList(),
+	runUT(utgVerifier.uniqueLinkedGroupList(),
 		utVerifier.uniqueLinkedUnitTestList()
 	);
 

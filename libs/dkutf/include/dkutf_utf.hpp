@@ -33,8 +33,9 @@ Modification history:
 
 namespace dk {
 
-	void verify(UTGListVerifier&, UTListVerifier&) noexcept;
-	void run(const UTGList&, const UTList&) noexcept;
+	void sortUT() noexcept;
+	void verifyUT(UTGListVerifier&, UTListVerifier&) noexcept;
+	void runUT(const UTGList&, const UTList&) noexcept;
 
 };	// namespace dk;
 

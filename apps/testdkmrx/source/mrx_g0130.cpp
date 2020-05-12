@@ -35,14 +35,7 @@ using namespace dkmrx;
 using namespace dk;
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "Copy constructor assisted by assignment.";
-	test = 1;
-	group = 130;
-}
-bool execute()
+BEGIN_UNIT_TEST("Copy constructor assisted by assignment.", 1, 130)
 {
 	bool bPassed{ false };
 
@@ -68,14 +61,7 @@ bool execute()
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "Straight copy assignment.";
-	test = 2;
-	group = 130;
-}
-bool execute()
+BEGIN_UNIT_TEST("Straight copy assignment.", 2, 130)
 {
 	bool bPassed{ false };
 
@@ -102,14 +88,7 @@ bool execute()
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "Move constructor assisted by assignment.";
-	test = 3;
-	group = 130;
-}
-bool execute()
+BEGIN_UNIT_TEST("Move constructor assisted by assignment.", 3, 130)
 {
 	bool bPassed{ false };
 
@@ -135,14 +114,7 @@ bool execute()
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "Straight move assignment.";
-	test = 4;
-	group = 130;
-}
-bool execute()
+BEGIN_UNIT_TEST("Straight move assignment.", 4, 130)
 {
 	bool bPassed{ false };
 

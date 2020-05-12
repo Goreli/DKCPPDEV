@@ -40,7 +40,7 @@ static UTList& singleton() {
 }
 
 UnitTest::UnitTest()
-	: group{ 0 }, test{ 0 }, description{ "" }, utkCompositeKey_{0, 0}
+	: description_{ "" }, test_{ 0 }, group_{ 0 }, utkCompositeKey_{0, 0}
 {
 	auto& list = singleton();
 	list.push_back(this);
@@ -62,7 +62,7 @@ const UTList& UnitTest::list() noexcept
 }
 void UnitTest::initCompositeKey() noexcept
 {
-	utkCompositeKey_ = UTKey(group, test);
+	utkCompositeKey_ = UTKey(group_, test_);
 }
 const UTKey& UnitTest::getKey() const noexcept
 {
@@ -70,5 +70,13 @@ const UTKey& UnitTest::getKey() const noexcept
 }
 const std::string& UnitTest::getDescription() const noexcept
 {
-	return description;
+	return description_;
 }
+
+void UnitTest::_describe(const std::string& d, unsigned t, unsigned g) noexcept
+{
+	description_ = d;
+	test_ = t;
+	group_ = g;
+}
+

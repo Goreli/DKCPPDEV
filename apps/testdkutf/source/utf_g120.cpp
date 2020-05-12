@@ -30,15 +30,8 @@ Modification history:
 #include "dkutf_ut_macros.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description =	"Explicit copy constructor invocation:"
-					" ConstDestTracker obj1(obj2);";
-	test = 1;
-	group = 120;
-}
-bool execute()
+BEGIN_UNIT_TEST("Explicit copy constructor invocation:"
+				" ConstDestTracker obj1(obj2);", 1, 120)
 {
 	bool bPassed{ false };
 
@@ -55,15 +48,8 @@ bool execute()
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST
-void describe()
-{
-	description = "Assignment operator assisted copy constructor invocation:"
-					" ConstDestTracker obj1 = obj2;";
-	test = 2;
-	group = 120;
-}
-bool execute()
+BEGIN_UNIT_TEST("Assignment operator assisted copy constructor invocation:"
+				" ConstDestTracker obj1 = obj2;", 2, 120)
 {
 	bool bPassed{ false };
 

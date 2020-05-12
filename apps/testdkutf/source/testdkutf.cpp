@@ -49,12 +49,15 @@ and failed tests.
 */
 
 int main() {
-	UTGListVerifier utgVerifier;
-	UTListVerifier utVerifier;
+	sortUT();
 
-	verify(utgVerifier, utVerifier);
-	run(utgVerifier.uniqueLinkedGroupList(),
+    UTGListVerifier utgVerifier;
+    UTListVerifier utVerifier;
+    verifyUT(utgVerifier, utVerifier);
+
+    runUT(utgVerifier.uniqueLinkedGroupList(),
 		utVerifier.uniqueLinkedUnitTestList()
 	);
+
 	return 0;
 }
