@@ -30,7 +30,7 @@ Modification history:
 #include "dkutf_ut_macros.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("Default constructor.", 1, 110)
+BEGIN_UNIT_TEST(110, 1, "Default constructor.")
 {
 	bool bPassed{ false };
 
@@ -46,7 +46,7 @@ BEGIN_UNIT_TEST("Default constructor.", 1, 110)
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("Two default constructors.", 2, 110)
+BEGIN_UNIT_TEST(110, 2, "Two default constructors.")
 {
 	bool bPassed{ false };
 
@@ -63,7 +63,7 @@ BEGIN_UNIT_TEST("Two default constructors.", 2, 110)
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("Three default constructors.", 3, 110)
+BEGIN_UNIT_TEST(110, 3, "Three default constructors.")
 {
 	bool bPassed{ false };
 

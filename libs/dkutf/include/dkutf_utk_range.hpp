@@ -26,55 +26,35 @@ Modification history:
 
 */
 
-#include <sstream>
+#ifndef libs_dkutf_utk_range_hpp
+#define libs_dkutf_utk_range_hpp
+
+#include <string>
+#include <stdexcept>
 #include "dkutf_utk.hpp"
 
-using namespace dk;
+namespace dk {
+	class UTKeyRangeException : public std::invalid_argument {
+	public:
+		UTKeyRangeException(const std::string&);
+	};
 
-UTKey::UTKey(unsigned int uiGroup, unsigned int uiTest)
-	: uiGroup_{ uiGroup }, uiTest_{ uiTest }, bAutoNumberedTestNo_{ false }
-{
-}
-UTKey::~UTKey()
-{}
-bool UTKey::operator < (const UTKey& key) const noexcept
-{
-	if (uiGroup_ < key.uiGroup_)
-		return true;
-	if (uiGroup_ > key.uiGroup_)
-		return false;
-	if (uiTest_ < key.uiTest_)
-		return true;
-	return false;
-}
-bool UTKey::operator == (const UTKey& key) const noexcept
-{
-	return (uiGroup_ == key.uiGroup_) && (uiTest_ == key.uiTest_);
-}
-bool UTKey::operator <= (const UTKey& key) const noexcept
-{
-	return ((*this < key) || (*this == key));
-}
-unsigned int UTKey::group() const noexcept
-{
-	return uiGroup_;
-}
-unsigned int UTKey::test() const noexcept
-{
-	return uiTest_;
-}
-void UTKey::test(unsigned int uiTest) noexcept
-{
-	uiTest_ = uiTest;
-	bAutoNumberedTestNo_ = true;
-}
-std::string UTKey::str() const noexcept
-{
-	std::ostringstream ss;
-	ss << uiGroup_ << "." << uiTest_;
-	return ss.str();
-}
-bool UTKey::autoNumberedTestNo() const noexcept
-{
-	return bAutoNumberedTestNo_;
-}
+	class UTKeyRange {
+	public:
+		UTKeyRange();
+		virtual ~UTKeyRange();
+
+		void parse(const std::string&);	// Can throw UTKeyRangeException
+		bool operator()(const UTKey&) const noexcept;	// True if in range. Otherwise false.
+
+	private:
+		// These are inclusive bounds.
+		// If there is only one key in the range then (lowerBound_ == upperBound_);
+		UTKey lowerBound_;
+		UTKey upperBound_;
+
+		UTKey parseUTKey_(const std::string&, const UTKey&); // Can throw UTKeyRangeException
+	};
+}	// namespace dk
+
+#endif	// libs_dkutf_utk_range_hpp

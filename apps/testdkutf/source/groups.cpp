@@ -31,23 +31,22 @@ Modification history:
 /*
 Use the following macro to create a group of unit tests:
 
-CREATE_GROUP(unsigned int groupId, const char* description);
+UNIT_TEST_GROUP(const BasePositiveInteger& groupId, const std::string& description)
 
 Parameters:
 	groupId - a unique id of a group of unit tests. 
 	  If the id is not unique the program won't spit the dummy.
-		However, it will ignore unit tests pertaining to the
-		duplicate group and, if in the validation mode, report
-		the group as a duplicate.
+		However, it will ignore unit tests pertaining to the duplicate
+		group and, if in the validation mode, report the group as a duplicate.
 	  Do not use 0 (zero) as a group id as this number is reserved
-		for a system group. Custom groups defined using the reserved
-		id will be ignored. Custom unit tests allocated to such
-		a group will be ignored too.
+		for the system default group. Custom groups defined using
+		the reserved id will be ignored.
 
 	description - the description of the group of unit tests. 
 */
 
-UNIT_TEST_GROUP(110, "ConstDestTracker default constructor");
-UNIT_TEST_GROUP(120, "ConstDestTracker copy constructor");
-UNIT_TEST_GROUP(130, "ConstDestTracker move constructor");
-UNIT_TEST_GROUP(140, "ConstDestTracker overloaded assignment operators");
+UNIT_TEST_GROUP(100, "Macro syntax scenarios")
+UNIT_TEST_GROUP(110, "ConstDestTracker default constructor")
+UNIT_TEST_GROUP(120, "ConstDestTracker copy constructor")
+UNIT_TEST_GROUP(130, "ConstDestTracker move constructor")
+UNIT_TEST_GROUP(140, "ConstDestTracker overloaded assignment operators")

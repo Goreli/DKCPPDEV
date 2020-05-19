@@ -25,11 +25,13 @@
     <ClInclude Include="..\include\dkutil_cli_misc.hpp" />
     <ClInclude Include="..\include\dkutil_cli_parser_base.hpp" />
     <ClInclude Include="..\include\dkutil_multitimer.hpp" />
+    <ClInclude Include="..\include\dkutil_string.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\dkutil_cli_misc.cpp" />
     <ClCompile Include="..\source\dkutil_cli_parser_base.cpp" />
     <ClCompile Include="..\source\dkutil_multitimer.cpp" />
+    <ClCompile Include="..\source\dkutil_string.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

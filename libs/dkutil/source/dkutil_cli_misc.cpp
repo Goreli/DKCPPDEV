@@ -1,7 +1,7 @@
-/* cli_misc.cpp
+/* dkutil_cli_misc.cpp
 Declares miscellaneous CLI routines.
 
-Copyright(c) 2019 David Krikheli
+Copyright(c) 2020 David Krikheli
 
 Modification history:
     10/May/2020 - David Krikheli created the module.

@@ -40,7 +40,7 @@ void UTListVerifier::countInstances_(const UTList& utList) noexcept
 {
 	// Count instances of unit tests.
 	for (auto& pUnitTest : utList) {
-		UTKey utKey = pUnitTest->getKey();
+		UTKey utKey = pUnitTest->key();
 		try {
 			unsigned int uiValue = utInstanceCounter_.at(utKey);
 			utInstanceCounter_[utKey] = uiValue + 1;
@@ -54,14 +54,12 @@ void UTListVerifier::countInstances_(const UTList& utList) noexcept
 void UTListVerifier::populateLists_(const UTList& utList, const UTGInstanceCounter& utgInstanceCounter) noexcept
 {
 	for (auto& pUnitTest : utList) {
-		UTKey utKey = pUnitTest->getKey();
+		UTKey utKey = pUnitTest->key();
 
-		unsigned int uiGroupKey = utKey.groupKey();
-		if (uiGroupKey == 0)
-			utZeroGroupList_.push_back(pUnitTest);
+		unsigned int uiGroup = utKey.group();
 
 		bool bHasDuplicate = (utInstanceCounter_[utKey] > 1);
-		bool bIsLinked = (utgInstanceCounter.count(uiGroupKey) > 0);
+		bool bIsLinked = (utgInstanceCounter.count(uiGroup) > 0);
 
 		if (bHasDuplicate) {
 			if (bIsLinked)
@@ -79,9 +77,6 @@ void UTListVerifier::populateLists_(const UTList& utList, const UTGInstanceCount
 
 const UTInstanceCounter& UTListVerifier::instanceCounter() const noexcept {
 	return utInstanceCounter_;
-}
-const UTList& UTListVerifier::zeroGroupList() const noexcept {
-	return utZeroGroupList_;
 }
 const UTList& UTListVerifier::duplicateLinkedUnitTestList() const noexcept {
 	return utDuplicateLinkedUnitTestList_;

@@ -34,8 +34,10 @@ using namespace dkmrx;
 using namespace dk;
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("makeUpperTriangular() with a 1x1 matrix. "
-				"Assess the single element.", 1, 200)
+BEGIN_UNIT_TEST(200, 1,
+	"makeUpperTriangular() with a 1x1 matrix. "
+	"Assess the single element."
+)
 {
 	bool bPassed{ false };
 
@@ -53,8 +55,10 @@ BEGIN_UNIT_TEST("makeUpperTriangular() with a 1x1 matrix. "
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("makeUpperTriangular() with a 2x2 matrix. "
-				"Multiply the main diagonal elements.", 2, 200)
+BEGIN_UNIT_TEST(200, 2,
+	"makeUpperTriangular() with a 2x2 matrix. "
+	"Multiply the main diagonal elements."
+)
 {
 	bool bPassed{ false };
 
@@ -72,8 +76,10 @@ BEGIN_UNIT_TEST("makeUpperTriangular() with a 2x2 matrix. "
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("makeUpperTriangular() with a 3x3 matrix. "
-				"Multiply the main diagonal elements.", 3, 200)
+BEGIN_UNIT_TEST(200, 3,
+	"makeUpperTriangular() with a 3x3 matrix. "
+	"Multiply the main diagonal elements."
+)
 {
 	bool bPassed{ false };
 
@@ -93,8 +99,10 @@ BEGIN_UNIT_TEST("makeUpperTriangular() with a 3x3 matrix. "
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("makeUpperTriangular() with a 4x4 matrix. "
-				"Multiply the main diagonal elements.", 4, 200)
+BEGIN_UNIT_TEST(200, 4,
+	"makeUpperTriangular() with a 4x4 matrix. "
+	"Multiply the main diagonal elements."
+)
 {
 	bool bPassed{ false };
 

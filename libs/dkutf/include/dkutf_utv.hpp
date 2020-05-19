@@ -43,7 +43,6 @@ namespace dk {
 		void verify(const UTList&, const UTGInstanceCounter&) noexcept;
 
 		const UTInstanceCounter& instanceCounter() const noexcept;
-		const UTList& zeroGroupList() const noexcept;
 		const UTList& duplicateLinkedUnitTestList() const noexcept;
 		const UTList& duplicateUnlinkedUnitTestList() const noexcept;
 		const UTList& uniqueLinkedUnitTestList() const noexcept;
@@ -59,9 +58,6 @@ namespace dk {
 		// value in the instance counter object will be greater than 1. For each
 		// correct unit test (with no duplicate) the value will equal 1.
 		UTInstanceCounter utInstanceCounter_;
-
-		// A list of unit tests whose Group Key is set to a 0 (zero).
-		UTList utZeroGroupList_;
 
 		// A list of unit tests with duplicate Composite Key and associated groups
 		// linked to them.

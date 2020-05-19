@@ -29,8 +29,10 @@ Modification history:
 #include "dkutf_ut_macros.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("Explicit move constructor invocation:"
-				" ConstDestTracker obj1(std::move(obj2));", 1, 130)
+BEGIN_UNIT_TEST(130, 1,
+	"Explicit move constructor invocation:"
+	" ConstDestTracker obj1(std::move(obj2));"
+)
 {
 	bool bPassed{ false };
 
@@ -47,8 +49,10 @@ BEGIN_UNIT_TEST("Explicit move constructor invocation:"
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("Assignment operator assisted move constructor invocation:"
-				" ConstDestTracker obj1 = std::move(obj2);", 2, 130)
+BEGIN_UNIT_TEST(130, 2,
+	"Assignment operator assisted move constructor invocation:"
+	" ConstDestTracker obj1 = std::move(obj2);"
+)
 {
 	bool bPassed{ false };
 

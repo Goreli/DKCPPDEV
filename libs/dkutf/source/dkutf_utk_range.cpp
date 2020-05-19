@@ -27,54 +27,37 @@ Modification history:
 */
 
 #include <sstream>
-#include "dkutf_utk.hpp"
+#include "dkutf_utk_range.hpp"
+#include "dkutil_string.hpp"
 
+using namespace std;
 using namespace dk;
 
-UTKey::UTKey(unsigned int uiGroup, unsigned int uiTest)
-	: uiGroup_{ uiGroup }, uiTest_{ uiTest }, bAutoNumberedTestNo_{ false }
-{
+UTKeyRangeException::UTKeyRangeException(const string& strWhat)
+	: invalid_argument{ strWhat } {
 }
-UTKey::~UTKey()
+
+UTKeyRange::UTKeyRange()
+	: lowerBound_(1, 1), upperBound_(0, 0)
 {}
-bool UTKey::operator < (const UTKey& key) const noexcept
+UTKeyRange::~UTKeyRange()
+{}
+void UTKeyRange::parse(const std::string& str)
 {
-	if (uiGroup_ < key.uiGroup_)
-		return true;
-	if (uiGroup_ > key.uiGroup_)
-		return false;
-	if (uiTest_ < key.uiTest_)
-		return true;
-	return false;
+    stringstream ss(str);
+    string token;
+
+    getline(ss, token, '-');
+    trim(token);
+    lowerBound_ = parseUTKey_(token, UTKey(0, 0));
+
+    getline(ss, token);
+    trim(token);
+    upperBound_ = parseUTKey_(token, lowerBound_);
+
+    //unsigned int x = stoi(token);
 }
-bool UTKey::operator == (const UTKey& key) const noexcept
+bool UTKeyRange::operator()(const UTKey& key) const noexcept
 {
-	return (uiGroup_ == key.uiGroup_) && (uiTest_ == key.uiTest_);
-}
-bool UTKey::operator <= (const UTKey& key) const noexcept
-{
-	return ((*this < key) || (*this == key));
-}
-unsigned int UTKey::group() const noexcept
-{
-	return uiGroup_;
-}
-unsigned int UTKey::test() const noexcept
-{
-	return uiTest_;
-}
-void UTKey::test(unsigned int uiTest) noexcept
-{
-	uiTest_ = uiTest;
-	bAutoNumberedTestNo_ = true;
-}
-std::string UTKey::str() const noexcept
-{
-	std::ostringstream ss;
-	ss << uiGroup_ << "." << uiTest_;
-	return ss.str();
-}
-bool UTKey::autoNumberedTestNo() const noexcept
-{
-	return bAutoNumberedTestNo_;
+	return (lowerBound_ <= key) && (key <= upperBound_);
 }

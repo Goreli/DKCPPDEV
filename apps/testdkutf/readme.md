@@ -6,6 +6,6 @@ This is a console application that executes a suite of unit tests to test functi
 
 Here is the MS Visual Studio configuration log used to build the target in both the Debug and Release configurations:
 1. Set the language standard to the most recent version;
-2. Let the c++ compiler know locations of include areas: ../include;../../../libs/dkutf/include
+2. Let the c++ compiler know locations of include areas: ../include;../../../libs/dkutf/include;../../../libs/dkutil/include
 3. Switch precompiled headers off;
-4. Let the linker know the location of the dkutf.lib library (add a reference to the project on the Visual C++ platform).
+4. Let the linker know the location of the dkutf.lib and dkutil.lib libraries (add respective references to the project on the Visual C++ platform).

@@ -92,7 +92,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>../include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;../../dkutil/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -145,7 +145,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>../include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;../../dkutil/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -155,21 +155,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\dkutf_cli_parser.hpp" />
     <ClInclude Include="..\include\dkutf_ut.hpp" />
     <ClInclude Include="..\include\dkutf_utf.hpp" />
     <ClInclude Include="..\include\dkutf_utg.hpp" />
     <ClInclude Include="..\include\dkutf_utgv.hpp" />
     <ClInclude Include="..\include\dkutf_utg_macros.hpp" />
     <ClInclude Include="..\include\dkutf_utk.hpp" />
+    <ClInclude Include="..\include\dkutf_utk_range.hpp" />
     <ClInclude Include="..\include\dkutf_utv.hpp" />
     <ClInclude Include="..\include\dkutf_ut_macros.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\source\dkutf_cli_parser.cpp" />
     <ClCompile Include="..\source\dkutf_ut.cpp" />
     <ClCompile Include="..\source\dkutf_utf.cpp" />
     <ClCompile Include="..\source\dkutf_utg.cpp" />
     <ClCompile Include="..\source\dkutf_utgv.cpp" />
     <ClCompile Include="..\source\dkutf_utk.cpp" />
+    <ClCompile Include="..\source\dkutf_utk_range.cpp" />
     <ClCompile Include="..\source\dkutf_utv.cpp" />
   </ItemGroup>
   <ItemGroup>

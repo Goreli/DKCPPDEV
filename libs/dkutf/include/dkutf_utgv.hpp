@@ -44,7 +44,6 @@ namespace dk {
 		void verify(const UTGList&, const UTList&) noexcept;
 
 		const UTGInstanceCounter& instanceCounter() const noexcept;
-		const UTGList& zeroGroupList() const noexcept;
 		const UTGList& duplicateLinkedGroupList() const noexcept;
 		const UTGList& duplicateUnlinkedGroupList() const noexcept;
 		const UTGList& uniqueLinkedGroupList() const noexcept;
@@ -61,9 +60,6 @@ namespace dk {
 		// counter object will be greater than 1. For each correct custom group (with
 		// no duplicate) the value will equal 1.
 		UTGInstanceCounter utgInstanceCounter_;
-
-		// A list of custom defined groups whose Group Key is set to a 0 (zero).
-		UTGList utgZeroGroupList_;
 
 		// A list of custom defined groups with duplicate Group Key that have
 		// associated unit tests linked to them.

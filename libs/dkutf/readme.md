@@ -20,14 +20,14 @@ The library enables collaboration between several unit test developers. This is 
 
 The library tracks relationship between group entities and unit tests pertaining to those entities. If there are any referential integrity issues in this relationship the library will identify and report them accordingly. 
 
-Up to a commit# 101b80e76fe509b8616938fe7e126085d29d41d5 it provided an instrumentation tool to monitor balance between the counts of object constructor execution and object destructor execution. Also, it used to detect certain cases of object corruption. This functionality has been removed in the recent versions because it's orthogonal to the main purpose and shouldn't be there in the library. The source code can still be found in the review folder.
+Up to a git commit# 101b80e76fe509b8616938fe7e126085d29d41d5 it provided an instrumentation tool to monitor balance between the counts of object constructor execution and object destructor execution. Also, it used to detect certain cases of object corruption. This functionality has been removed in the recent versions because it's orthogonal to the main purpose and shouldn't be there in the library. The source code can still be found in the review folder.
 
 ## Build Notes
 
 Here is the MS Visual Studio configuration log used to build the target in both the Debug and Release configurations:
 1. Switch precompiled headers off;
 2. Set the language standard to the most recent version;
-3. Let the C++ compiler know the location of include area: ../include
+3. Let the C++ compiler know the location of include areas: ../include;../../dkutil/include
 
 ## Roadmap
 

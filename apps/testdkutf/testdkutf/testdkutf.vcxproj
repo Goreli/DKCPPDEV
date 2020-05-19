@@ -24,6 +24,8 @@
   <ItemGroup>
     <ClCompile Include="..\source\groups.cpp" />
     <ClCompile Include="..\source\testdkutf.cpp" />
+    <ClCompile Include="..\source\utf_g000.cpp" />
+    <ClCompile Include="..\source\utf_g100.cpp" />
     <ClCompile Include="..\source\utf_g110.cpp" />
     <ClCompile Include="..\source\utf_g120.cpp" />
     <ClCompile Include="..\source\utf_g130.cpp" />
@@ -32,6 +34,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\libs\dkutf\dkutf\dkutf.vcxproj">
       <Project>{9efbb70d-3149-4e25-8e2c-f44e0e6c72db}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\libs\dkutil\dkutil\dkutil.vcxproj">
+      <Project>{c0c61a06-f56a-410a-a0bd-e3f4fe342893}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -107,7 +112,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>../include;../../../libs/dkutf/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;../../../libs/dkutf/include;../../../libs/dkutil/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,7 +164,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>../include;../../../libs/dkutf/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;../../../libs/dkutf/include;../../../libs/dkutil/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

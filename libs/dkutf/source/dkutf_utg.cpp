@@ -39,17 +39,29 @@ static UTGList& singleton() {
 	return list_;
 }
 
-UnitTestGroup::UnitTestGroup(unsigned uKey, const std::string& sDescription)
-	: uKey_{ uKey }, sDescription_{ sDescription }
+// This is the first group object defined in the global scope right
+// here, in the library module. The purpose of this group is to provide
+// a system default group that users could assign unit tests to with
+// minimum effort without the need of explicitly defined groups.
+UnitTestGroup UnitTestGroup::objDefaultGroup_;
+
+UnitTestGroup::UnitTestGroup(const BasePositiveInteger& objPosInt, const std::string& sDescription)
+	: uiGroup_{ unsigned int (objPosInt) }, sDescription_{ sDescription }
+{
+	auto& list = singleton();
+	list.push_back(this);
+}
+UnitTestGroup::UnitTestGroup()
+	: uiGroup_{0}, sDescription_{ "Default group" }
 {
 	auto& list = singleton();
 	list.push_back(this);
 }
 UnitTestGroup::~UnitTestGroup()
 {}
-static bool comparisonFunction(UnitTestGroup* p1, UnitTestGroup* p2)
+static bool comparisonFunction(const UnitTestGroup* p1, const UnitTestGroup* p2)
 {
-	return p1->getKey() < p2->getKey();
+	return p1->group() < p2->group();
 }
 void UnitTestGroup::sort() noexcept
 {
@@ -60,11 +72,11 @@ const UTGList& UnitTestGroup::list() noexcept
 {
 	return singleton();
 }
-unsigned UnitTestGroup::getKey() const noexcept
+unsigned int UnitTestGroup::group() const noexcept
 {
-	return uKey_;
+	return uiGroup_;
 }
-const std::string& UnitTestGroup::getDescription() const noexcept
+const std::string& UnitTestGroup::description() const noexcept
 {
 	return sDescription_;
 }

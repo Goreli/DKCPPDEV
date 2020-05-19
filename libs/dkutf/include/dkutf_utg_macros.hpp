@@ -32,8 +32,8 @@ Modification history:
 #include "dkutf_utg.hpp"
 
 // Helper macros.
-#define _UTG_CONCATENATE_THEM_AGAIN_(X,Y) static dk::UnitTestGroup X##Y
-#define _UTG_CONCATENATE_THEM_(X,Y) _UTG_CONCATENATE_THEM_AGAIN_(X,Y)
+#define _UTG_CONCATENATE_THEM_AGAIN_(iGroup,Desc,X,Y) static dk::UnitTestGroup X##Y(dk::PositiveInteger<iGroup>(),Desc);
+#define _UTG_CONCATENATE_THEM_(iGroup,Desc,X,Y) _UTG_CONCATENATE_THEM_AGAIN_(iGroup,Desc,X,Y)
 
 /*
 Main macro to:
@@ -42,6 +42,6 @@ Main macro to:
 Keep all UNIT_TEST_GROUP statements in a single module to guarantee
 unique names of c++ objects that represent the unit test groups.
 */
-#define UNIT_TEST_GROUP _UTG_CONCATENATE_THEM_(g_,__LINE__)
+#define UNIT_TEST_GROUP(iGroup,Desc) _UTG_CONCATENATE_THEM_(iGroup,Desc,g_,__LINE__)
 
 #endif	// libs_dk_utg_macros_hpp

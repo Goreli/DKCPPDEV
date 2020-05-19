@@ -26,55 +26,20 @@ Modification history:
 
 */
 
-#include <sstream>
-#include "dkutf_utk.hpp"
+#include "dkutf_ut_macros.hpp"
 
-using namespace dk;
+/*
+///////////////////////////////////////////////////////////////////////////////
+// This is an example of an autonumbered unit test assigned to the default
+// group (0) and having no description.
+BEGIN_UNIT_TEST() {
+	return true;
+} END_UNIT_TEST
+*/
 
-UTKey::UTKey(unsigned int uiGroup, unsigned int uiTest)
-	: uiGroup_{ uiGroup }, uiTest_{ uiTest }, bAutoNumberedTestNo_{ false }
-{
-}
-UTKey::~UTKey()
-{}
-bool UTKey::operator < (const UTKey& key) const noexcept
-{
-	if (uiGroup_ < key.uiGroup_)
-		return true;
-	if (uiGroup_ > key.uiGroup_)
-		return false;
-	if (uiTest_ < key.uiTest_)
-		return true;
-	return false;
-}
-bool UTKey::operator == (const UTKey& key) const noexcept
-{
-	return (uiGroup_ == key.uiGroup_) && (uiTest_ == key.uiTest_);
-}
-bool UTKey::operator <= (const UTKey& key) const noexcept
-{
-	return ((*this < key) || (*this == key));
-}
-unsigned int UTKey::group() const noexcept
-{
-	return uiGroup_;
-}
-unsigned int UTKey::test() const noexcept
-{
-	return uiTest_;
-}
-void UTKey::test(unsigned int uiTest) noexcept
-{
-	uiTest_ = uiTest;
-	bAutoNumberedTestNo_ = true;
-}
-std::string UTKey::str() const noexcept
-{
-	std::ostringstream ss;
-	ss << uiGroup_ << "." << uiTest_;
-	return ss.str();
-}
-bool UTKey::autoNumberedTestNo() const noexcept
-{
-	return bAutoNumberedTestNo_;
-}
+
+///////////////////////////////////////////////////////////////////////////////
+BEGIN_UNIT_TEST("Autonumbered unit test assigned to the default group") {
+	return true;
+} END_UNIT_TEST
+

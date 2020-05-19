@@ -28,12 +28,12 @@ Modification history:
 
 #include "dkutf_utg_macros.hpp"
 
-UNIT_TEST_GROUP(120, "Constructors");
-UNIT_TEST_GROUP(130, "Assignment operators");
-UNIT_TEST_GROUP(140, "Data access facilities");
-UNIT_TEST_GROUP(150, "Addition operators");
-UNIT_TEST_GROUP(160, "Subtraction operators");
-UNIT_TEST_GROUP(170, "Multiplication operators");
-UNIT_TEST_GROUP(180, "Division operators");
-UNIT_TEST_GROUP(190, "Expressions with various operators mixed");
-UNIT_TEST_GROUP(200, "Determinant related calculations");
+UNIT_TEST_GROUP(120, "Constructors")
+UNIT_TEST_GROUP(130, "Assignment operators")
+UNIT_TEST_GROUP(140, "Data access facilities")
+UNIT_TEST_GROUP(150, "Addition operators")
+UNIT_TEST_GROUP(160, "Subtraction operators")
+UNIT_TEST_GROUP(170, "Multiplication operators")
+UNIT_TEST_GROUP(180, "Division operators")
+UNIT_TEST_GROUP(190, "Expressions with various operators mixed")
+UNIT_TEST_GROUP(200, "Determinant related calculations")

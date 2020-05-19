@@ -40,13 +40,13 @@ void UTGListVerifier::countInstances_(const UTGList& utgList) noexcept
 {
 	// Count instances of groups.
 	for (auto& pGroup : utgList) {
-		unsigned int uiGroupKey = pGroup->getKey();
+		unsigned int uiGroup = pGroup->group();
 		try {
-			unsigned int uiValue = utgInstanceCounter_.at(uiGroupKey);
-			utgInstanceCounter_[uiGroupKey] = uiValue + 1;
+			unsigned int uiValue = utgInstanceCounter_.at(uiGroup);
+			utgInstanceCounter_[uiGroup] = uiValue + 1;
 		}
 		catch (...) {
-			utgInstanceCounter_[uiGroupKey] = 1;
+			utgInstanceCounter_[uiGroup] = 1;
 		}
 	}
 }
@@ -54,15 +54,12 @@ void UTGListVerifier::countInstances_(const UTGList& utgList) noexcept
 void UTGListVerifier::populateLists_(const UTGList& utgList, const UTList& utList) noexcept
 {
 	for (auto& pGroup : utgList) {
-		unsigned int uiGroupKey = pGroup->getKey();
-
-		if (uiGroupKey == 0)
-			utgZeroGroupList_.push_back(pGroup);
+		unsigned int uiGroupKey = pGroup->group();
 
 		bool bHasDuplicate = (utgInstanceCounter_[uiGroupKey] > 1);
 		bool bIsLinked = false;
 		for (auto& pTest : utList) 
-			if (pTest->getKey().groupKey() == uiGroupKey) {
+			if (pTest->key().group() == uiGroupKey) {
 				bIsLinked = true;
 				break;
 			}
@@ -83,9 +80,6 @@ void UTGListVerifier::populateLists_(const UTGList& utgList, const UTList& utLis
 
 const UTGInstanceCounter& UTGListVerifier::instanceCounter() const noexcept {
 	return utgInstanceCounter_;
-}
-const UTGList& UTGListVerifier::zeroGroupList() const noexcept {
-	return utgZeroGroupList_;
 }
 const UTGList& UTGListVerifier::duplicateLinkedGroupList() const noexcept {
 	return utgDuplicateLinkedGroupList_;

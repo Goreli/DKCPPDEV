@@ -26,26 +26,33 @@ Modification history:
 
 */
 
-#ifndef libs_dk_utk_hpp
-#define libs_dk_utk_hpp
+#ifndef libs_dkutf_utk_hpp
+#define libs_dkutf_utk_hpp
+
+#include <string>
 
 namespace dk {
 
 	class UTKey{
 	public:
-		UTKey(unsigned, unsigned);
+		UTKey(unsigned int, unsigned int);
 		virtual ~UTKey();
 
-		bool operator < (const UTKey&) const;
-		bool operator == (const UTKey&) const;
-		unsigned groupKey() const noexcept;
-		unsigned testKey() const noexcept;
+		bool operator < (const UTKey&) const noexcept;
+		bool operator == (const UTKey&) const noexcept;
+		bool operator <= (const UTKey&) const noexcept;
+		unsigned int group() const noexcept;
+		unsigned int test() const noexcept;
+		void test(unsigned int) noexcept;
+		std::string str() const noexcept;
+		bool autoNumberedTestNo() const noexcept;
 
 	private:
-		unsigned uGroupKey_;
-		unsigned uTestKey_;
+		unsigned int uiGroup_;
+		unsigned int uiTest_;
+		bool bAutoNumberedTestNo_;
 	};
 
 }	// namespace dk
 
-#endif	// libs_dk_utk_hpp
+#endif	// libs_dkutf_utk_hpp

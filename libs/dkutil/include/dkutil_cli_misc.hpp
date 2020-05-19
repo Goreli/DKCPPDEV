@@ -11,11 +11,11 @@ Modification history:
     10/May/2020 - David Krikheli created the module.
 */
 
-#ifndef cli_misc_hpp
-#define cli_misc_hpp
+#ifndef dkutil_cli_misc_hpp
+#define dkutil_cli_misc_hpp
 
 namespace dk {
 	void enableEscapeSequences();
 	void forceThousandsSeparators(std::ostream& os);
 };	// namespace dk
-#endif //	cli_misc_hpp
+#endif //	dkutil_cli_misc_hpp

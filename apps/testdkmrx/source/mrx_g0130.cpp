@@ -35,7 +35,9 @@ using namespace dkmrx;
 using namespace dk;
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("Copy constructor assisted by assignment.", 1, 130)
+BEGIN_UNIT_TEST(130, 1,
+	"Copy constructor assisted by assignment."
+)
 {
 	bool bPassed{ false };
 
@@ -61,7 +63,7 @@ BEGIN_UNIT_TEST("Copy constructor assisted by assignment.", 1, 130)
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("Straight copy assignment.", 2, 130)
+BEGIN_UNIT_TEST(130, 2, "Straight copy assignment.")
 {
 	bool bPassed{ false };
 
@@ -88,7 +90,7 @@ BEGIN_UNIT_TEST("Straight copy assignment.", 2, 130)
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("Move constructor assisted by assignment.", 3, 130)
+BEGIN_UNIT_TEST(130, 3, "Move constructor assisted by assignment.")
 {
 	bool bPassed{ false };
 
@@ -114,7 +116,7 @@ BEGIN_UNIT_TEST("Move constructor assisted by assignment.", 3, 130)
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("Straight move assignment.", 4, 130)
+BEGIN_UNIT_TEST(130, 4, "Straight move assignment.")
 {
 	bool bPassed{ false };
 

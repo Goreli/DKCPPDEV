@@ -29,7 +29,7 @@ Modification history:
 #include "dkutf_ut_macros.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("Copy assignment operator: obj1 = obj2;", 1, 140)
+BEGIN_UNIT_TEST(140, 1, "Copy assignment operator: obj1 = obj2;")
 {
 	bool bPassed{ false };
 
@@ -47,7 +47,7 @@ BEGIN_UNIT_TEST("Copy assignment operator: obj1 = obj2;", 1, 140)
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("Move assignment operator: obj1 = std::move(obj2);", 2, 140)
+BEGIN_UNIT_TEST(140, 2, "Move assignment operator: obj1 = std::move(obj2);")
 {
 	bool bPassed{ false };
 

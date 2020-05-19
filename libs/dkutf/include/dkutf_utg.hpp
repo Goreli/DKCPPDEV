@@ -33,25 +33,53 @@ Modification history:
 #include <vector>
 
 namespace dk {
+
+	class BasePositiveInteger {
+	public:
+		virtual operator int() const noexcept = 0;
+	};
+
+	template <int i>
+	class PositiveInteger : public BasePositiveInteger {
+	public:
+		PositiveInteger():i_(i) {
+			static_assert(i > 0, "PositiveInteger not positive");
+		}
+		virtual operator int() const noexcept {
+			return i_;
+		}
+	private:
+		int i_;
+	};
+
 	class UnitTestGroup;
 	typedef std::vector<UnitTestGroup*> UTGList;
 
 	class UnitTestGroup {
 	public:
-		UnitTestGroup(unsigned, const std::string&);
+		// This is a public constructor required to create user defined groups
+		// of unit tests. User defined groups must have their group ids set to
+		// positive values. Hence the use of the BasePositiveInteger type.
+		// Also, see the private constructor declared in this class required
+		// to define a system default group with the group id set to a 0.
+		UnitTestGroup(const BasePositiveInteger&, const std::string&);
 		virtual ~UnitTestGroup();
 
-		static void sort() noexcept;
 		static const UTGList& list() noexcept;
+		static void sort() noexcept;
 
-		unsigned getKey() const noexcept;
-		const std::string& getDescription() const noexcept;
+		unsigned int group() const noexcept;
+		const std::string& description() const noexcept;
 
 	private:
-		unsigned uKey_;
+		unsigned int uiGroup_;
 		std::string sDescription_;
+
+		// This is a private constructor required to create the system default
+		// group with the group id set to a 0.
+		UnitTestGroup();
+		static UnitTestGroup objDefaultGroup_;
 	};
 }	// namespace dk
-
 
 #endif	// libs_dk_utg_hpp

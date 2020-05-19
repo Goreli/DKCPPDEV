@@ -36,9 +36,9 @@ using namespace dkmrx;
 using namespace dk;
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST(
-	"One default constructor to test the ConstDestTracker instrumentation.",
-	1, 120)
+BEGIN_UNIT_TEST(120, 1,
+	"One default constructor to test the ConstDestTracker instrumentation."
+)
 {
 	bool bPassed{ false };
 
@@ -54,9 +54,9 @@ BEGIN_UNIT_TEST(
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST(
-	"Two default constructors to test the ConstDestTracker instrumentation.",
-	2, 120)
+BEGIN_UNIT_TEST(120, 2,
+	"Two default constructors to test the ConstDestTracker instrumentation."
+)
 {
 	bool bPassed{ false };
 
@@ -70,9 +70,9 @@ BEGIN_UNIT_TEST(
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST(
-	"Three default constructors to test the ConstDestTracker instrumentation.",
-	3, 120)
+BEGIN_UNIT_TEST(120, 3,
+	"Three default constructors to test the ConstDestTracker instrumentation."
+)
 {
 	bool bPassed{ false };
 
@@ -87,9 +87,9 @@ BEGIN_UNIT_TEST(
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST(
-	"Parameterised constructor: test the rows and columns parameters.",
-	4, 120)
+BEGIN_UNIT_TEST(120, 4,
+	"Parameterised constructor: test the rows and columns parameters."
+)
 {
 	bool bPassed{ false };
 
@@ -105,8 +105,10 @@ BEGIN_UNIT_TEST(
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("Parameterised and copy constructors : "
-				"test the rows and columns parameters.", 5, 120)
+BEGIN_UNIT_TEST(120, 5,
+	"Parameterised and copy constructors : "
+	"test the rows and columns parameters."
+)
 {
 	bool bPassed{ false };
 
@@ -127,8 +129,10 @@ BEGIN_UNIT_TEST("Parameterised and copy constructors : "
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("Parameterised, copy and move constructors: "
-				"test the rows and columns parameters.", 6, 120)
+BEGIN_UNIT_TEST(120, 6,
+	"Parameterised, copy and move constructors: "
+	"test the rows and columns parameters."
+)
 {
 	bool bPassed{ false };
 
@@ -152,8 +156,10 @@ BEGIN_UNIT_TEST("Parameterised, copy and move constructors: "
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("Initialising constructor: "
-				"test the rows, columns and initial value parameters.", 7, 120)
+BEGIN_UNIT_TEST(120, 7,
+	"Initialising constructor: "
+	"test the rows, columns and initial value parameters."
+)
 {
 	bool bPassed{ false };
 
@@ -174,9 +180,10 @@ BEGIN_UNIT_TEST("Initialising constructor: "
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("Uniform initialisation: "
-	"matrix(const std::initializer_list<const std::initializer_list<real>>&)",
-	8, 120)
+BEGIN_UNIT_TEST(120, 8,
+	"Uniform initialisation: "
+	"matrix(const std::initializer_list<const std::initializer_list<real>>&)"
+)
 {
 	bool bPassed{ false };
 
@@ -200,8 +207,10 @@ BEGIN_UNIT_TEST("Uniform initialisation: "
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST("Uniform initialisation: "
-			"matrix(size_t rows, const std::initializer_list<real>&)", 9, 120)
+BEGIN_UNIT_TEST(120, 9,
+	"Uniform initialisation: "
+	"matrix(size_t rows, const std::initializer_list<real>&)"
+)
 {
 	bool bPassed{ false };
 

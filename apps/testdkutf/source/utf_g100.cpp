@@ -26,45 +26,45 @@ Modification history:
 
 */
 
-
 #include "dkutf_ut_macros.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST(120, 1,
-	"Explicit copy constructor invocation:"
-	" ConstDestTracker obj1(obj2);"
-)
+BEGIN_UNIT_TEST(100, 11, "Basic Eric Allman style indentation")
 {
-	bool bPassed{ false };
-
-	//dk::ConstDestTracker obj2;
-	//dk::ConstDestTracker obj1(obj2);
-
-	// For the purpose of this group of tests integrity of the ConstDestTracker
-	// object is automatically tested outside this routine. So there is no need
-	// to validate anything here.
-	bPassed = true;
-
-	return bPassed;
+	return true;
 }
 END_UNIT_TEST
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_UNIT_TEST(120, 2,
-	"Assignment operator assisted copy constructor invocation:"
-	" ConstDestTracker obj1 = obj2;"
+BEGIN_UNIT_TEST(100, 12, "Basic Kernighan & Ritchie style indentation") {
+	return true;
+} END_UNIT_TEST
+
+///////////////////////////////////////////////////////////////////////////////
+BEGIN_UNIT_TEST(100, 13,
+	"Description split"
+	" between two lines"
+){
+	return true;
+} END_UNIT_TEST
+
+///////////////////////////////////////////////////////////////////////////////
+// This is an example of a unit test having no description.
+BEGIN_UNIT_TEST(100, 14) {
+	return true;
+} END_UNIT_TEST
+
+///////////////////////////////////////////////////////////////////////////////
+// This is an example of an autonumbered unit test having no description.
+BEGIN_UNIT_TEST(100) {
+	return true;
+} END_UNIT_TEST
+
+///////////////////////////////////////////////////////////////////////////////
+BEGIN_UNIT_TEST(100, "Autonumbered unit test"
+	" assigned to the user specified group"
 )
 {
-	bool bPassed{ false };
-
-	//dk::ConstDestTracker obj2;
-	//dk::ConstDestTracker obj1 = obj2;
-
-	// For the purpose of this group of tests integrity of the ConstDestTracker
-	// object is automatically tested outside this routine. So there is no need
-	// to validate anything here.
-	bPassed = true;
-
-	return bPassed;
+	return true;
 }
 END_UNIT_TEST

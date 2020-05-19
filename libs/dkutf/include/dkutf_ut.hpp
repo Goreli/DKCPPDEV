@@ -42,38 +42,38 @@ namespace dk {
 		UnitTest();
 		virtual ~UnitTest();
 
-		static void sort() noexcept;
+		static void updateAndSort() noexcept;
 		static const UTList& list() noexcept;
 
 		// Expect a nonabstract override to be defined in the application module
-		// in order to ascertain _uGroupKey, _uTestKey and _sDescription.
-		//
-		// In theory this function should be declared as noexcept, except we want to
-		// minimise the amount of scripting in the application module. The motivation
-		// here is to make the process of defining application unit tests as user
-		// friendly as possible. Risks seem to be minimal in this context.
-		virtual void describe() = 0;
-
-		// Set the composite key once the application module has defined
-		// a nonabstract override of the identify() member function.
-		void initCompositeKey() noexcept;
+		// in order to ascertain description_ and utkCompositeKey_.
+		virtual void update() noexcept = 0;
 
 		// Expect a nonabstract override to be defined in the application module
 		// in order to execute the actual unit test.
+		// In general unit tests are expected to handle exceptions themselves.
+		// If there is an unhandled exception thrown within the unit test code
+		// it will be caught by the UTF framework and the unit test will be
+		// reported as failed. This provides a mechanism for detecting "fantom"
+		// exceptions that may have been thrown by ill documented libraries used
+		// in unit tests.
 		virtual bool run() = 0;
 
-		const UTKey& getKey() const noexcept;
-		const std::string& getDescription() const noexcept;
+		const std::string& description() const noexcept;
+		UTKey& key() noexcept;
 
 	protected:
-		void _describe(const std::string& = {}, unsigned = 0, unsigned = 0) noexcept;
+		void _update(unsigned int = 0, unsigned int = 0, const std::string & = {}) noexcept;
+		void _update(unsigned int, const std::string &) noexcept;
+		void _update(const std::string &) noexcept;
 
 	private:
 		std::string description_;
-		unsigned test_;
-		unsigned group_;
-
 		UTKey utkCompositeKey_;
+
+		// Identifies unit tests with the unit test numbers set to the default
+		// (0) value and updates them to unique nonzero numbers.
+		void updateDefault_(const UTList&);
 	};
 }	// namespace dk
 

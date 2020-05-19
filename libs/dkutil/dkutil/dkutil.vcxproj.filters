@@ -27,6 +27,9 @@
     <ClInclude Include="..\include\dkutil_cli_parser_base.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\dkutil_string.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\dkutil_multitimer.cpp">
@@ -36,6 +39,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\source\dkutil_cli_parser_base.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\dkutil_string.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

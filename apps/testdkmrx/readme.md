@@ -9,9 +9,8 @@ Here is the MS Visual Studio configuration log used to build the target in both 
 2. Let the c++ compiler know locations of include areas: ../include;../../../libs/dkmrx/include;../../../libs/dkutf/include;../../../libs/dkutil/include
 3. Switch precompiled headers off;
 4. Define the real type the same as what has been used to build the dkmrx.lib library e.g. real=double.
-5. Let the linker know the location of the dkutf.lib and dkutil.lib libraries (add respective references to the project on the Visual C++ platform).
-6. Don't link the dkmrx library. Rather compile the dkmrx source files directly into the project. This is to preclude a potential confusion that may be caused to other applicatins due to the use of the [../../libs/dkutf](../../libs/dkutf) instrumentation.
-7. Define _CRT_SECURE_NO_WARNINGS to remove "This function or variable may be unsafe" errors triggered by some string and file functions.
+5. Let the linker know the location of the dkmrx.lib, dkutf.lib and dkutil.lib libraries (add respective references to the project on the Visual C++ platform).
+6. Define _CRT_SECURE_NO_WARNINGS to remove "This function or variable may be unsafe" errors triggered by some string and file functions.
 
 
 ## Roadmap

@@ -29,15 +29,11 @@ Modification history:
 #include <iostream>
 #include "dkutf_utf.hpp"
 
-void dk::sortUT() noexcept
+void dk::updateAndSort() noexcept
 {
 	// Prepare the global lists.
 	UnitTestGroup::sort();
-	for (auto& pTst : UnitTest::list()) {
-		pTst->describe();
-		pTst->initCompositeKey();
-	}
-	UnitTest::sort();
+	UnitTest::updateAndSort();
 }
 
 void dk::verifyUT(UTGListVerifier& utgVerifier, UTListVerifier& utVerifier) noexcept
@@ -64,32 +60,57 @@ static void printSummaryOfFailedTests(const dk::UTList& utFailedUTList)
 {
 	if (utFailedUTList.size()) {
 		// Print in red color.
-		std::cout << "\033[3;41;37m" << "Summary of failed unit tests:" << "\033[0m" << std::endl;
+		std::cout << "\033[3;41;37m" << "Summary of failed unit tests:" << "\033[0m" << "\n";
 
-		for (auto pUT : utFailedUTList) {
-			size_t uiGroupKey = pUT->getKey().groupKey();
-			size_t uiTestKey = pUT->getKey().testKey();
-			std::cout << "\033[3;41;37m" << uiGroupKey << "." << uiTestKey << "\033[0m" << ": " << pUT->getDescription() << std::endl;
-		}
+		for (auto pUT : utFailedUTList)
+			std::cout << "\033[3;41;37m" << pUT->key().str() << "\033[0m" << ": " << pUT->description() << "\n";
+
 		std::cout << std::endl;
 	}
 }
 
-static void printAndRunUT(dk::UnitTest* pUnitTest, dk::UTList& utFailedUTList)
+static void printAndRunUT(dk::UnitTest* pUT, dk::UTList& utFailedUTList)
 {
-	size_t uiGroupKey = pUnitTest->getKey().groupKey();
-	size_t uiTestKey = pUnitTest->getKey().testKey();
+	// Print the unit test.
+	std::string strUTKey = pUT->key().str();
+	std::cout << "\t" << strUTKey << "\t";
+	if(pUT->key().autoNumberedTestNo())
+		std::cout << "[autonumbered] ";
+	std::cout  << pUT->description() << std::endl;
 
-	// Print and execute the unit test.
-	std::cout << "\tUnit test " << uiGroupKey << "." << uiTestKey << ": " << pUnitTest->getDescription() << std::endl;
-	if (pUnitTest->run()) {
+	// Run the unit test.
+	bool bPassed{false};
+	try {
+		bPassed = pUT->run();
+	}
+	catch (const std::exception& e)
+	{
+		bPassed = false;
+		// Print in red color.
+		std::cout << "\t\t" << strUTKey << "\t";
+		std::cout << "\033[3;41;37m" << "caught unhandled exception of type \'";
+		std::cout << typeid(e).name() << "\': " << e.what() << "\033[0m" << std::endl;
+	}
+	catch (...)
+	{
+		bPassed = false;
+		// Print in red color.
+		std::cout << "\t\t" << strUTKey << "\t";
+		std::cout << "\033[3;41;37m" << "caught unhandled exception of unknown type.";
+		std::cout << "\033[0m" << std::endl;
+	}
+
+	// Print the status.
+	if (bPassed) {
 		// Print in green color.
-		std::cout << "\t\t" << "\033[3;42;30m" << "Passed" << "\033[0m" << std::endl;
+		std::cout << "\t\t" << strUTKey << "\t";
+		std::cout << "\033[3;42;30m" << "passed" << "\033[0m" << std::endl;
 	}
 	else {
-		utFailedUTList.push_back(pUnitTest);
+		utFailedUTList.push_back(pUT);
 		// Print in red color.
-		std::cout << "\t\t" << "\033[3;41;37m" << "Failed" << "\033[0m" << std::endl;
+		std::cout << "\t\t" << strUTKey << "\t";
+		std::cout << "\033[3;41;37m" << "failed" << "\033[0m" << std::endl;
 	}
 }
 
@@ -100,33 +121,28 @@ void dk::runUT(const UTGList& utgList, const UTList& utList) noexcept
 	size_t uiUnitTestCount{ 0 };
 
 	// Print unique linked groups and execute respective unique linked unit tests.
-	size_t uiLastGroupKey = 0;
-	for (auto& pUnitTest : utList) {
-		// Ignore zero group key unit tests.
-		size_t uiGroupKey = pUnitTest->getKey().groupKey();
-		if (uiGroupKey == 0)
-			continue;
+	size_t uiLastGroup { 0 };
+	bool bNextGroupStarted{ true };
 
-		// Ignore zero key unit tests.
-		size_t uiTestKey = pUnitTest->getKey().testKey();
-		if (uiTestKey == 0)
-			continue;
+	for (auto& pUT : utList) {
+		// Get the number of the group and check if the next group has started.
+		size_t uiGroup = pUT->key().group();
+		if (!bNextGroupStarted && uiGroup > uiLastGroup)
+			bNextGroupStarted = true;
 
-		// Check if the group has changed.
-		if (uiLastGroupKey != uiGroupKey) {
+		// Check if we are dealing with the next group here.
+		if (bNextGroupStarted) {
+			if (uiGroupCount > 0)
+				std::cout << std::endl;
 			// Find the record of the group and print it.
-			for (auto& pGroup : utgList)
-				if (pGroup->getKey() == uiGroupKey) {
-					if(uiGroupCount > 0)
-						std::cout << std::endl;
-					std::cout << "Group " << pGroup->getKey() << ": " << pGroup->getDescription() << std::endl;
-					break;
-				}
-			uiLastGroupKey = uiGroupKey;
+			std::cout << utgList[uiGroupCount]->group() << ": " << utgList[uiGroupCount]->description() << std::endl;
+
+			uiLastGroup = uiGroup;
 			uiGroupCount++;
+			bNextGroupStarted = false;
 		}
 
-		printAndRunUT(pUnitTest, utFailedUTList);
+		printAndRunUT(pUT, utFailedUTList);
 		uiUnitTestCount++;
 	}
 	std::cout << std::endl;
