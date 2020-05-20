@@ -27,12 +27,12 @@ Modification history:
 */
 
 #include "dkutf_utf.hpp"
-#include "dkutil_cli_misc.hpp"
+#include "dkutil_ansi_esc.hpp"
 
 using namespace dk;
 
 int main() {
-	enableEscapeSequences();
+	enableANSIEscapeSequences();
 	updateAndSort();
 
     UTGListVerifier utgVerifier;

@@ -29,16 +29,16 @@ Modification history:
 #include <iostream>
 #include <ctime>
 #include "dkutf_utf.hpp"
-#include "dkutil_cli_misc.hpp"
+#include "dkutil_ansi_esc.hpp"
 using namespace dk;
 
 int main() {
-	enableEscapeSequences();
+	enableANSIEscapeSequences();
 
 	std::time_t timeT = std::time(nullptr);
 	std::cout << "Started: " << std::asctime(std::localtime(&timeT));
 
-	sortUT();
+	updateAndSort();
 
 	UTGListVerifier utgVerifier;
 	UTListVerifier utVerifier;
