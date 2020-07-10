@@ -37,6 +37,8 @@ namespace dkmrx {
 	class mLine;
 	class mTransformer;
 	class matrix;
+}
+namespace dk {
 	class MultiThreadedDriver;
 }
 
@@ -52,7 +54,7 @@ void setSize(unsigned winWidth, unsigned winHeight);
 void getSize(unsigned* pWinWidth, unsigned* pWinHeight);
 //void nextFrame(void);
 void setupTransformer(void);
-void transformInitialCoords(dkmrx::MultiThreadedDriver&);
+void transformInitialCoords(dk::MultiThreadedDriver&);
 
 size_t	getTransformedX(size_t x, size_t y) noexcept;
 size_t	getTransformedY(size_t x, size_t y) noexcept;

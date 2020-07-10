@@ -50,20 +50,20 @@ static void printSummaryOfCounts(size_t uiUnitTestCount, size_t uiGroupCount, si
 	std::cout << "Unit tests: " << uiUnitTestCount << ". Groups: " << uiGroupCount << "." << std::endl;
 	if (uiFailedUTCount)
 		// Print in red color.
-		std::cout << "\033[3;41;37m" << "Failed: " << uiFailedUTCount << "." << "\033[0m" << " Passed: " << uiPassedUTCount << "." << std::endl;
+		std::cout << "\033[41;37m" << "Failed: " << uiFailedUTCount << "." << "\033[0m" << " Passed: " << uiPassedUTCount << "." << std::endl;
 	else
 		// Print in green color.
-		std::cout << "\033[3;42;30m" << "Failed: " << uiFailedUTCount << ". Passed: " << uiPassedUTCount << "." << "\033[0m" << std::endl;
+		std::cout << "\033[42;30m" << "Failed: " << uiFailedUTCount << ". Passed: " << uiPassedUTCount << "." << "\033[0m" << std::endl;
 }
 
 static void printSummaryOfFailedTests(const dk::UTList& utFailedUTList)
 {
 	if (utFailedUTList.size()) {
 		// Print in red color.
-		std::cout << "\033[3;41;37m" << "Summary of failed unit tests:" << "\033[0m" << "\n";
+		std::cout << "\033[41;37m" << "Summary of failed unit tests:" << "\033[0m" << "\n";
 
 		for (auto pUT : utFailedUTList)
-			std::cout << "\033[3;41;37m" << pUT->key().str() << "\033[0m" << ": " << pUT->description() << "\n";
+			std::cout << "\033[41;37m" << pUT->key().str() << "\033[0m" << ": " << pUT->description() << "\n";
 
 		std::cout << std::endl;
 	}
@@ -73,9 +73,9 @@ static void printAndRunUT(dk::UnitTest* pUT, dk::UTList& utFailedUTList)
 {
 	// Print the unit test.
 	std::string strUTKey = pUT->key().str();
-	std::cout << "\t" << strUTKey << "\t";
 	if(pUT->key().autoNumberedTestNo())
-		std::cout << "[autonumbered] ";
+		std::cout << "(a)";
+	std::cout << "\t" << strUTKey << "\t";
 	std::cout  << pUT->description() << std::endl;
 
 	// Run the unit test.
@@ -88,7 +88,7 @@ static void printAndRunUT(dk::UnitTest* pUT, dk::UTList& utFailedUTList)
 		bPassed = false;
 		// Print in red color.
 		std::cout << "\t\t" << strUTKey << "\t";
-		std::cout << "\033[3;41;37m" << "caught unhandled exception of type \'";
+		std::cout << "\033[41;37m" << "caught unhandled exception of type \'";
 		std::cout << typeid(e).name() << "\': " << e.what() << "\033[0m" << std::endl;
 	}
 	catch (...)
@@ -96,21 +96,21 @@ static void printAndRunUT(dk::UnitTest* pUT, dk::UTList& utFailedUTList)
 		bPassed = false;
 		// Print in red color.
 		std::cout << "\t\t" << strUTKey << "\t";
-		std::cout << "\033[3;41;37m" << "caught unhandled exception of unknown type.";
+		std::cout << "\033[41;37m" << "caught unhandled exception of unknown type.";
 		std::cout << "\033[0m" << std::endl;
 	}
 
 	// Print the status.
 	if (bPassed) {
 		// Print in green color.
-		std::cout << "\t\t" << strUTKey << "\t";
-		std::cout << "\033[3;42;30m" << "passed" << "\033[0m" << std::endl;
+		std::cout << "\t\t\t" << strUTKey << "\t";
+		std::cout << "\033[42;30m" << "passed" << "\033[0m" << std::endl;
 	}
 	else {
 		utFailedUTList.push_back(pUT);
 		// Print in red color.
-		std::cout << "\t\t" << strUTKey << "\t";
-		std::cout << "\033[3;41;37m" << "failed" << "\033[0m" << std::endl;
+		std::cout << "\t\t\t" << strUTKey << "\t";
+		std::cout << "\033[41;37m" << "failed" << "\033[0m" << std::endl;
 	}
 }
 
@@ -135,7 +135,11 @@ void dk::runUT(const UTGList& utgList, const UTList& utList) noexcept
 			if (uiGroupCount > 0)
 				std::cout << std::endl;
 			// Find the record of the group and print it.
-			std::cout << utgList[uiGroupCount]->group() << ": " << utgList[uiGroupCount]->description() << std::endl;
+			std::cout << "\033[1m";	// Highlight by bolding the text.
+			std::cout << utgList[uiGroupCount]->group() << ": ";
+			std::cout << utgList[uiGroupCount]->description();
+			std::cout << "\033[0m";	// Reset the highlighting.
+			std::cout << std::endl;
 
 			uiLastGroup = uiGroup;
 			uiGroupCount++;

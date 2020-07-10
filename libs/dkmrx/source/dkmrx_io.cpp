@@ -31,11 +31,9 @@ Modification history:
 #include <cctype>
 #include "dkmrx_matrix.hpp"
 
-using namespace dkmrx;
-
 char* str_lwr(char*);
 
-std::ostream& dkmrx::operator<<(std::ostream& out,matrix& mx)
+std::ostream& operator<<(std::ostream& out, const dkmrx::matrix& mx)
 {
 std::streamsize tempWidth     = out.width();
 std::streamsize tempPrecision = out.precision();
@@ -68,7 +66,7 @@ std::streamsize tempPrecision = out.precision();
 	return out;
 }
 
-std::istream& dkmrx::operator>>(std::istream& in,matrix& mx)
+std::istream& operator>>(std::istream& in, dkmrx::matrix& mx)
 {    
     if ( mx.pValues_ != nullptr)
 		mx.empty();
@@ -172,3 +170,4 @@ char* c = str;
 		*c++ = (char)std::tolower(*c);
 	return str;
 }
+

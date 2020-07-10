@@ -1,9 +1,11 @@
 /* dkutil_ansi_esc.cpp
 Declares ANSI escape sequence related structures and routines.
 
-Usefule ANSI ESC links:
+Useful ANSI ESC links:
 	https://en.wikipedia.org/wiki/ANSI_escape_code
 	https://solarianprogrammer.com/2019/04/08/c-programming-ansi-escape-codes-windows-macos-linux-terminals/
+Additional information about control (non ANSI ESC) codes:
+	https://en.wikipedia.org/wiki/C0_and_C1_control_codes
 
 Copyright(c) 2020 David Krikheli
 

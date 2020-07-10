@@ -28,18 +28,19 @@ Modification history:
 
 #include <utility>
 #include "dkmrx_matrix.hpp"
-#include "dkmrx_parallel_processor_base.hpp"
-#include "dkmrx_multi_threaded_driver.hpp"
+#include "dkutil_parallel_processor_base.hpp"
+#include "dkutil_multi_threaded_driver.hpp"
 
 using namespace dkmrx;
+using namespace dk;
 
 
-class ParallelTransposedMatrixMultiplier : public dkmrx::ParallelProcessorBase {
+class ParallelTransposedMatrixMultiplier : public ParallelProcessorBase {
 public:
 	ParallelTransposedMatrixMultiplier(const matrix& mrx, const matrix& mrxTransposed, matrix& mrxProduct);
 	virtual ~ParallelTransposedMatrixMultiplier() override;
 
-	virtual void operator()(size_t inxBegin, size_t inxEnd) override;
+	virtual void operator()(size_t inxPartStart, size_t inxPartEnd) override;
 	virtual size_t size() override;
 
 private:
@@ -55,12 +56,12 @@ ParallelTransposedMatrixMultiplier::ParallelTransposedMatrixMultiplier(const mat
 ParallelTransposedMatrixMultiplier::~ParallelTransposedMatrixMultiplier()
 {
 }
-void ParallelTransposedMatrixMultiplier::operator()(size_t inxBegin, size_t inxEnd)
+void ParallelTransposedMatrixMultiplier::operator()(size_t inxPartStart, size_t inxPartEnd)
 {
 	size_t iMrxTransRows = mrxTransposed_.rows();
 	size_t iMrxCols = mrx_.columns();
 
-	for (size_t iRowFirst = inxBegin; iRowFirst < inxEnd; iRowFirst++)
+	for (size_t iRowFirst = inxPartStart; iRowFirst < inxPartEnd; iRowFirst++)
 		for (size_t iRowSecond = 0; iRowSecond < iMrxTransRows; iRowSecond++)
 		{
 			real sum = 0.0;
@@ -74,7 +75,7 @@ size_t ParallelTransposedMatrixMultiplier::size()
 	return mrx_.rows();
 }
 
-void matrix::multiply_MT(const matrix& mrx1, const matrix& mrx2, MultiThreadedDriver& driverMT)
+void matrix::multiply_MT(const matrix& mrx1, const matrix& mrx2, dk::MultiThreadedDriver& driverMT)
 {
 	bool bCompatible = (mrx1.iColumns_ == mrx2.iRows_);
 	_validate(mrx1.pValues_, mrx2.pValues_, bCompatible, "matrix::multiply_MT(const matrix&, const matrix&, dk::MultiThreadedDriver*)");

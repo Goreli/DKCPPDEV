@@ -38,7 +38,7 @@ Modification history:
 
 #include "upside_down_projector.hpp"
 #include "bitmap_composer.hpp"
-#include "dkmrx_multi_threaded_driver.hpp"
+#include "dkutil_multi_threaded_driver.hpp"
 
 struct ProjectedPoint;
 class RasterGeometry;
@@ -90,7 +90,7 @@ private:
 
 	UpsideDownProjector projector_;
 	BitmapComposer composer_;
-	dkmrx::MultiThreadedDriver driverMT_;
+	dk::MultiThreadedDriver driverMT_;
 };
 
 #endif // winraster_renderer_hpp

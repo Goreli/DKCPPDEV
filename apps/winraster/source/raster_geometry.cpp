@@ -274,7 +274,7 @@ void RasterGeometry::setupTransformer(void)
 	transformer_->rotate(-w3 * frameCounter_ / 2, aboutZ, *windowCentre_);
 }
 
-void RasterGeometry::transformInitialCoords(MultiThreadedDriver& driverMT)
+void RasterGeometry::transformInitialCoords(dk::MultiThreadedDriver& driverMT)
 {
 	//*transformedCoords_ = *initialCoords_ * (*transformer_);
 	transformedCoords_->multiply_MT(*initialCoords_, *transformer_, driverMT);

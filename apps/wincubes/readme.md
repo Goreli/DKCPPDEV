@@ -12,7 +12,7 @@ Here is the MS Visual Studio configuration log used to build the target in both 
 3. Let the c++ compiler know the locations of include areas: ../include;../../../libs/dkmrx/include
 4. Let the resource compiler know the location of include area: ../include
 5. Define the real type the same as what has been used to build the dkmrx.lib library e.g. real=double.
-6. Let the linker know the location of the dkmrx.lib library (add a reference to the project on the Visual C++ platform).
+6. Let the linker know the location of the dkmrx.lib and dkutil.lib libraries (add a reference to the project on the Visual C++ platform).
 
 No optimisation has been used in the Debug configuration. Specifically in the Release configuration the "Favour Speed over Size" optimisation option may be desired.
 

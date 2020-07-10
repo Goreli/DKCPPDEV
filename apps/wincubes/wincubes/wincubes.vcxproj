@@ -44,6 +44,9 @@
     <ProjectReference Include="..\..\..\libs\dkmrx\dkmrx\dkmrx.vcxproj">
       <Project>{0473ebfa-50b3-4d48-9e19-5986a91f17d9}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\libs\dkutil\dkutil\dkutil.vcxproj">
+      <Project>{c0c61a06-f56a-410a-a0bd-e3f4fe342893}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

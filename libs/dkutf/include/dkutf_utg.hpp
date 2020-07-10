@@ -45,7 +45,7 @@ namespace dk {
 		PositiveInteger():i_(i) {
 			static_assert(i > 0, "PositiveInteger not positive");
 		}
-		virtual operator int() const noexcept {
+		virtual operator int() const noexcept override {
 			return i_;
 		}
 	private:

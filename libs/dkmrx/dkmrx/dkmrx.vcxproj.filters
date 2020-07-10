@@ -51,9 +51,6 @@
     <ClCompile Include="..\source\dkmrx_transpose.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\dkmrx_multi_threaded_driver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\dkmrx_gausseln.hpp">
@@ -69,12 +66,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\dkmrx_gausselnx.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\dkmrx_multi_threaded_driver.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\dkmrx_parallel_processor_base.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

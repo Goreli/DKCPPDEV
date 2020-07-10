@@ -82,7 +82,7 @@ There are three sample programs available that demonstrate how to use the librar
 Here is the MS Visual Studio configuration log used to build the target in both the Debug and Release configurations:
 1. Switch precompiled headers off;
 2. Set the language standard to the most recent version;
-3. Let the c++ compiler know the location of include area: ../include
+3. Let the c++ compiler know the location of include area: ../include;../../dkutil/include
 4. Define the real type e.g. real=double.
 5. Define _CRT_SECURE_NO_WARNINGS to remove "This function or variable may be unsafe" errors triggered by some string and file functions.
 

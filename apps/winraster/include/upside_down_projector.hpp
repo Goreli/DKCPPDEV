@@ -29,19 +29,19 @@ Modification history:
 #ifndef upside_down_projector_hpp
 #define upside_down_projector_hpp
 
-#include "dkmrx_parallel_processor_base.hpp"
+#include "dkutil_parallel_processor_base.hpp"
 
 class RasterGeometry;
 struct ProjectedPoint;
 
-class UpsideDownProjector : public dkmrx::ParallelProcessorBase {
+class UpsideDownProjector : public dk::ParallelProcessorBase {
 public:
    UpsideDownProjector();
    virtual ~UpsideDownProjector() override;
    void init(RasterGeometry* pRasterGeom);
 
    void setupProjection(size_t iProjectionHeight, size_t iProjectionWidth, ProjectedPoint* pProjectionBuffer);
-   virtual void operator()(size_t inxBegin, size_t inxEnd) override;
+   virtual void operator()(size_t inxPartStart, size_t inxPartEnd) override;
    virtual size_t size() override;
 
 private:

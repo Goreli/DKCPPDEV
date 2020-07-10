@@ -31,9 +31,17 @@ Modification history:
 
 #include <iosfwd>
 
-namespace dkmrx {
-
+namespace dk {
 	class MultiThreadedDriver;
+}
+
+namespace dkmrx {
+	class matrix;
+}
+std::ostream& operator<<(std::ostream&, const dkmrx::matrix&);
+std::istream& operator>>(std::istream&, dkmrx::matrix&);
+
+namespace dkmrx {
 
 	class matrix
 	{
@@ -54,9 +62,9 @@ namespace dkmrx {
 		matrix& operator =      (matrix&&) noexcept;
 
 		real* operator [] (size_t i) const { return pValues_ + (((long long)iColumns_) * ((long long)i)); }
-		friend  std::ostream& operator <<    (std::ostream&, matrix&);
-		friend  std::istream& operator >>    (std::istream&, matrix&);
-		
+		friend  std::ostream& ::operator<<(std::ostream&, const dkmrx::matrix&);
+		friend  std::istream& ::operator>>(std::istream&, dkmrx::matrix&);
+
 		matrix operator +      (const matrix&) const;
 		matrix operator +      (real) const;
 		matrix& operator +=    (const matrix&);
@@ -71,7 +79,7 @@ namespace dkmrx {
 		matrix operator *      (real) const;
 		matrix& operator *=    (const matrix&);
 		matrix& operator *=    (real);
-		void multiply_MT(const matrix&, const matrix&, MultiThreadedDriver&);
+		void multiply_MT(const matrix&, const matrix&, dk::MultiThreadedDriver&);
 
 		// A matrix format of a system of simultaneious linear equations
 		// normally looks like: A*x=B. From here we will derive the following

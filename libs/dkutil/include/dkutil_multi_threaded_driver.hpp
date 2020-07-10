@@ -26,19 +26,50 @@ Modification history:
 
 */
 
-#ifndef dkmrx_parallel_processor_base
-#define dkmrx_parallel_processor_base
+#ifndef dkutil_multi_threaded_driver
+#define dkutil_multi_threaded_driver
 
-namespace dkmrx {
+#include <thread>
+#include <mutex>
+#include <vector>
 
-   class ParallelProcessorBase
-   {
-   public:
-      virtual ~ParallelProcessorBase();
-      virtual void operator()(size_t inxBegin, size_t inxEnd) = 0;
-      virtual size_t size() = 0;
-   };
+namespace dk {
 
-} // namespace dkmrx {
+class ParallelProcessorBase;
 
-#endif // dkmrx_parallel_processor_base
+class MultiThreadedDriver
+{
+public:
+   MultiThreadedDriver();
+   virtual ~MultiThreadedDriver();
+
+   void init(size_t iNumThreads);
+   void join();
+   void drive(ParallelProcessorBase* pParProc);
+   void operator()(size_t inxThread);
+
+private:
+   std::vector<size_t> helperThreadStates_;
+   std::vector<std::thread> helperThreads_;
+
+   // Helper thread synchronisation objects.
+   std::mutex mutexHT_;
+   std::condition_variable cvHT_;
+
+   // Main thread synchronisation objects.
+   std::mutex mutexMT_;
+   std::condition_variable cvMT_;
+
+   ParallelProcessorBase* pParProc_;
+
+   // inxNextPartStart_ is used in the multi partition mode.
+   size_t inxNextPartStart_;
+
+   void execSinglePartition_(size_t inxThread);
+   void execMultiplePartitions_(size_t inxThread);
+   void notifyMainThread_(size_t inxThread);
+};
+
+}  // namespace dk {
+
+#endif // dkutil_multi_threaded_driver
